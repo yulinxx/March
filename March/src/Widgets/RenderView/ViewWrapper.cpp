@@ -102,88 +102,40 @@ void ViewWrapper::updateScene()
     m_glView->update();
 }
 
-QPointF ViewWrapper::screenToNDC(const QPoint& screenPos) const
-{
-    //float aspect = float(m_glView->width()) / m_glView->height();
-    auto sz = m_scene->getViewSize();
-    float aspect = float(sz.x() / sz.y());
-    float ndcX = (float(screenPos.x()) / m_glView->width()) * 2.0f - 1.0f;
-    float ndcY = -((float(screenPos.y()) / m_glView->height()) * 2.0f - 1.0f);
-    return QPointF(ndcX, ndcY);
-}
-
-QPointF ViewWrapper::screenToWorld(const QPoint& screenPos) const
-{
-    // 1. 屏幕坐标到 NDC
-    QPointF ndc = screenToNDC(screenPos);
-
-    // 2. NDC 到视图坐标（反投影）
-    auto sz = m_scene->getViewSize();
-    auto w = sz.x();
-    auto h = sz.y();
-
-    float orthoSize = h * 0.5 * m_scene->getViewScale();
-
-    //float aspect = float(m_glView->width()) / m_glView->height();
-    float aspect = float(w / h);
-
-    float viewX = ndc.x() * orthoSize * aspect;
-    float viewY = ndc.y() * orthoSize;
-
-    // 3. 视图坐标到世界坐标
-    float worldX = (viewX - getTranslation().x()) / getScale();
-    float worldY = (viewY - getTranslation().y()) / getScale();
-
-    return QPointF(worldX, worldY);
-}
-
-QPointF ViewWrapper::ndcToWorld(float ndcX, float ndcY) const
-{
-    auto sz = m_scene->getViewSize();
-    auto w = sz.x();
-    auto h = sz.y();
-
-    //float orthoSize = m_glView->height() * 0.5 * m_scene->getViewScale();
-    float orthoSize = h * 0.5 * m_scene->getViewScale();
-
-    //float aspect = float(m_glView->width()) / m_glView->height();
-    float aspect = float(w / h);
-
-    float scaledX = ndcX * orthoSize * aspect;
-    float scaledY = ndcY * orthoSize;
-
-    float worldX = (scaledX - getTranslation().x()) / getScale();
-    float worldY = (scaledY - getTranslation().y()) / getScale();
-    return QPointF(worldX, worldY);
-}
-
-QPointF ViewWrapper::worldToNDC(float worldX, float worldY) const
-{
-    float orthoSize = m_glView->height() * 0.5 * m_scene->getViewScale();
-    float aspect = float(m_glView->width()) / m_glView->height();
-
-    float scaledX = worldX * getScale() + getTranslation().x();
-    float scaledY = worldY * getScale() + getTranslation().y();
-
-    float ndcX = scaledX / (orthoSize * aspect);
-    float ndcY = scaledY / orthoSize;
-    return QPointF(ndcX, ndcY);
-}
-
-QPointF ViewWrapper::worldToScreen(float worldX, float worldY) const
-{
-    QPointF ndc = worldToNDC(worldX, worldY);
-    float screenX = (ndc.x() + 1.0f) / 2.0f * m_glView->width();
-    float screenY = (1.0f - ndc.y()) / 2.0f * m_glView->height();
-    return QPointF(screenX, screenY);
-}
-
-QPointF ViewWrapper::ndcToScreen(float ndcX, float ndcY) const
-{
-    float screenX = (ndcX + 1.0f) / 2.0f * m_glView->width();
-    float screenY = (1.0f - ndcY) / 2.0f * m_glView->height();
-    return QPointF(screenX, screenY);
-}
+//QPointF ViewWrapper::screenToNDC(const QPoint& screenPos) const
+//{
+//    //float aspect = float(m_glView->width()) / m_glView->height();
+//    auto sz = m_scene->getViewSize();
+//    float aspect = float(sz.x() / sz.y());
+//    float ndcX = (float(screenPos.x()) / m_glView->width()) * 2.0f - 1.0f;
+//    float ndcY = -((float(screenPos.y()) / m_glView->height()) * 2.0f - 1.0f);
+//    return QPointF(ndcX, ndcY);
+//}
+//
+//QPointF ViewWrapper::screenToWorld(const QPoint& screenPos) const
+//{
+//    // 1. 屏幕坐标到 NDC
+//    QPointF ndc = screenToNDC(screenPos);
+//
+//    // 2. NDC 到视图坐标（反投影）
+//    auto sz = m_scene->getViewSize();
+//    auto w = sz.x();
+//    auto h = sz.y();
+//
+//    float orthoSize = h * 0.5 * m_scene->getViewScale();
+//
+//    //float aspect = float(m_glView->width()) / m_glView->height();
+//    float aspect = float(w / h);
+//
+//    float viewX = ndc.x() * orthoSize * aspect;
+//    float viewY = ndc.y() * orthoSize;
+//
+//    // 3. 视图坐标到世界坐标
+//    float worldX = (viewX - getTranslation().x()) / getScale();
+//    float worldY = (viewY - getTranslation().y()) / getScale();
+//
+//    return QPointF(worldX, worldY);
+//}
 
 bool ViewWrapper::eventFilter(QObject* obj, QEvent* event)
 {
@@ -252,7 +204,7 @@ void ViewWrapper::mousePressEvent(QMouseEvent* event)
     if (event->button() == Qt::MiddleButton)
     {
         m_lastPanPos = event->pos();
-        m_isPanning = true;
+        m_bPanning = true;
 
         if (1)
         {
@@ -270,14 +222,6 @@ void ViewWrapper::mousePressEvent(QMouseEvent* event)
     }
     else if (event->button() == Qt::LeftButton)
     {
-        //QPoint localPos = m_glView->mapFromGlobal(event->globalPos());
-
-        //QPointF world = screenToWorld(localPos);
-        //qDebug() << "Screen:" << localPos << "World:" << world;
-
-        //testCoordinateMapping(localPos);
-
-        //QPointF worldPos = screenToWorld(localPos);
 
         std::random_device rd;
         std::mt19937 gen(rd());
@@ -331,7 +275,7 @@ void ViewWrapper::mouseReleaseEvent(QMouseEvent* event)
 {
     if (event->button() == Qt::MiddleButton)
     {
-        m_isPanning = false;
+        m_bPanning = false;
     }
 }
 
@@ -343,7 +287,8 @@ void ViewWrapper::wheelEvent(QWheelEvent* event)
         float currentScale = getScale();
         QVector2D curTrans = getTranslation();
         float delta = event->angleDelta().y() > 0 ? 1.1f : 0.9f;
-        QPointF worldMousePos = screenToWorld(mousePos);
+        //QPointF worldMousePos = screenToWorld(mousePos);
+        auto worldMousePos = m_scene->screenToWorld({ mousePos.x(), mousePos.y() });
         float newScale = currentScale * delta;
 
         // 计算新的平移量，以保持鼠标位置在缩放后仍然是视图中心
@@ -386,73 +331,36 @@ void ViewWrapper::wheelEvent(QWheelEvent* event)
         auto sz = m_scene->getViewSize();
         std::cout<< "Size:" << sz.x() << " " << sz.y() << std::endl;
 
-        if (0)
-        {
-            QPointF pos = event->position();
-            float aspect = float(m_glView->width()) / m_glView->height();
-            float mouseX = (pos.x() / m_glView->width() * 2.0f - 1.0f) * 1000.0f * aspect / getScale() - getTranslation().x();
-            float mouseY = -(pos.y() / m_glView->height() * 2.0f - 1.0f) * 1000.0f / getScale() - getTranslation().y();
-
-            float newScale = getScale() * delta;
-            QVector2D newTranslation = getTranslation();
-            newTranslation.setX(getTranslation().x() - mouseX * (delta - 1.0f) * getScale());
-            newTranslation.setY(getTranslation().y() - mouseY * (delta - 1.0f) * getScale());
-            //m_glView->setScale(newScale);
-            m_glView->setTranslation(newTranslation);
-            m_glView->update();
-        }
-
         QWidget::wheelEvent(event);
     }
 }
 
 void ViewWrapper::mouseMoveEvent(QMouseEvent* event)
 {
-    if (m_isPanning)
-    {
-        QPoint curPos = event->pos();
 
-        QPointF posA = screenToWorld(m_lastPanPos);
-        QPointF posB = screenToWorld(curPos);
-        QPointF dir = posB - posA;
-        dir.setX(dir.x() / m_scene->getViewScale());
-        dir.setY(dir.y() / m_scene->getViewScale());
-
-        std::cout<< "Begin:" << posA.x() << " " << posA.y() << std::endl;
-        std::cout<< "   To:" << m_lastPanPos.x() << " " << m_lastPanPos.y() << std::endl;
-        std::cout<< "  Dir:" << dir.x() << " " << dir.y() << std::endl;
-
-        Ut::Vec2 v = Ut::Vec2(dir.x(), dir.y());
-        m_scene->pan(v);
-        auto mat = m_scene->getViewMatrix();
-        m_glView->setViewMatrix(mat);
-
-        m_lastPanPos = curPos;
-
-        update();
-    }
+    QPoint curPos = event->pos();
+    auto world = m_scene->screenToWorld({ curPos.x(), curPos.y() });
 
     if (event->buttons() & Qt::MiddleButton)
     {
-        //QPoint delta = event->pos() - m_lastPos;
-        //float aspect = float(m_glView->width()) / m_glView->height();
-        //float moveSpeed = 2.0f;
-        //float dx = delta.x() * moveSpeed * aspect / m_glView->width();
-        //float dy = -delta.y() * moveSpeed / m_glView->height();
+        if (m_bPanning)
+        {
 
-        //QVector2D newTranslation = getTranslation() + QVector2D(dx, dy) * 1000.0f;
-        //m_scene->pan(Ut::Vec2(newTranslation.x(), newTranslation.y()));
-        //Mat3 matView = m_scene->getViewMatrix();
-        //m_glView->setViewMatrix(matView);
+            auto posA = m_scene->screenToWorld({ m_lastPanPos.x(), m_lastPanPos.y() });
+            auto dir = world - posA;
 
+            m_scene->pan(dir);
 
-        //    m_glView->setTranslation(newTranslation);
-        //    m_lastPos = event->pos();
+            auto mat = m_scene->getViewMatrix();
+            m_glView->setViewMatrix(mat);
 
-        //    m_glView->update();
+            m_lastPanPos = curPos;
+
+            update();
+        }
+
     }
 
-    auto world = m_scene->screenToWorld({ event->pos().x(), event->pos().y() });
     sigCoordChanged(world.x(), world.y());
 
     QWidget::mouseMoveEvent(event);
@@ -460,6 +368,10 @@ void ViewWrapper::mouseMoveEvent(QMouseEvent* event)
 
 void ViewWrapper::keyPressEvent(QKeyEvent* event)
 {
+    if (event->key() == Qt::Key_Escape)
+    {
+        m_bPanning = false;
+    }
     if (event->key() == Qt::Key_Delete)
     {
         m_glView->clearLinePoints();

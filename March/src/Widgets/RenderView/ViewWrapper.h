@@ -26,13 +26,13 @@ public:
 
     void updateScene();
 
-public:
-    QPointF screenToNDC(const QPoint& screenPos) const;
-    QPointF screenToWorld(const QPoint& screenPos) const;
-    QPointF ndcToWorld(float ndcX, float ndcY) const;
-    QPointF worldToNDC(float worldX, float worldY) const;
-    QPointF worldToScreen(float worldX, float worldY) const;
-    QPointF ndcToScreen(float ndcX, float ndcY) const;
+//public:
+    //QPointF screenToNDC(const QPoint& screenPos) const;
+    //QPointF screenToWorld(const QPoint& screenPos) const;
+//    QPointF ndcToWorld(float ndcX, float ndcY) const;
+//    QPointF worldToNDC(float worldX, float worldY) const;
+//    QPointF worldToScreen(float worldX, float worldY) const;
+//    QPointF ndcToScreen(float ndcX, float ndcY) const;
 
 signals:
     void sigCoordChanged(float x, float y); // 信号：鼠标坐标变化
@@ -62,7 +62,7 @@ private:
     qint64 m_lastMiddleClickTime = 0;// 中键点击时间
     QPoint m_lastMiddlePos;// 鼠标位置
 
-    bool m_isPanning = false; // 是否平移
+    bool m_bPanning = false; // 是否平移
     //double m_dZoomFactor = 1.0; // 缩放因子
 
     QPoint m_lastPanPos; // 上次平移位置
