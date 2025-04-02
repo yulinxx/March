@@ -1,0 +1,61 @@
+cmake_minimum_required(VERSION 3.10)
+
+project(MEngine VERSION 1.0.0 LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+file(GLOB_RECURSE HEADERS "include/*.h")
+GroupHeaderFiles("${HEADERS}" "${CMAKE_CURRENT_SOURCE_DIR}")
+
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+FindAndGroupFiles(${CMAKE_CURRENT_SOURCE_DIR})
+
+find_package(Eigen3 CONFIG REQUIRED)
+find_package(Boost REQUIRED)
+
+add_library(${PROJECT_NAME} SHARED ${SOURCES} ${HEADERS})
+
+if(WIN32)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE MENGINE_EXPORTS)
+    set_target_properties(${PROJECT_NAME} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS OFF)
+endif()
+
+target_include_directories(${PROJECT_NAME} PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/Eng
+    # ${CMAKE_CURRENT_SOURCE_DIR}/include/Eng/Command
+    # ${CMAKE_CURRENT_SOURCE_DIR}/include/Eng/DrawData
+    # ${CMAKE_CURRENT_SOURCE_DIR}/include/Eng/Scene
+    # ${CMAKE_CURRENT_SOURCE_DIR}/include/Eng/Entity
+    ${CMAKE_SOURCE_DIR}/MLog/include
+    ${CMAKE_SOURCE_DIR}/Utility/include
+    ${CMAKE_SOURCE_DIR}/FileHandler/include
+    # ${CMAKE_SOURCE_DIR}/MRenderInterface/include
+)
+
+if(OUT_CMAKE_MSG)
+message("===== ${PROJECT_NAME} 包含目录路径如下:")
+message(STATUS "1. ${CMAKE_CURRENT_SOURCE_DIR}/include")
+message(STATUS "2. ${CMAKE_CURRENT_SOURCE_DIR}/include/Entity") 
+message(STATUS "3. ${CMAKE_SOURCE_DIR}/MLog/include")
+message(STATUS "4. ${CMAKE_SOURCE_DIR}/Utility/include")
+message(" ==============\n")
+endif(OUT_CMAKE_MSG)
+
+# 链接 Boost 库
+if(Boost_FOUND)
+    target_include_directories(${PROJECT_NAME} PUBLIC ${Boost_INCLUDE_DIRS})
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${Boost_LIBRARIES})
+endif()
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    Eigen3::Eigen
+    MLog
+    Utility
+)
+
+if(ENABLE_GTEST)
+    find_package(GTest REQUIRED)
+    enable_testing()
+    add_subdirectory(tests)
+endif()

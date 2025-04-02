@@ -1,0 +1,27 @@
+[submodule "FileHandler"]
+	path = FileHandler
+	url = git@gitlab.com:yulinxx/FileHandler.git
+[submodule "HardwareControl"]
+	path = HardwareControl
+	url = git@gitlab.com:yulinxx/HardwareControl.git
+[submodule "MLog"]
+	path = MLog
+	url = git@gitlab.com:yulinxx/MLog.git
+[submodule "MEngine"]
+	path = MEngine
+	url = git@gitlab.com:yulinxx/MEngine.git
+
+[submodule "MLog"]
+	path = MLog
+	url = git@gitlab.com:yulinxx/MLog.git
+[submodule "MRender"]
+	path = MRender
+	url = git@gitlab.com:yulinxx/MRender.git
+	
+[submodule "MRenderInterface"]
+	path = MRenderInterface
+	url = git@gitlab.com:yulinxx/MRenderInterface.git
+[submodule "Utility"]
+	path = Utility
+	url = git@gitlab.com:yulinxx/Utility.git
+

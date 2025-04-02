@@ -1,0 +1,49 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/open.png</file>
+        <file>icons/save.png</file>
+        <file>icons/cut.png</file>
+        <file>icons/new.png</file>
+        <file>icons/copy.png</file>
+        <file>icons/paste.png</file>
+        <file>icons/draw-select.png</file>
+        <file>icons/draw-new.png</file>
+        <file>icons/draw-point.png</file>
+        <file>icons/draw-line.png</file>
+        <file>icons/draw-pline.png</file>
+        <file>icons/draw-polygon.png</file>
+        <file>icons/draw-circle.png</file>
+        <file>icons/draw-text.png</file>
+        <file>icons/draw-image.png</file>
+        <file>icons/draw-bezier.png</file>
+        <file>icons/draw-positive-arc.png</file>
+        <file>icons/draw-three-point-arc.png</file>
+        <file>icons/draw-elliptic-arc.png</file>
+        <file>icons/draw-cad-object.png</file>
+        <file>icons/move-18.png</file>
+        <file>icons/editor-5.png</file>
+        <file>icons/text-border.png</file>
+        <file>icons/polygon-2.png</file>
+        <file>icons/rectangle-5.png</file>
+        <file>icons/select-15.png</file>
+        <file>icons/setting.png</file>
+        <file>icons/text-55.png</file>
+        <file>icons/three-point-arc.png</file>
+        <file>icons/log.png</file>
+        <file>icons/close.png</file>
+        <file>icons/restore.png</file>
+        <file>svg/logo.svg</file>
+        
+        <!--  QSS  -->
+        <file>theme/MetroUI.qss</file>
+        <file>theme/Aqua.qss</file>
+        <file>theme/ConsoleStyle.qss</file>
+        <file>theme/ElegantDark.qss</file>
+        <file>theme/MacOS.qss</file>
+        <file>theme/ManjaroMix.qss</file>
+        <file>theme/MaterialDark.qss</file>
+        <file>theme/Ubuntu.qss</file>
+        <!-- QSS -->
+
+    </qresource>
+</RCC>
