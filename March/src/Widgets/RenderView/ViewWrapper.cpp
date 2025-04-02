@@ -27,7 +27,7 @@ ViewWrapper::ViewWrapper(QWidget* parent) : QWidget(parent)
 
     // 启用鼠标跟踪
     setMouseTracking(true);
-    m_glView->setMouseTracking(true); 
+    m_glView->setMouseTracking(true);
 
     setFocusPolicy(Qt::StrongFocus);
 }
@@ -223,17 +223,29 @@ void ViewWrapper::mousePressEvent(QMouseEvent* event)
     else if (event->button() == Qt::LeftButton)
     {
 
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_real_distribution<float> disColor(0.0f, 1.0f);
-        float r = disColor(gen);
-        float g = disColor(gen);
-        float b = disColor(gen);
+        // 记录选择起始点
+        m_selectStart = m_scene->screenToWorld({ event->pos().x(), event->pos().y() });
+        m_selectEnd = m_selectStart;
+        m_bSelecting = true;
 
-        auto world = m_scene->screenToWorld({ event->pos().x(), event->pos().y() });
+        // 清除之前的选择
+        //m_scene->clearSelection();
+        //m_glView->update();
 
-        m_glView->addLinePoint({ float(world.x()), float(world.y()), 0.0f, r, g, b });
-        m_glView->update();
+        {
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_real_distribution<float> disColor(0.0f, 1.0f);
+            float r = disColor(gen);
+            float g = disColor(gen);
+            float b = disColor(gen);
+
+            auto world = m_scene->screenToWorld({ event->pos().x(), event->pos().y() });
+
+            m_glView->addLinePoint({ float(world.x()), float(world.y()), 0.0f, r, g, b });
+            m_glView->update();
+
+        }
     }
     else if (event->button() == Qt::RightButton)
     {
@@ -247,7 +259,7 @@ void ViewWrapper::mousePressEvent(QMouseEvent* event)
         Ut::Vec2d center = m_scene->getViewCenter();
 
         float dScale = m_scene->getViewScale();
- 
+
         std::uniform_real_distribution<float> disX(center.x() - (sz.x() * 0.5), center.x() + (sz.x() * 0.5));
         std::uniform_real_distribution<float> disY(center.y() - (sz.y() * 0.5), center.y() + (sz.y() * 0.5));
 
@@ -273,7 +285,39 @@ void ViewWrapper::mousePressEvent(QMouseEvent* event)
 
 void ViewWrapper::mouseReleaseEvent(QMouseEvent* event)
 {
-    if (event->button() == Qt::MiddleButton)
+    if (event->button() == Qt::LeftButton && m_bSelecting)
+    {
+        
+        // 计算选择区域
+        Ut::Vec2d minPt(
+            std::min(m_selectStart.x(), m_selectEnd.x()),
+            std::min(m_selectStart.y(), m_selectEnd.y())
+        );
+
+        Ut::Vec2d maxPt(
+            std::max(m_selectStart.x(), m_selectEnd.x()),
+            std::max(m_selectStart.y(), m_selectEnd.y())
+        );
+
+        // 判断选择方向
+        bool bCrossSel = (m_selectEnd.x() < m_selectStart.x());
+
+        // 执行选择
+        if (bCrossSel)
+        {
+            qDebug() << "Cross selection";
+            //m_scene->selectByCross(minPt, maxPt); // 交选
+        }
+        else
+        {
+            qDebug() << "Window selection";
+            //m_scene->selectByWindow(minPt, maxPt); // 窗选
+        }
+
+        m_bSelecting = false;
+        m_glView->update();
+    }
+    else if (event->button() == Qt::MiddleButton)
     {
         m_bPanning = false;
     }
@@ -327,9 +371,9 @@ void ViewWrapper::wheelEvent(QWheelEvent* event)
         m_glView->update();
 
         auto centerPt = m_scene->getViewCenter();
-        std::cout<< "Center:" << centerPt.x() << " " << centerPt.y() << std::endl;
+        std::cout << "Center:" << centerPt.x() << " " << centerPt.y() << std::endl;
         auto sz = m_scene->getViewSize();
-        std::cout<< "Size:" << sz.x() << " " << sz.y() << std::endl;
+        std::cout << "Size:" << sz.x() << " " << sz.y() << std::endl;
 
         QWidget::wheelEvent(event);
     }
@@ -337,10 +381,14 @@ void ViewWrapper::wheelEvent(QWheelEvent* event)
 
 void ViewWrapper::mouseMoveEvent(QMouseEvent* event)
 {
-
     QPoint curPos = event->pos();
     auto world = m_scene->screenToWorld({ curPos.x(), curPos.y() });
 
+    if (m_bSelecting && (event->buttons() & Qt::LeftButton))
+    {
+        // 更新选择终点并重绘
+        m_selectEnd = world;
+    }
     if (event->buttons() & Qt::MiddleButton)
     {
         if (m_bPanning)

@@ -26,13 +26,13 @@ public:
 
     void updateScene();
 
-//public:
-    //QPointF screenToNDC(const QPoint& screenPos) const;
-    //QPointF screenToWorld(const QPoint& screenPos) const;
-//    QPointF ndcToWorld(float ndcX, float ndcY) const;
-//    QPointF worldToNDC(float worldX, float worldY) const;
-//    QPointF worldToScreen(float worldX, float worldY) const;
-//    QPointF ndcToScreen(float ndcX, float ndcY) const;
+    //public:
+        //QPointF screenToNDC(const QPoint& screenPos) const;
+        //QPointF screenToWorld(const QPoint& screenPos) const;
+    //    QPointF ndcToWorld(float ndcX, float ndcY) const;
+    //    QPointF worldToNDC(float worldX, float worldY) const;
+    //    QPointF worldToScreen(float worldX, float worldY) const;
+    //    QPointF ndcToScreen(float ndcX, float ndcY) const;
 
 signals:
     void sigCoordChanged(float x, float y); // 信号：鼠标坐标变化
@@ -66,6 +66,11 @@ private:
     //double m_dZoomFactor = 1.0; // 缩放因子
 
     QPoint m_lastPanPos; // 上次平移位置
+
+    // 窗、交选
+    bool m_bSelecting = false;
+    Ut::Vec2d m_selectStart;
+    Ut::Vec2d m_selectEnd;
 
 };
 
