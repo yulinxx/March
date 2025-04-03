@@ -24,6 +24,7 @@ public:
     MRender::MarchView* getGlView() const;
     MEngine::Scene* getScene();
 
+    void updateRender();
     void updateScene();
 
     void setOperation(std::shared_ptr<OptBase> operation);
@@ -63,8 +64,8 @@ private:
     Ut::Vec2d m_selectStart;
     Ut::Vec2d m_selectEnd;
 
+    std::shared_ptr<OptBase> m_selectOpt = nullptr; 
     std::shared_ptr<OptBase> m_curOpt = nullptr;
-
 
 };
 

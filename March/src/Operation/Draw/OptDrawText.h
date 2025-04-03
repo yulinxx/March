@@ -8,6 +8,11 @@ class OptDrawText : public OptBase
 {
 public:
     OptDrawText(MEngine::Scene* scene);
+    ~OptDrawText() override;
+
+    // 实现enter()和exit()函数
+    void enter() override;
+    void exit() override;
 
     void mousePressEvent(QMouseEvent* event) override;
     void mouseReleaseEvent(QMouseEvent* event) override;

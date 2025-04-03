@@ -7,6 +7,11 @@ class OptDrawSpline : public OptBase
 {
 public:
     OptDrawSpline(MEngine::Scene* scene);
+    ~OptDrawSpline() override;
+
+    // 实现enter()和exit()函数
+    void enter() override;
+    void exit() override;
 
 public:
     virtual void mousePressEvent(QMouseEvent* event);

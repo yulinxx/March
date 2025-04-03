@@ -10,6 +10,7 @@
 #include <QDebug>
 
 #include "Entity/Line.h"
+#include "DrawData/LineData.h"
 
 ViewWrapper::ViewWrapper(QWidget* parent) : QWidget(parent)
 {
@@ -26,11 +27,11 @@ ViewWrapper::ViewWrapper(QWidget* parent) : QWidget(parent)
 
     setLayout(layout);
 
+    m_selectOpt = std::make_shared<OptBase>(m_scene);
+    m_selectOpt->setGLView(m_glView);
+    m_selectOpt->setParent(this);
+    m_curOpt = m_selectOpt;
 
-    m_curOpt = std::make_shared<OptBase>(m_scene);
-    m_curOpt->setGLView(m_glView);
-
-    // 启用鼠标跟踪
     setMouseTracking(true);
     setFocusPolicy(Qt::StrongFocus);
 }
@@ -77,6 +78,25 @@ MEngine::Scene* ViewWrapper::getScene()
     return m_scene;
 }
 
+
+void ViewWrapper::updateRender()
+{
+    m_scene->paint();
+
+    auto pairData = m_scene->getDrawData()->getLineData();
+    float* pt = pairData.first;
+    size_t sz = pairData.second;
+
+    for (size_t i = 0; i < sz; i += 2)
+    {
+        MRender::ColorPoint pts{ *(pt + i), *(pt + i + 1), 0.0f, 1.0f, 0.0f, 0.0f };
+        m_glView->addLinePoint(pts);
+    }
+
+    m_glView->update();
+
+}
+
 void ViewWrapper::updateScene()
 {
     m_glView->clearLinePoints();
@@ -108,7 +128,15 @@ void ViewWrapper::updateScene()
 
 void ViewWrapper::setOperation(std::shared_ptr<OptBase> operation)
 {
-    m_curOpt = operation;
+    m_curOpt->exit();
+
+    if(operation == nullptr)
+        m_curOpt = std::make_shared<OptBase>(m_scene);
+    else
+        m_curOpt = operation;
+
+    m_curOpt->setGLView(m_glView);
+    m_curOpt->setParent(this);
 }
 
 bool ViewWrapper::eventFilter(QObject* obj, QEvent* event)

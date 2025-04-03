@@ -7,6 +7,11 @@ class OptDrawCircle : public OptBase
 {
 public:
     OptDrawCircle(MEngine::Scene* scene);
+    ~OptDrawCircle() override;
+
+    // 实现enter()和exit()函数
+    void enter() override;
+    void exit() override;
 
 public:
     void mousePressEvent(QMouseEvent* event) override;

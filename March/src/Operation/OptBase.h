@@ -8,6 +8,8 @@
 
 #include "Scene/Scene.h"
 
+
+class ViewWrapper;
 namespace MRender { class MarchView; }
 
 class OptBase
@@ -17,6 +19,9 @@ public:
     virtual ~OptBase();
 
 public:
+    virtual void enter();
+    virtual void exit();
+
     // 定义鼠标和键盘事件的虚函数
     virtual void mousePressEvent(QMouseEvent* event);
     virtual void mouseReleaseEvent(QMouseEvent* event);
@@ -29,9 +34,12 @@ public:
 public:
     void resetView();
 
+    void setParent(ViewWrapper* parent);
     void setGLView(MRender::MarchView* glView);
 
-private:
+//private:
+public:
+    ViewWrapper* m_viewWrap = nullptr;
     MEngine::Scene* m_scene = nullptr;
     MRender::MarchView* m_glView = nullptr;
 

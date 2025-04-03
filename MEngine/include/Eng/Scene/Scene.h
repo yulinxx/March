@@ -23,8 +23,9 @@ namespace MEngine
         CommandManager* getCmdManager();
 
         void paint();   // 绘图入口
+        DrawData* getDrawData();
 
-        Mat3 getViewMatrix() const; // 获取视口矩阵
+        Mat3& getViewMatrix() const; // 获取视口矩阵
 
         //void resize(size_t width, size_t height);
         void setView(size_t width, size_t height); // 设置视口大小

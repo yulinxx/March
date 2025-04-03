@@ -1,4 +1,5 @@
 .vs
+.gi
 .vscode
 out
 build
@@ -35,3 +36,4 @@ build
 *.exe
 *.out
 *.app
+.gita/COMMIT_EDITMSG

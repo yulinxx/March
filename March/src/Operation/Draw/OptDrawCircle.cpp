@@ -1,7 +1,20 @@
 #include "OptDrawCircle.h"
 
-OptDrawCircle::OptDrawCircle(MEngine::Scene* scene) : OptBase(scene)
+OptDrawCircle::OptDrawCircle(MEngine::Scene* scene) : OptBase(scene) {}
+OptDrawCircle::~OptDrawCircle() {}
+
+// 实现enter()函数
+void OptDrawCircle::enter()
 {
+    // 这里可以添加进入绘制圆形操作时的具体逻辑
+    // 例如，初始化圆形绘制所需的数据、显示提示信息等
+}
+
+// 实现exit()函数
+void OptDrawCircle::exit()
+{
+    // 这里可以添加退出绘制圆形操作时的具体逻辑
+    // 例如，清理圆形绘制相关的数据、保存状态等
 }
 
 void OptDrawCircle::mousePressEvent(QMouseEvent* event)

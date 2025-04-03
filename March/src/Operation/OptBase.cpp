@@ -1,6 +1,7 @@
 #include "OptBase.h"
 
 #include "Render/MarchView.h"
+#include "Widgets/RenderView/ViewWrapper.h"
 
 #include <QDateTime>
 #include <QApplication>
@@ -8,12 +9,23 @@
 #include <algorithm>
 #include <random>
 
-OptBase::OptBase(MEngine::Scene* scene) : m_scene(scene)
+OptBase::OptBase(MEngine::Scene* scene)
+    : m_scene(scene)
 {
 }
 
 OptBase::~OptBase()
 {
+}
+
+void OptBase::enter()
+{
+
+}
+
+void OptBase::exit()
+{
+
 }
 
 void OptBase::mousePressEvent(QMouseEvent* event)
@@ -32,6 +44,7 @@ void OptBase::mousePressEvent(QMouseEvent* event)
                 resetView();
                 return;
             }
+
             m_lastMiddleClickTime = curTime;
             m_lastMiddlePos = event->pos();
             m_lastPos = event->pos();
@@ -48,6 +61,7 @@ void OptBase::mousePressEvent(QMouseEvent* event)
         //m_scene->clearSelection();
         //m_glView->update();
 
+        if (0)
         {
             std::random_device rd;
             std::mt19937 gen(rd());
@@ -64,31 +78,35 @@ void OptBase::mousePressEvent(QMouseEvent* event)
     }
     else if (event->button() == Qt::RightButton)
     {
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_real_distribution<float> disColor(0.0f, 1.0f);
-
-        Ut::Vec2d sz = m_scene->getViewSize();
-        float aspect = float(sz.x() / sz.y());
-
-        Ut::Vec2d center = m_scene->getViewCenter();
-
-        float dScale = m_scene->getViewScale();
-
-        std::uniform_real_distribution<float> disX(center.x() - (sz.x() * 0.5), center.x() + (sz.x() * 0.5));
-        std::uniform_real_distribution<float> disY(center.y() - (sz.y() * 0.5), center.y() + (sz.y() * 0.5));
-
-        for (int i = 0; i < 100; ++i)
+        if (0)
         {
-            float randomX = disX(gen);
-            float randomY = disY(gen);
-            float r = disColor(gen);
-            float g = disColor(gen);
-            float b = disColor(gen);
-            m_glView->addLinePoint({ randomX, randomY, 0.0f, r, g, b });
+
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_real_distribution<float> disColor(0.0f, 1.0f);
+
+            Ut::Vec2d sz = m_scene->getViewSize();
+            float aspect = float(sz.x() / sz.y());
+
+            Ut::Vec2d center = m_scene->getViewCenter();
+
+            float dScale = m_scene->getViewScale();
+
+            std::uniform_real_distribution<float> disX(center.x() - (sz.x() * 0.5), center.x() + (sz.x() * 0.5));
+            std::uniform_real_distribution<float> disY(center.y() - (sz.y() * 0.5), center.y() + (sz.y() * 0.5));
+
+            for (int i = 0; i < 100; ++i)
+            {
+                float randomX = disX(gen);
+                float randomY = disY(gen);
+                float r = disColor(gen);
+                float g = disColor(gen);
+                float b = disColor(gen);
+                m_glView->addLinePoint({ randomX, randomY, 0.0f, r, g, b });
+            }
+            m_glView->update();
         }
 
-        m_glView->update();
     }
     else if (event->button() == Qt::MiddleButton)
     {
@@ -153,60 +171,31 @@ void OptBase::mouseMoveEvent(QMouseEvent* event)
 
             m_scene->pan(dir);
 
-            auto mat = m_scene->getViewMatrix();
+            auto& mat = m_scene->getViewMatrix();
             m_glView->setViewMatrix(mat);
 
             m_lastPanPos = curPos;
-
-            //update();
         }
     }
 }
 
 void OptBase::wheelEvent(QWheelEvent* event)
 {
-    if (0)
-    {
-        //QPoint mousePos = event->position().toPoint();
-        //float currentScale = getScale();
-        //QVector2D curTrans = getTranslation();
-        //float delta = event->angleDelta().y() > 0 ? 1.1f : 0.9f;
-        ////QPointF worldMousePos = screenToWorld(mousePos);
-        //auto worldMousePos = m_scene->screenToWorld({ mousePos.x(), mousePos.y() });
-        //float newScale = currentScale * delta;
+    QPoint curPos = event->pos();
+    auto world = m_scene->screenToWorld({ curPos.x(), curPos.y() });
 
-        //// 计算新的平移量，以保持鼠标位置在缩放后仍然是视图中心
-        //QVector2D newTranslation = curTrans + QVector2D(
-        //    (worldMousePos.x() - curTrans.x()) / currentScale -
-        //    (worldMousePos.x() - curTrans.x()) / newScale,
-        //    (worldMousePos.y() - curTrans.y()) / currentScale -
-        //    (worldMousePos.y() - curTrans.y()) / newScale
-        //) * newScale; // 此处乘以newScale是为了调整平移量到新的缩放级别
+    float delta = event->angleDelta().y() > 0 ? 1.1f : 0.9f;
 
-        //// 更新视图的缩放比例和平移量
-        ////m_glView->setScale(newScale);
-        //m_glView->setTranslation(newTranslation);
-        //m_glView->update();
+    m_scene->zoomAt(Ut::Vec2{ world.x(), world.y() }, delta);
+    //m_scene->setZoom(delta);
 
-    }
-    else // 以视图为中心缩放
-    {
-        QPoint curPos = event->pos();
-        auto world = m_scene->screenToWorld({ curPos.x(), curPos.y() });
+    Ut::Mat3& matView = m_scene->getViewMatrix();
+    m_glView->setViewMatrix(matView);
 
-        float delta = event->angleDelta().y() > 0 ? 1.1f : 0.9f;
+    m_glView->update();
 
-        m_scene->zoomAt(Ut::Vec2{ world.x(), world.y() }, delta);
-        //m_scene->setZoom(delta);
+    //sigCoordChanged(world.x(), world.y());
 
-        Ut::Mat3 matView = m_scene->getViewMatrix();
-        m_glView->setViewMatrix(matView);
-
-        m_glView->update();
-
-        //sigCoordChanged(world.x(), world.y());
-
-    }
 }
 
 void OptBase::keyPressEvent(QKeyEvent* event)
@@ -214,6 +203,7 @@ void OptBase::keyPressEvent(QKeyEvent* event)
     if (event->key() == Qt::Key_Escape)
     {
         m_bPanning = false;
+        m_viewWrap->setOperation(nullptr);
     }
     if (event->key() == Qt::Key_Delete)
     {
@@ -227,7 +217,7 @@ void OptBase::resizeEvent(QResizeEvent* event)
     auto sz = m_glView->size();
     m_scene->setView(sz.width(), sz.height());
 
-    auto mat = m_scene->getViewMatrix();
+    auto& mat = m_scene->getViewMatrix();
     m_glView->setViewMatrix(mat);
 }
 
@@ -236,10 +226,15 @@ void OptBase::resetView()
     auto sz = m_glView->size();
     m_scene->setView(sz.width(), sz.height());
 
-    auto mat = m_scene->getViewMatrix();
+    auto& mat = m_scene->getViewMatrix();
     m_glView->clearLinePoints();
     m_glView->setViewMatrix(mat);
     m_glView->update();
+}
+
+void OptBase::setParent(ViewWrapper* parent)
+{
+    m_viewWrap = parent;
 }
 
 void OptBase::setGLView(MRender::MarchView* glView)

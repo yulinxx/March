@@ -1,18 +1,34 @@
 #include "DrawData/DrawData.h"
 #include "DrawData/LineData.h"
-#include "Entity/Entity.h"
 
 namespace MEngine
 {
+    class DrawData::Impl
+    {
+    public:
+        std::unique_ptr<LineData> m_lineData{ nullptr };
+    };
+
+    DrawData::DrawData()
+    {
+        pImpl = new Impl();
+    }
+
+    DrawData::~DrawData()
+    {
+        delete pImpl;
+    }
+
     void DrawData::processEntities(Group* group)
+
     {
         if (!group)
             return;
 
-        if (!m_lineData)
-            m_lineData = std::make_unique<LineData>();
+        if (!pImpl->m_lineData)
+            pImpl->m_lineData = std::make_unique<LineData>();
 
-        m_lineData->clear();
+        pImpl->m_lineData->clear();
 
         // auto collectData = [&](Entity* entity) {
         //     switch (entity->m_eType) {
@@ -63,7 +79,7 @@ namespace MEngine
                 case ETYPE::LINE:
                 {
                     auto line = static_cast<Line*>(entity);
-                    m_lineData->collectLineData(line);
+                    pImpl->m_lineData->collectLineData(line);
                     break;
                 }
                 //case ETYPE::ARC:
@@ -89,5 +105,20 @@ namespace MEngine
                 }
             }
         }
+    }
+
+
+    float* DrawData::getLineData(size_t& sz) const
+    {
+        if (nullptr == pImpl->m_lineData)
+            return nullptr;
+
+        sz = pImpl->m_lineData->m_vLinePts.size();
+        return pImpl->m_lineData->m_vLinePts.data();
+    }
+
+    std::pair<float*, size_t> DrawData::getLineData() const
+    {
+        return { pImpl->m_lineData->m_vLinePts.data(), pImpl->m_lineData->m_vLinePts.size() };
     }
 }

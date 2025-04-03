@@ -46,7 +46,12 @@ namespace MEngine
         m_sceneData->m_drawData->processEntities(m_sceneData->m_rootGroup);
     }
 
-    Mat3 Scene::getViewMatrix() const
+    DrawData* Scene::getDrawData()
+    {
+        return m_sceneData->m_drawData;
+    }
+
+    Mat3& Scene::getViewMatrix() const
     {
         return m_sceneData->m_matOrtho;
     }
@@ -124,7 +129,6 @@ namespace MEngine
         m_sceneData->m_cmdManager->execute(std::move(cmd));
     }
 
-    //void Scene::redo(Command* cmd)
     void Scene::redo()
     {
         m_sceneData->m_cmdManager->redo();
@@ -154,7 +158,6 @@ namespace MEngine
             int w = rect.width();
             int h = rect.height();
             m_sceneData->m_vViewSize = Ut::Vec2i{ w, h };
-            //m_sceneData->m_matOrtho.ortho2D(rect.left, rect.right, rect.bottom, rect.top);
         }
     }
 
@@ -190,8 +193,6 @@ namespace MEngine
         double centerY = -ty / b;
 
         return Ut::Vec2d(width, height);
-
-        //return m_sceneData->m_vViewSize;
     }
 
     Ut::Vec2d Scene::getViewCenter()
@@ -210,7 +211,6 @@ namespace MEngine
         double centerY = -ty / b;
 
         return Ut::Vec2d(centerX, centerY);
-        //return m_sceneData->m_vViewSize;
     }
 
     void Scene::setZoom(float dScale)
@@ -223,15 +223,6 @@ namespace MEngine
 
         m_sceneData->m_dZoomFactor = res;
         m_sceneData->m_matOrtho.scale(dScale);
-
-        //// 创建缩放矩阵
-        //Ut::Matrix3d zoomMatrix;
-        //zoomMatrix.identity();
-        //zoomMatrix(0, 0) = dScale;
-        //zoomMatrix(1, 1) = dScale;
-
-        //// 对正交矩阵应用缩放
-        //m_sceneData->m_matOrtho *= m_sceneData->m_matOrtho * zoomMatrix;
     }
 
     float Scene::getViewScale()
@@ -245,17 +236,6 @@ namespace MEngine
             return;
 
         m_sceneData->m_matOrtho.scale(factor, factor, viewPos[0], viewPos[1]);
-        //m_sceneData->m_matOrtho.scale(factor);
-
-        // m_sceneData->m_matOrtho = Ut::Matrix3d::scaleAt(factor, factor, viewPos[0], viewPos[1]) * m_sceneData->m_matOrtho;
-
-        // Convert view coordinates to scene coordinates
-        //Ut::Vec<double, 2> scenePos = viewToScene(viewPos);
-
-        // Apply scaling around the scene position
-        // 将视图坐标转换为场景坐标
-        //Ut::Vec2 scenePos = /* 根据当前矩阵转换viewPos */;
-        //m_sceneData->zoomAt(scenePos, factor);
     }
 
     void Scene::pan(const Ut::Vec2& offset)
@@ -273,4 +253,5 @@ namespace MEngine
 
         m_sceneData->m_matOrtho.identity();
     }
+
 } // namespace MEngine

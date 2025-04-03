@@ -80,7 +80,6 @@ namespace boost
                 }
             };
 
-            // 为 Ut::Rect<T, DIM> 定义 Boost Geometry Traits
             template <typename T, int DIM>
             struct tag<Ut::Rect<T, DIM>>
             {
@@ -157,15 +156,15 @@ namespace MEngine
     using RTreeValue = std::pair<Ut::Rect2d, std::shared_ptr<Entity>>;
     using RTree = bgi::rtree<RTreeValue, bgi::quadratic<16>>;
 
-    // 空间索引管理类声明
     class MENGINE_API EntityIndex
     {
     public:
         EntityIndex();
 
+    public:
         // 插入单个实体及其边界框
         void insert(std::shared_ptr<Entity> entity, const Ut::Rect2d& box);
-        void insert(Entity* entity, const Ut::Rect2d& box); // 兼容原始指针
+        void insert(Entity* entity, const Ut::Rect2d& box);
 
         // 批量插入
         void insertBatch(const std::vector<std::pair<std::shared_ptr<Entity>, Ut::Rect2d>>& entities);
@@ -196,7 +195,7 @@ namespace MEngine
         bool empty() const;
 
     private:
-        RTree m_entTree; // R-tree实例
+        RTree m_entTree;
     };
 } // namespace MEngine
 

@@ -1,7 +1,20 @@
 #include "OptDrawPoint.h"
 
-OptDrawPoint::OptDrawPoint(MEngine::Scene* scene) : OptBase(scene)
+OptDrawPoint::OptDrawPoint(MEngine::Scene* scene) : OptBase(scene) {}
+OptDrawPoint::~OptDrawPoint() {}
+
+// 实现enter()函数
+void OptDrawPoint::enter()
 {
+    // 这里可以添加进入绘制点操作时的具体逻辑
+    // 例如，初始化点绘制所需的数据、显示提示信息等
+}
+
+// 实现exit()函数
+void OptDrawPoint::exit()
+{
+    // 这里可以添加退出绘制点操作时的具体逻辑
+    // 例如，清理点绘制相关的数据、保存状态等
 }
 
 void OptDrawPoint::mousePressEvent(QMouseEvent* event)
