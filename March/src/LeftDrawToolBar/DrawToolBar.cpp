@@ -1,12 +1,13 @@
 #include "DrawToolBar.h"
-#include <QAction>
+
 #include <QIcon>
 #include <QLayout>
 #include "def.h"
 
-#include "../Widgets/TipWidget.h"
+#include "Widgets/TipWidget.h"
 
-DrawToolBar::DrawToolBar(QWidget* parent) : QDockWidget(parent)
+DrawToolBar::DrawToolBar(QWidget* parent)
+    : QDockWidget(parent)
 {
     initUI();
     this->adjustSize();
@@ -24,105 +25,60 @@ void DrawToolBar::initUI()
     setAllowedAreas(Qt::AllDockWidgetAreas);
     setWidget(m_toolbar);
 
-    m_actSelect = new QAction(QIcon("://icons/draw-select.png"), tr("Select"), this);
-    m_actDrawPoint = new QAction(QIcon("://icons/draw-point.png"), tr("Point"), this);
-    m_actDrawLine = new QAction(QIcon("://icons/draw-line.png"), tr("Line"), this);
-    m_actDrawPline = new QAction(QIcon("://icons/draw-pline.png"), tr("Polyline"), this);
-    m_actDrawCircle = new QAction(QIcon("://icons/draw-circle.png"), tr("Circle"), this);
-    m_actDrawText = new QAction(QIcon("://icons/draw-text.png"), tr("Text"), this);
-    m_actDrawArc = new QAction(QIcon("://icons/draw-elliptic-arc.png"), tr("Arc"), this);
-    m_actDrawPolygon = new QAction(QIcon("://icons/draw-polygon.png"), tr("Polygon"), this);
-    m_actDrawImage = new QAction(QIcon("://icons/draw-image.png"), tr("Image"), this);
 
-    connect(m_actSelect, &QAction::triggered, this, [this]() {
-        emit sigEntityOpration(static_cast<int>((0)));
-        });
-    connect(m_actDrawPoint, &QAction::triggered, this, [this]() {
-        emit sigCreateEntity(static_cast<int>(DrawType::Point));
-        });
-    connect(m_actDrawLine, &QAction::triggered, this, [this]() {
-        emit sigCreateEntity(static_cast<int>((DrawType::Line)));
-        });
-    connect(m_actDrawPline, &QAction::triggered, this, [this]() {
-        emit sigCreateEntity(static_cast<int>((DrawType::Polyline)));
-        });
-    connect(m_actDrawCircle, &QAction::triggered, this, [this]() {
-        emit sigCreateEntity(static_cast<int>((DrawType::Circle)));
-        });
-    connect(m_actDrawText, &QAction::triggered, this, [this]() {
-        emit sigCreateEntity(static_cast<int>((DrawType::Text)));
-        });
-    connect(m_actDrawArc, &QAction::triggered, this, [this]() {
-        TipWidget::instance()->showMessage(tr("Arc"));
-        });
-    connect(m_actDrawPolygon, &QAction::triggered, this, [this]() {
-        TipWidget::instance()->showMessage(tr("Polygon"));
-        });
-    connect(m_actDrawImage, &QAction::triggered, this, &DrawToolBar::slotDrawImage);
+    // 使用有序map管理操作类型与action的对应关系
+    const std::map<int, std::pair<QString, QString>> mapActionCfg{
+        {static_cast<int>(DrawType::Select),  {tr("Select"),  "://icons/draw-select.png"}},
+        {static_cast<int>(DrawType::Point),   {tr("Point"),   "://icons/draw-point.png"}},
+        {static_cast<int>(DrawType::Line),    {tr("Line"),    "://icons/draw-line.png"}},
+        {static_cast<int>(DrawType::Polyline),{tr("Polyline"),"://icons/draw-pline.png"}},
+        {static_cast<int>(DrawType::Circle),  {tr("Circle"),  "://icons/draw-circle.png"}},
+        {static_cast<int>(DrawType::Text),    {tr("Text"),    "://icons/draw-text.png"}},
+        {static_cast<int>(DrawType::Arc),     {tr("Arc"),     "://icons/draw-elliptic-arc.png"}},
+        {static_cast<int>(DrawType::Polygon), {tr("Polygon"), "://icons/draw-polygon.png"}},
+        {static_cast<int>(DrawType::Image),   {tr("Image"),   "://icons/draw-image.png"}}
+    };
 
-    m_toolbar->addAction(m_actSelect);
+    // 批量创建并配置action
+    for (const auto& [type, config] : mapActionCfg)
+    {
+        QAction* action = new QAction(QIcon(config.second), config.first, this);
+        action->setData(static_cast<int>(type));
+        m_mapActions[type] = action;
+    }
+
+    auto handleAction = [this]() {
+        if (auto action = qobject_cast<QAction*>(sender()))
+        {
+            DrawType type = static_cast<DrawType>(action->data().toInt());
+            if (type == DrawType::Select)
+            {
+                emit sigEntityOpration(static_cast<int>(type));
+            }
+            else
+            {
+                emit sigCreateEntity(static_cast<int>(type));
+            }
+        }
+        };
+
+    // 批量连接信号
+    for (auto& [_, action] : m_mapActions)
+    {
+        connect(action, &QAction::triggered, this, handleAction);
+    }
+
+    m_toolbar->addAction(m_mapActions[static_cast<int>(DrawType::Select)]);
+
     m_toolbar->addSeparator();
-    m_toolbar->addAction(m_actDrawPoint);
-    m_toolbar->addAction(m_actDrawLine);
-    m_toolbar->addAction(m_actDrawPline);
-    m_toolbar->addAction(m_actDrawCircle);
-    m_toolbar->addAction(m_actDrawText);
-    m_toolbar->addAction(m_actDrawArc);
-    m_toolbar->addAction(m_actDrawPolygon);
+    for (size_t i = 1; i < 7; ++i)
+    {
+        m_toolbar->addAction(m_mapActions[i]);
+    }
     m_toolbar->addSeparator();
-    m_toolbar->addAction(m_actDrawImage);
-    m_toolbar->setOrientation(Qt::Vertical);
+    m_toolbar->addAction(m_mapActions[static_cast<int>(DrawType::Image)]);
 
     connect(this, &QDockWidget::dockLocationChanged, this, &DrawToolBar::slotDockPosChanged);
-}
-
-// 绘图工具槽函数
-void DrawToolBar::slotSelect()
-{
-    emit sigEntityOpration(static_cast<int>((0)));
-}
-
-void DrawToolBar::slotDrawPoint()
-{
-    emit sigCreateEntity(static_cast<int>(DrawType::Point));
-}
-
-void DrawToolBar::slotDrawLine()
-{
-    emit sigCreateEntity(static_cast<int>((DrawType::Line)));
-}
-
-void DrawToolBar::slotDrawPline()
-{
-    emit sigCreateEntity(static_cast<int>((DrawType::Polyline)));
-}
-
-void DrawToolBar::slotDrawCircle()
-{
-    emit sigCreateEntity(static_cast<int>((DrawType::Circle)));
-}
-
-void DrawToolBar::slotDrawText()
-{
-    emit sigCreateEntity(static_cast<int>((DrawType::Text)));
-}
-
-void DrawToolBar::slotDrawArc()
-{
-    TipWidget::instance()->showMessage(tr("Arc"));
-}
-
-void DrawToolBar::slotDrawPolygon()
-{
-    TipWidget::instance()->showMessage(tr("Polygon"));
-}
-
-// 长文本测试用
-void DrawToolBar::slotDrawImage()
-{
-    TipWidget::instance()->showMessage(
-        tr("ImageImageImageImageImageImageImageImageImageImageImageImageImageImage\
-        ImageImageImageImageImageImageImageImageImageImageImageImageImageImageImageImageImageImage"));
 }
 
 void DrawToolBar::slotDockPosChanged(Qt::DockWidgetArea area)

@@ -1,8 +1,11 @@
-#ifndef LEFTDRAWTOOLBAR_DRAWTOOLBAR_H
-#define LEFTDRAWTOOLBAR_DRAWTOOLBAR_H
+#ifndef DRAWTOOLBAR_H
+#define DRAWTOOLBAR_H
+
 #include <QDockWidget>
 #include <QToolBar>
 #include <QAction>
+
+#include <map>
 
 class DrawToolBar final : public QDockWidget
 {
@@ -17,31 +20,14 @@ signals:
 private slots:
     void slotDockPosChanged(Qt::DockWidgetArea area);
 
-    void slotSelect();
-    void slotDrawPoint();
-    void slotDrawLine();
-    void slotDrawPline();
-    void slotDrawCircle();
-    void slotDrawText();
-    void slotDrawArc();
-    void slotDrawPolygon();
-    void slotDrawImage();
-
 private:
     void initUI();
 
 private:
     QToolBar* m_toolbar{ nullptr };
 
-    QAction *m_actSelect { nullptr };
-    QAction *m_actDrawPoint { nullptr };
-    QAction *m_actDrawLine { nullptr };
-    QAction *m_actDrawPline { nullptr };
-    QAction *m_actDrawCircle { nullptr };
-    QAction *m_actDrawText { nullptr };
-    QAction *m_actDrawArc { nullptr };
-    QAction *m_actDrawPolygon { nullptr };
-    QAction *m_actDrawImage { nullptr };
+    std::map<int, QAction*> m_mapActions;
+
 
 };
-#endif // LEFTDRAWTOOLBAR_DRAWTOOLBAR_H
+#endif // DRAWTOOLBAR_H
