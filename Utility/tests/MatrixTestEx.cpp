@@ -526,8 +526,6 @@ namespace
         expectMatrixEqual(product, this->identity3x3);
     }
 
-
-
     // Test 2x2 matrix inverse
     TYPED_TEST(MatrixTestEx, Inverse2x2)
     {
@@ -588,7 +586,6 @@ namespace
         }
     }
 
-
     //// 测试 2x2 矩阵求逆
     //TEST(MatrixTest, Inverse2x2)
     //{
@@ -626,7 +623,6 @@ namespace
     //{
     //    //Matrix<double, 3, 3> mat = { 1, 2, 3, 4, 5, 6, 7, 8, 10 };
     //    Matrix<double, 3, 3> mat({ 1, 2, 3, 4, 5, 6, 7, 8, 10 });
-
 
     //    try
     //    {
@@ -692,7 +688,6 @@ namespace
     //        FAIL() << "Exception thrown: " << e.what();
     //    }
     //}
-
 
     // Output stream test
     // TEST(MatrixOutputTest, OutputStream)

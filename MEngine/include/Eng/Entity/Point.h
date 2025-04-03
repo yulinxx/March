@@ -12,7 +12,9 @@ namespace MEngine
         Point(Ut::Vec2d pos);
 
         template<typename T>
-        Point(T x, T y) : m_vPos(double(x), double(y)) {}
+        Point(T x, T y) : m_vPos(double(x), double(y))
+        {
+        }
 
         ~Point() override;
 

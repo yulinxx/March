@@ -3,6 +3,8 @@
 
 #include "Scene/SceneData.h"
 
+//#include "IRender/IRenderInterface.h"
+
 namespace MEngine
 {
     class MENGINE_API Scene
@@ -15,7 +17,7 @@ namespace MEngine
         // void addEntity(Entity* entity, Group* parent = nullptr);
         // bool removeEntity(Entity* entity);
 
-        // void setRenderInterface(IRender::IRenderInterface* i);
+         //void setRenderInterface(IRender::IRenderInterface* i);
 
         Group* getRootGroup();
         CommandManager* getCmdManager();
@@ -47,7 +49,7 @@ namespace MEngine
         Ut::Vec2d screenToWorld(const Ut::Vec2d& screenPos) const;
         Ut::Vec2d ndcToWorld(const Ut::Vec2d& ndcPos) const;
         Ut::Vec2d worldToNdc(const Ut::Vec2d& worldPos) const;
-        
+
         // 执行操作命令
         void execute(CommandPtr cmd);
         void redo();

@@ -1,15 +1,42 @@
 #include "OptDrawLine.h"
 
-OptDrawLine::OptDrawLine(MEngine::Scene* scene) : OptBase(scene) {}
-
-void OptDrawLine::onMousePress(const QPointF& point) {
-    //m_scene->setStartPoint(point);
+OptDrawLine::OptDrawLine(MEngine::Scene* scene) : OptBase(scene)
+{
 }
 
-void OptDrawLine::onMouseMove(const QPointF& start, const QPointF& end) {
-    //m_scene->updateTempLine(start, end);
+void OptDrawLine::mousePressEvent(QMouseEvent* event)
+{
+    if (event->button() == Qt::LeftButton)
+    {
+        QPointF pos = event->pos();
+        //m_scene->setStartPoint(Ut::Vec2d(pos.x(), pos.y()));
+    }
 }
 
-void OptDrawLine::onMouseRelease(const QPointF& start, const QPointF& end) {
-    //m_scene->addLine(start, end);
+void OptDrawLine::mouseReleaseEvent(QMouseEvent* event)
+{
+    if (event->button() == Qt::LeftButton)
+    {
+        //QPointF start = m_scene->getStartPoint();
+        //QPointF end = event->pos();
+        //m_scene->addLine(Ut::Vec2d(start.x(), start.y()), Ut::Vec2d(end.x(), end.y()));
+    }
+}
+
+void OptDrawLine::mouseMoveEvent(QMouseEvent* event)
+{
+    if (event->buttons() & Qt::LeftButton)
+    {
+        //QPointF start = m_scene->getStartPoint();
+        //QPointF end = event->pos();
+        //m_scene->updateTempLine(Ut::Vec2d(start.x(), start.y()), Ut::Vec2d(end.x(), end.y()));
+    }
+}
+
+void OptDrawLine::wheelEvent(QWheelEvent* event)
+{
+}
+
+void OptDrawLine::keyPressEvent(QKeyEvent* event)
+{
 }

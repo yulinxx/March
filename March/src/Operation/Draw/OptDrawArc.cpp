@@ -4,17 +4,41 @@ OptDrawArc::OptDrawArc(MEngine::Scene* scene) : OptBase(scene)
 {
 }
 
-void OptDrawArc::onMousePress(const QPointF& point)
+void OptDrawArc::mousePressEvent(QMouseEvent* event)
 {
-    //m_scene->setArcStartPoint(point);
+    if (event->button() == Qt::LeftButton)
+    {
+        QPointF pos = event->pos();
+        // m_scene->setArcStartPoint(Ut::Vec2d(pos.x(), pos.y()));
+    }
 }
 
-void OptDrawArc::onMouseMove(const QPointF& start, const QPointF& end)
+void OptDrawArc::mouseReleaseEvent(QMouseEvent* event)
 {
-    //m_scene->updateTempArc(start, end);
+    if (event->button() == Qt::LeftButton)
+    {
+        // QPointF start = m_scene->getArcStartPoint();
+        // QPointF end = event->pos();
+        // m_scene->addArc(Ut::Vec2d(start.x(), start.y()), Ut::Vec2d(end.x(), end.y()));
+    }
 }
 
-void OptDrawArc::onMouseRelease(const QPointF& start, const QPointF& end)
+void OptDrawArc::mouseMoveEvent(QMouseEvent* event)
 {
-    //m_scene->addArc(start, end);
+    if (event->buttons() & Qt::LeftButton)
+    {
+        // QPointF start = m_scene->getArcStartPoint();
+        // QPointF end = event->pos();
+        // m_scene->updateTempArc(Ut::Vec2d(start.x(), start.y()), Ut::Vec2d(end.x(), end.y()));
+    }
+}
+
+void OptDrawArc::wheelEvent(QWheelEvent* event)
+{
+    // 可根据需要添加自定义处理逻辑
+}
+
+void OptDrawArc::keyPressEvent(QKeyEvent* event)
+{
+    // 可根据需要添加自定义处理逻辑
 }

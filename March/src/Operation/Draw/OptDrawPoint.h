@@ -6,12 +6,12 @@
 class OptDrawPoint : public OptBase
 {
 public:
-    OptDrawPoint(MEngine::Scene *scene);
-
-public:
-    void onMousePress(const QPointF &point) override;
-    void onMouseMove(const QPointF &start, const QPointF &end) override;
-    void onMouseRelease(const QPointF &start, const QPointF &end) override;
+    OptDrawPoint(MEngine::Scene* scene);
+    void mousePressEvent(QMouseEvent* event) override;
+    void mouseReleaseEvent(QMouseEvent* event) override;
+    void mouseMoveEvent(QMouseEvent* event) override;
+    void wheelEvent(QWheelEvent* event) override;
+    void keyPressEvent(QKeyEvent* event) override;
 };
 
 #endif // OPTDRAWPOINT_H

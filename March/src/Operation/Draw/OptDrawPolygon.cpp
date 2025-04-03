@@ -4,17 +4,38 @@ OptDrawPolygon::OptDrawPolygon(MEngine::Scene* scene) : OptBase(scene)
 {
 }
 
-void OptDrawPolygon::onMousePress(const QPointF& point)
+void OptDrawPolygon::mousePressEvent(QMouseEvent* event)
 {
-    //m_scene->addPolygonVertex(point);
+    if (event->button() == Qt::LeftButton)
+    {
+        QPointF pos = event->pos();
+        //m_scene->addPolygonVertex(Ut::Vec2d(pos.x(), pos.y()));
+    }
 }
 
-void OptDrawPolygon::onMouseMove(const QPointF& start, const QPointF& end)
+void OptDrawPolygon::mouseReleaseEvent(QMouseEvent* event)
 {
-    //m_scene->updateTempPolygon(end);
+    if (event->button() == Qt::LeftButton)
+    {
+        //m_scene->completePolygon();
+    }
 }
 
-void OptDrawPolygon::onMouseRelease(const QPointF& start, const QPointF& end)
+void OptDrawPolygon::mouseMoveEvent(QMouseEvent* event)
 {
-    //m_scene->completePolygon();
+    if (event->buttons() & Qt::LeftButton)
+    {
+        QPointF pos = event->pos();
+        //m_scene->updateTempPolygon(Ut::Vec2d(pos.x(), pos.y()));
+    }
+}
+
+void OptDrawPolygon::wheelEvent(QWheelEvent* event)
+{
+    // 可根据需要添加自定义处理逻辑
+}
+
+void OptDrawPolygon::keyPressEvent(QKeyEvent* event)
+{
+    // 可根据需要添加自定义处理逻辑
 }

@@ -17,14 +17,16 @@ public:
 
 public:
     const std::vector<MRender::ColorPoint>& getLinePoints() const;
-    float getScale() const;
-    QVector2D getTranslation() const;
+    // float getScale() const;
+    //QVector2D getTranslation() const;
 
 public:
     MRender::MarchView* getGlView() const;
     MEngine::Scene* getScene();
 
     void updateScene();
+
+    void setOperation(std::shared_ptr<OptBase> operation);
 
 signals:
     void sigCoordChanged(float x, float y); // 信号：鼠标坐标变化
@@ -54,8 +56,6 @@ private:
     QPoint m_lastMiddlePos;// 鼠标位置
 
     bool m_bPanning = false; // 是否平移
-    //double m_dZoomFactor = 1.0; // 缩放因子
-
     QPoint m_lastPanPos; // 上次平移位置
 
     // 窗、交选
@@ -63,7 +63,7 @@ private:
     Ut::Vec2d m_selectStart;
     Ut::Vec2d m_selectEnd;
 
-    OptBase* m_currentStrategy = nullptr; // 当前绘制策略;
+    std::shared_ptr<OptBase> m_curOpt = nullptr;
 
 
 };

@@ -4,17 +4,41 @@ OptDrawRectangle::OptDrawRectangle(MEngine::Scene* scene) : OptBase(scene)
 {
 }
 
-void OptDrawRectangle::onMousePress(const QPointF& point)
+void OptDrawRectangle::mousePressEvent(QMouseEvent* event)
 {
-    //m_scene->setRectTopLeft(point);
+    if (event->button() == Qt::LeftButton)
+    {
+        QPointF pos = event->pos();
+        //m_scene->setRectTopLeft(Ut::Vec2d(pos.x(), pos.y()));
+    }
 }
 
-void OptDrawRectangle::onMouseMove(const QPointF& start, const QPointF& end)
+void OptDrawRectangle::mouseReleaseEvent(QMouseEvent* event)
 {
-    //m_scene->updateTempRectangle(start, end);
+    if (event->button() == Qt::LeftButton)
+    {
+        //QPointF topLeft = m_scene->getRectTopLeft();
+        //QPointF bottomRight = event->pos();
+        //m_scene->addRectangle(Ut::Vec2d(topLeft.x(), topLeft.y()), Ut::Vec2d(bottomRight.x(), bottomRight.y()));
+    }
 }
 
-void OptDrawRectangle::onMouseRelease(const QPointF& start, const QPointF& end)
+void OptDrawRectangle::mouseMoveEvent(QMouseEvent* event)
 {
-    //m_scene->addRectangle(start, end);
+    if (event->buttons() & Qt::LeftButton)
+    {
+        //QPointF topLeft = m_scene->getRectTopLeft();
+        //QPointF bottomRight = event->pos();
+        //m_scene->updateTempRectangle(Ut::Vec2d(topLeft.x(), topLeft.y()), Ut::Vec2d(bottomRight.x(), bottomRight.y()));
+    }
+}
+
+void OptDrawRectangle::wheelEvent(QWheelEvent* event)
+{
+    // 可根据需要添加自定义处理逻辑
+}
+
+void OptDrawRectangle::keyPressEvent(QKeyEvent* event)
+{
+    // 可根据需要添加自定义处理逻辑
 }

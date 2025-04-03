@@ -4,17 +4,31 @@ OptDrawPoint::OptDrawPoint(MEngine::Scene* scene) : OptBase(scene)
 {
 }
 
-void OptDrawPoint::onMousePress(const QPointF& point)
+void OptDrawPoint::mousePressEvent(QMouseEvent* event)
 {
-    //m_scene->addPoint(point);
+    if (event->button() == Qt::LeftButton)
+    {
+        QPointF pos = event->pos();
+        //m_scene->addPoint(Ut::Vec2d(pos.x(), pos.y()));
+    }
 }
 
-void OptDrawPoint::onMouseMove(const QPointF& start, const QPointF& end)
+void OptDrawPoint::mouseReleaseEvent(QMouseEvent* event)
 {
-    // 点绘制不需要处理鼠标移动
+    // 可根据需要添加自定义处理逻辑
 }
 
-void OptDrawPoint::onMouseRelease(const QPointF& start, const QPointF& end)
+void OptDrawPoint::mouseMoveEvent(QMouseEvent* event)
 {
-    // 点绘制不需要处理鼠标释放
+    // 可根据需要添加自定义处理逻辑
+}
+
+void OptDrawPoint::wheelEvent(QWheelEvent* event)
+{
+    // 可根据需要添加自定义处理逻辑
+}
+
+void OptDrawPoint::keyPressEvent(QKeyEvent* event)
+{
+    // 可根据需要添加自定义处理逻辑
 }

@@ -111,19 +111,19 @@ namespace Ut
             return max_ - min_;
         }
 
-           // 获取宽度（仅适用于二维和三维矩形）
-    T width() const
-    {
-        static_assert(DIM == 2 || DIM == 3, "Width is only defined for 2D and 3D rectangles");
-        return max_.x() - min_.x();
-    }
+        // 获取宽度（仅适用于二维和三维矩形）
+        T width() const
+        {
+            static_assert(DIM == 2 || DIM == 3, "Width is only defined for 2D and 3D rectangles");
+            return max_.x() - min_.x();
+        }
 
-    // 获取高度（仅适用于二维和三维矩形）
-    T height() const
-    {
-        static_assert(DIM == 2 || DIM == 3, "Height is only defined for 2D and 3D rectangles");
-        return max_.y() - min_.y();
-    }
+        // 获取高度（仅适用于二维和三维矩形）
+        T height() const
+        {
+            static_assert(DIM == 2 || DIM == 3, "Height is only defined for 2D and 3D rectangles");
+            return max_.y() - min_.y();
+        }
     private:
         Vec<T, DIM> min_;
         Vec<T, DIM> max_;
@@ -184,8 +184,6 @@ namespace Ut
 
     using AABB = AxisAlignedBoundingBox;
     using TBB = TightBoundingBox;
-
- 
 } // namespace Ut
 
 #endif // RECT_H

@@ -76,7 +76,6 @@ namespace MEngine
         }
     }
 
-
     Ut::Vec2d Scene::worldToScreen(const Ut::Vec2d& worldPos) const
     {
         // 1. 世界坐标 -> NDC (使用 3x3 正交矩阵)
@@ -157,7 +156,6 @@ namespace MEngine
             m_sceneData->m_vViewSize = Ut::Vec2i{ w, h };
             //m_sceneData->m_matOrtho.ortho2D(rect.left, rect.right, rect.bottom, rect.top);
         }
-
     }
 
     void Scene::setView(Ut::Vec2& ptCenter, Ut::Vec2i& ptSize)
@@ -214,7 +212,6 @@ namespace MEngine
         return Ut::Vec2d(centerX, centerY);
         //return m_sceneData->m_vViewSize;
     }
-
 
     void Scene::setZoom(float dScale)
     {

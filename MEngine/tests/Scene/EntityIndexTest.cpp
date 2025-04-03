@@ -2,7 +2,6 @@
 #include "Scene/EntityIndex.h"
 #include "Entity/Point.h"
 
-
 namespace MEngine::Test
 {
     class EntityIndexTest : public ::testing::Test

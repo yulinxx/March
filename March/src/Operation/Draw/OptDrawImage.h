@@ -1,19 +1,21 @@
-#ifndef OPTDRAWCIRCLE_H
-#define OPTDRAWCIRCLE_H
+#ifndef OPTDRAWIMAGE_H
+#define OPTDRAWIMAGE_H
 
 #include "Operation/OptBase.h"
 
-class OptDrawCircle : public OptBase
+class OptDrawImage : public OptBase
 {
 public:
-    OptDrawCircle(MEngine::Scene* scene);
+    OptDrawImage(MEngine::Scene* scene);
 
-public:
     void mousePressEvent(QMouseEvent* event) override;
     void mouseReleaseEvent(QMouseEvent* event) override;
     void mouseMoveEvent(QMouseEvent* event) override;
     void wheelEvent(QWheelEvent* event) override;
     void keyPressEvent(QKeyEvent* event) override;
+
+private:
+    // 可添加相关成员变量
 };
 
-#endif // OPTDRAWCIRCLE_H
+#endif // OPTDRAWIMAGE_H

@@ -1,19 +1,22 @@
-#ifndef OPTDRAWCIRCLE_H
-#define OPTDRAWCIRCLE_H
+#ifndef OPTDRAWTEXT_H
+#define OPTDRAWTEXT_H
 
 #include "Operation/OptBase.h"
 
-class OptDrawCircle : public OptBase
+
+class OptDrawText : public OptBase
 {
 public:
-    OptDrawCircle(MEngine::Scene* scene);
+    OptDrawText(MEngine::Scene* scene);
 
-public:
     void mousePressEvent(QMouseEvent* event) override;
     void mouseReleaseEvent(QMouseEvent* event) override;
     void mouseMoveEvent(QMouseEvent* event) override;
     void wheelEvent(QWheelEvent* event) override;
     void keyPressEvent(QKeyEvent* event) override;
+
+private:
+
 };
 
-#endif // OPTDRAWCIRCLE_H
+#endif // OPTDRAWTEXT_H

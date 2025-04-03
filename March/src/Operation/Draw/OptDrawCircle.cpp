@@ -4,17 +4,41 @@ OptDrawCircle::OptDrawCircle(MEngine::Scene* scene) : OptBase(scene)
 {
 }
 
-void OptDrawCircle::onMousePress(const QPointF& point)
+void OptDrawCircle::mousePressEvent(QMouseEvent* event)
 {
-    //m_scene->setCenterPoint(point);
+    if (event->button() == Qt::LeftButton)
+    {
+        QPointF pos = event->pos();
+        // m_scene->setCenterPoint(Ut::Vec2d(pos.x(), pos.y()));
+    }
 }
 
-void OptDrawCircle::onMouseMove(const QPointF& start, const QPointF& end)
+void OptDrawCircle::mouseReleaseEvent(QMouseEvent* event)
 {
-    //m_scene->updateTempCircle(start, end);
+    if (event->button() == Qt::LeftButton)
+    {
+        // QPointF center = m_scene->getCenterPoint();
+        // QPointF edge = event->pos();
+        // m_scene->addCircle(Ut::Vec2d(center.x(), center.y()), Ut::Vec2d(edge.x(), edge.y()));
+    }
 }
 
-void OptDrawCircle::onMouseRelease(const QPointF& start, const QPointF& end)
+void OptDrawCircle::mouseMoveEvent(QMouseEvent* event)
 {
-    //m_scene->addCircle(start, end);
+    if (event->buttons() & Qt::LeftButton)
+    {
+        // QPointF center = m_scene->getCenterPoint();
+        // QPointF edge = event->pos();
+        // m_scene->updateTempCircle(Ut::Vec2d(center.x(), center.y()), Ut::Vec2d(edge.x(), edge.y()));
+    }
+}
+
+void OptDrawCircle::wheelEvent(QWheelEvent* event)
+{
+    // 可根据需要添加自定义处理逻辑
+}
+
+void OptDrawCircle::keyPressEvent(QKeyEvent* event)
+{
+    // 可根据需要添加自定义处理逻辑
 }

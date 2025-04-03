@@ -1,12 +1,12 @@
-#ifndef OPTDRAWCIRCLE_H
-#define OPTDRAWCIRCLE_H
+#ifndef OPTDRAWBEZIERCURVE_H
+#define OPTDRAWBEZIERCURVE_H
 
 #include "Operation/OptBase.h"
 
-class OptDrawCircle : public OptBase
+class OptDrawBezierCurve : public OptBase
 {
 public:
-    OptDrawCircle(MEngine::Scene* scene);
+    OptDrawBezierCurve(MEngine::Scene* scene);
 
 public:
     void mousePressEvent(QMouseEvent* event) override;
@@ -14,6 +14,10 @@ public:
     void mouseMoveEvent(QMouseEvent* event) override;
     void wheelEvent(QWheelEvent* event) override;
     void keyPressEvent(QKeyEvent* event) override;
+
+private:
+    int m_pointCount;
+    QPointF m_points[4];
 };
 
-#endif // OPTDRAWCIRCLE_H
+#endif // OPTDRAWBEZIERCURVE_H

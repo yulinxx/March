@@ -6,7 +6,6 @@
 #include <sstream>
 #include <curl/curl.h>
 
-
 size_t WriteCallback(void* c, size_t sz, size_t nmemb, void* userp)
 {
     ((std::string*)userp)->append((char*)c, sz * nmemb);
@@ -44,12 +43,12 @@ std::time_t TimeChecker::GetNetworkTime(const std::string& url)
         std::string dateStr = headerData.substr(pos + 6, 29); // RFC 7231 格式
         struct tm timeStruct = {};
 
-#ifdef _WIN32 
+#ifdef _WIN32
         std::istringstream ss(dateStr);
         ss >> std::get_time(&timeStruct, "%a, %d %b %Y %H:%M:%S GMT");
         if (ss.fail())
             return -1;
-#else 
+#else
         strptime(dateStr.c_str(), "%a, %d %b %Y %H:%M:%S GMT", &timeStruct);
 #endif
 

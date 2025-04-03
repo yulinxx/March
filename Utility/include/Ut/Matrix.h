@@ -20,7 +20,6 @@ namespace Ut
         explicit Matrix(T value) noexcept;
         explicit Matrix(std::initializer_list<T> init);
 
-
         T& at(size_t row, size_t col);
         const T& at(size_t row, size_t col) const;
         T& operator()(size_t row, size_t col);
@@ -31,7 +30,6 @@ namespace Ut
         Matrix operator*(T scalar) const;
         Matrix& operator*=(const Matrix& other);
         Matrix& operator=(std::initializer_list<T> init);
-
 
         template<size_t OtherCols>
         Matrix<T, Rows, OtherCols> operator*(const Matrix<T, Cols, OtherCols>& other) const;

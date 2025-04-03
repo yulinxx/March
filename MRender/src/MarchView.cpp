@@ -53,8 +53,7 @@ namespace MRender
 
         // Line
         {
-            
-        const char* lineVS = R"(
+            const char* lineVS = R"(
             #version 400
             layout(location = 0) in vec3 position;
             layout(location = 1) in vec3 color;
@@ -69,7 +68,7 @@ namespace MRender
                 fragColor = color;
             }
         )";
-    
+
             const char* lineFS = R"(
             #version 400
             in vec3 fragColor;
@@ -79,33 +78,31 @@ namespace MRender
                 outColor = vec4(fragColor, 1.0);
             }
         )";
-    
+
             m_lineProgram = new QOpenGLShaderProgram;
             m_lineProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, lineVS);
             m_lineProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, lineFS);
             m_lineProgram->link();
-    
+
             glGenVertexArrays(1, &m_lineVao);
             glGenBuffers(1, &m_lineVbo);
             glBindVertexArray(m_lineVao);
             glBindBuffer(GL_ARRAY_BUFFER, m_lineVbo);
-    
+
             glEnableVertexAttribArray(0);
-    
+
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ColorPoint), nullptr);
             glEnableVertexAttribArray(1);
             glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ColorPoint), (void*)(3 * sizeof(float)));
             glEnableVertexAttribArray(1);
-    
+
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
-
         }
 
         // Cross
         {
-            
-        const char* crossVS = R"(
+            const char* crossVS = R"(
             #version 400
             layout(location = 0) in vec3 position;
             layout(location = 1) in vec3 color;
@@ -116,7 +113,7 @@ namespace MRender
                 fragColor = color;
             }
         )";
-    
+
             const char* crossFS = R"(
             #version 400
             in vec3 fragColor;
@@ -126,34 +123,32 @@ namespace MRender
                 outColor = vec4(fragColor, 1.0);
             }
         )";
-    
+
             m_crossProgram = new QOpenGLShaderProgram;
             m_crossProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, crossVS);
             m_crossProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, crossFS);
             m_crossProgram->link();
-    
+
             glGenVertexArrays(1, &m_crossVao);
             glGenBuffers(1, &m_crossVbo);
             glBindVertexArray(m_crossVao);
             glBindBuffer(GL_ARRAY_BUFFER, m_crossVbo);
-    
+
             glBufferData(GL_ARRAY_BUFFER, m_crossPoints.size() * sizeof(ColorPoint),
                 m_crossPoints.data(), GL_STATIC_DRAW);
-    
+
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ColorPoint), nullptr);
             glEnableVertexAttribArray(0);
             glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ColorPoint), (void*)(3 * sizeof(float)));
             glEnableVertexAttribArray(1);
-    
+
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
-    
         }
 
         // Ruler
         {
-           
-        const char* rulerVS = R"(
+            const char* rulerVS = R"(
             #version 400
             layout(location = 0) in vec2 position;
             void main()
@@ -169,12 +164,12 @@ namespace MRender
                 fragColor = vec4(0.0, 0.0, 1.0, 1.0); // 蓝色标尺
             }
         )";
-    
+
             m_rulerProgram = new QOpenGLShaderProgram;
             m_rulerProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, rulerVS);
             m_rulerProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, rulerFS);
             m_rulerProgram->link();
-    
+
             glGenVertexArrays(1, &m_rulerVao);
             glGenBuffers(1, &m_rulerVbo);
             glBindVertexArray(m_rulerVao);
@@ -182,7 +177,7 @@ namespace MRender
             glEnableVertexAttribArray(0);
             glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
-            glBindVertexArray(0); 
+            glBindVertexArray(0);
         }
 
         clearLinePoints();
@@ -326,12 +321,12 @@ namespace MRender
             GLsizei nBufferSz = static_cast<GLsizei>(bufferSize);
             glBufferData(GL_ARRAY_BUFFER, nBufferSz, m_linePoints.data(), GL_STATIC_DRAW);
         }
-         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ColorPoint), nullptr);
-         glEnableVertexAttribArray(0);
-         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ColorPoint), (void*)(3 * sizeof(float)));
-         glEnableVertexAttribArray(1);
-         glBindBuffer(GL_ARRAY_BUFFER, 0);
-         glBindVertexArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ColorPoint), nullptr);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ColorPoint), (void*)(3 * sizeof(float)));
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
     }
 
     void MarchView::updateCrossBuffer()
@@ -461,36 +456,37 @@ namespace MRender
     {
         m_linePoints.clear();
         m_linePoints.shrink_to_fit();
-    
+
         // 添加矩形的四个顶点
-        ColorPoint redColor = {1.0f, 0.0f, 0.0f};
-    
+        ColorPoint redColor = { 1.0f, 0.0f, 0.0f };
+
         // 定义一个结构体来存储矩形的坐标
-        struct RectangleCoords {
+        struct RectangleCoords
+        {
             float x1 = 10.0f;
             float y1 = 10.0f;
             float x2 = 800.0f;
             float y2 = 800.0f;
         };
-    
-        const RectangleCoords rect = {10.0f, 10.0f, 800.0f, 800.0f};
-    
+
+        const RectangleCoords rect = { 10.0f, 10.0f, 800.0f, 800.0f };
+
         // 第一条边: (x1, y1) 到 (x2, y1)
-        m_linePoints.push_back({rect.x1, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b});
-        m_linePoints.push_back({rect.x2, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b});
-    
+        m_linePoints.push_back({ rect.x1, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b });
+        m_linePoints.push_back({ rect.x2, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b });
+
         // 第二条边: (x2, y1) 到 (x2, y2)
-        m_linePoints.push_back({rect.x2, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b});
-        m_linePoints.push_back({rect.x2, rect.y2, 0.0f, redColor.r, redColor.g, redColor.b});
-    
+        m_linePoints.push_back({ rect.x2, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b });
+        m_linePoints.push_back({ rect.x2, rect.y2, 0.0f, redColor.r, redColor.g, redColor.b });
+
         // 第三条边: (x2, y2) 到 (x1, y2)
-        m_linePoints.push_back({rect.x2, rect.y2, 0.0f, redColor.r, redColor.g, redColor.b});
-        m_linePoints.push_back({rect.x1, rect.y2, 0.0f, redColor.r, redColor.g, redColor.b});
-    
+        m_linePoints.push_back({ rect.x2, rect.y2, 0.0f, redColor.r, redColor.g, redColor.b });
+        m_linePoints.push_back({ rect.x1, rect.y2, 0.0f, redColor.r, redColor.g, redColor.b });
+
         // 第四条边: (x1, y2) 到 (x1, y1)
-        m_linePoints.push_back({rect.x1, rect.y2, 0.0f, redColor.r, redColor.g, redColor.b});
-        m_linePoints.push_back({rect.x1, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b});
-    
+        m_linePoints.push_back({ rect.x1, rect.y2, 0.0f, redColor.r, redColor.g, redColor.b });
+        m_linePoints.push_back({ rect.x1, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b });
+
         updateLineBuffer();
     }
 }
