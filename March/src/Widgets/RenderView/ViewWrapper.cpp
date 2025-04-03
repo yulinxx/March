@@ -102,41 +102,6 @@ void ViewWrapper::updateScene()
     m_glView->update();
 }
 
-//QPointF ViewWrapper::screenToNDC(const QPoint& screenPos) const
-//{
-//    //float aspect = float(m_glView->width()) / m_glView->height();
-//    auto sz = m_scene->getViewSize();
-//    float aspect = float(sz.x() / sz.y());
-//    float ndcX = (float(screenPos.x()) / m_glView->width()) * 2.0f - 1.0f;
-//    float ndcY = -((float(screenPos.y()) / m_glView->height()) * 2.0f - 1.0f);
-//    return QPointF(ndcX, ndcY);
-//}
-//
-//QPointF ViewWrapper::screenToWorld(const QPoint& screenPos) const
-//{
-//    // 1. 屏幕坐标到 NDC
-//    QPointF ndc = screenToNDC(screenPos);
-//
-//    // 2. NDC 到视图坐标（反投影）
-//    auto sz = m_scene->getViewSize();
-//    auto w = sz.x();
-//    auto h = sz.y();
-//
-//    float orthoSize = h * 0.5 * m_scene->getViewScale();
-//
-//    //float aspect = float(m_glView->width()) / m_glView->height();
-//    float aspect = float(w / h);
-//
-//    float viewX = ndc.x() * orthoSize * aspect;
-//    float viewY = ndc.y() * orthoSize;
-//
-//    // 3. 视图坐标到世界坐标
-//    float worldX = (viewX - getTranslation().x()) / getScale();
-//    float worldY = (viewY - getTranslation().y()) / getScale();
-//
-//    return QPointF(worldX, worldY);
-//}
-
 bool ViewWrapper::eventFilter(QObject* obj, QEvent* event)
 {
     if (obj == m_glView)
@@ -352,28 +317,21 @@ void ViewWrapper::wheelEvent(QWheelEvent* event)
     }
     else // 以视图为中心缩放
     {
+        QPoint curPos = event->pos();
+        auto world = m_scene->screenToWorld({ curPos.x(), curPos.y() });
+
         float delta = event->angleDelta().y() > 0 ? 1.1f : 0.9f;
-        //m_dZoomFactor *= delta;
 
-        //qDebug()<< "m_dZoomFactor:" << m_dZoomFactor;
-        //if ((m_dZoomFactor < 0.1) || (m_dZoomFactor > 10.0))
-        //{
-        //    return;
-        //}
-
-        //m_scene->zoomAt(Ut::Vec2{ pos.x(), pos.y() }, m_dZoomFactor);
-        m_scene->setZoom(delta);
+        m_scene->zoomAt(Ut::Vec2{ world.x(), world.y() }, delta);
+        //m_scene->setZoom(delta);
 
         Ut::Mat3 matView = m_scene->getViewMatrix();
         m_glView->setViewMatrix(matView);
-        // std::cout<<matView;
 
         m_glView->update();
 
-        auto centerPt = m_scene->getViewCenter();
-        std::cout << "Center:" << centerPt.x() << " " << centerPt.y() << std::endl;
-        auto sz = m_scene->getViewSize();
-        std::cout << "Size:" << sz.x() << " " << sz.y() << std::endl;
+
+        sigCoordChanged(world.x(), world.y());
 
         QWidget::wheelEvent(event);
     }
@@ -386,7 +344,6 @@ void ViewWrapper::mouseMoveEvent(QMouseEvent* event)
 
     if (m_bSelecting && (event->buttons() & Qt::LeftButton))
     {
-        // 更新选择终点并重绘
         m_selectEnd = world;
     }
     if (event->buttons() & Qt::MiddleButton)
@@ -434,26 +391,4 @@ void ViewWrapper::keyPressEvent(QKeyEvent* event)
 void ViewWrapper::paintEvent(QPaintEvent* event)
 {
     QWidget::paintEvent(event);
-}
-
-void ViewWrapper::testCoordinateMapping(QPoint& screenPos)
-{
-    qDebug() << "\n------Screen:\n " << screenPos;
-    auto world = m_scene->screenToWorld({ screenPos.x(), screenPos.y() });
-    std::cout << "World:\t  " << world.x() << " " << world.y() << std::endl;
-
-    // QPointF ndc = screenToNDC(screenPos);
-    // qDebug() << "NDC:\t  " << ndc;
-
-    //QPointF world = screenToWorld(screenPos);
-    //qDebug() << "\nWorld:\t  " << world;
-
-    // QPointF worldToNdc = worldToNDC(world.x(), world.y());
-    // qDebug() << "World to NDC:\t N- " << worldToNdc;
-
-    // QPointF worldToScreenPos = worldToScreen(world.x(), world.y());
-    // qDebug() << "World to Screen:\t S- " << worldToScreenPos;
-
-    // QPointF ndcToScreenPos = ndcToScreen(ndc.x(), ndc.y());
-    // qDebug() << "NDC to Screen:\t S- " << ndcToScreenPos;
 }

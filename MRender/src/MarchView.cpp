@@ -185,6 +185,7 @@ namespace MRender
             glBindVertexArray(0); 
         }
 
+        clearLinePoints();
         updateRuler();
     }
 
@@ -439,17 +440,6 @@ namespace MRender
         return m_linePoints;
     }
 
-    //float MarchView::getScale() const
-    //{
-    //    return m_scale;
-    //}
-
-    //void MarchView::setScale(float scale)
-    //{
-    //    m_scale = scale;
-    //    updateRuler();
-    //}
-
     QVector2D MarchView::getTranslation() const
     {
         return m_translation;
@@ -472,8 +462,36 @@ namespace MRender
     {
         m_linePoints.clear();
         m_linePoints.shrink_to_fit();
-
-        
+    
+        // 添加矩形的四个顶点
+        ColorPoint redColor = {1.0f, 0.0f, 0.0f};
+    
+        // 定义一个结构体来存储矩形的坐标
+        struct RectangleCoords {
+            float x1 = 10.0f;
+            float y1 = 10.0f;
+            float x2 = 800.0f;
+            float y2 = 800.0f;
+        };
+    
+        const RectangleCoords rect = {10.0f, 10.0f, 800.0f, 800.0f};
+    
+        // 第一条边: (x1, y1) 到 (x2, y1)
+        m_linePoints.push_back({rect.x1, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b});
+        m_linePoints.push_back({rect.x2, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b});
+    
+        // 第二条边: (x2, y1) 到 (x2, y2)
+        m_linePoints.push_back({rect.x2, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b});
+        m_linePoints.push_back({rect.x2, rect.y2, 0.0f, redColor.r, redColor.g, redColor.b});
+    
+        // 第三条边: (x2, y2) 到 (x1, y2)
+        m_linePoints.push_back({rect.x2, rect.y2, 0.0f, redColor.r, redColor.g, redColor.b});
+        m_linePoints.push_back({rect.x1, rect.y2, 0.0f, redColor.r, redColor.g, redColor.b});
+    
+        // 第四条边: (x1, y2) 到 (x1, y1)
+        m_linePoints.push_back({rect.x1, rect.y2, 0.0f, redColor.r, redColor.g, redColor.b});
+        m_linePoints.push_back({rect.x1, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b});
+    
         updateLineBuffer();
     }
 }

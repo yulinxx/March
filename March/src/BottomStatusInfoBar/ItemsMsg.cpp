@@ -13,5 +13,5 @@ ItemsMsg::ItemsMsg(QWidget* parent) : QWidget(parent)
 
 void ItemsMsg::setMsg(size_t count)
 {
-    m_label->setText(QString("选中图元数量: %1").arg(count));
+    m_label->setText(QString("选中图元数量: %1").arg(QString::number(count)));
 }

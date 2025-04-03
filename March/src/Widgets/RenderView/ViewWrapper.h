@@ -26,14 +26,6 @@ public:
 
     void updateScene();
 
-    //public:
-        //QPointF screenToNDC(const QPoint& screenPos) const;
-        //QPointF screenToWorld(const QPoint& screenPos) const;
-    //    QPointF ndcToWorld(float ndcX, float ndcY) const;
-    //    QPointF worldToNDC(float worldX, float worldY) const;
-    //    QPointF worldToScreen(float worldX, float worldY) const;
-    //    QPointF ndcToScreen(float ndcX, float ndcY) const;
-
 signals:
     void sigCoordChanged(float x, float y); // 信号：鼠标坐标变化
 
@@ -50,7 +42,6 @@ protected:
     void paintEvent(QPaintEvent* event) override;
 
 private:
-    void testCoordinateMapping(QPoint& pt);
     void resetView();
 
 private:
