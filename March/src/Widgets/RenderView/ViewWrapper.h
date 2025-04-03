@@ -3,10 +3,10 @@
 
 #include <QWidget>
 #include <QPoint>
-#include <QVector>
 #include <vector>
 #include "Scene/Scene.h"
 #include "Render/MarchView.h"
+#include "Operation/OptBase.h"
 
 class ViewWrapper : public QWidget
 {
@@ -62,6 +62,9 @@ private:
     bool m_bSelecting = false;
     Ut::Vec2d m_selectStart;
     Ut::Vec2d m_selectEnd;
+
+    OptBase* m_currentStrategy = nullptr; // 当前绘制策略;
+
 
 };
 

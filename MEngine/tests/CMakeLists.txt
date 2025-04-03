@@ -14,6 +14,7 @@ add_executable(AllTests ${ALL_TEST_SOURCES})
 
 # 配置包含目录和链接库
 target_include_directories(AllTests PRIVATE 
+    ${CMAKE_SOURCE_DIR}/MEngine/include/
     ${CMAKE_SOURCE_DIR}/MEngine/include/Eng
 )
 

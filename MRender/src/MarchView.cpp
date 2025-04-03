@@ -297,12 +297,12 @@ namespace MRender
         m_viewMatrix(2, 2) = mat(2, 2);
         m_viewMatrix(3, 3) = 1.0f;
 
-        qDebug() << "\n------------\n";
-        qDebug() << "Mat3:" << mat(0, 0) << mat(0, 1) << mat(0, 2);
-        qDebug() << "     " << mat(1, 0) << mat(1, 1) << mat(1, 2);
-        qDebug() << "     " << mat(2, 0) << mat(2, 1) << mat(2, 2);
+        // qDebug() << "\n------------\n";
+        // qDebug() << "Mat3:" << mat(0, 0) << mat(0, 1) << mat(0, 2);
+        // qDebug() << "     " << mat(1, 0) << mat(1, 1) << mat(1, 2);
+        // qDebug() << "     " << mat(2, 0) << mat(2, 1) << mat(2, 2);
 
-        qDebug() << "\nQMatrix4x4:\n" << m_viewMatrix;
+        // qDebug() << "\nQMatrix4x4:\n" << m_viewMatrix;
 
         update();
     }
@@ -444,7 +444,6 @@ namespace MRender
     {
         return m_translation;
     }
-
 
     void MarchView::setTranslation(const QVector2D& translation)
     {

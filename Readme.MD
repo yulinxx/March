@@ -1,32 +1,36 @@
-我现在有一个 MainWindow的窗口类：class MainWindow : public QMainWindow
+- 以 MainWindow 作为主窗口类：class MainWindow : public QMainWindow
 
-里面嵌套了一个   m_tabView ：
-  m_tabView = new QTabWidget(this);
-    setCentralWidget(m_tabView);
+里面嵌套了一个  m_tabView ：
+m_tabView = new QTabWidget(this);
+setCentralWidget(m_tabView);
 
-m_tabView 中添加了一个 viewWrapper：
+以及还有一些工具条： 绘图工具条  编辑工具条  显示工具条  帮助工具条  状态栏 等
+
+- 在 m_tabView 中添加了一个 viewWrapper：
 class ViewWrapper : public QWidget
 
-    int index = m_tabView->addTab(viewWrapper, tr("View %1").arg(m_tabView->count() + 1));
-    m_tabView->setCurrentIndex(index);
+int index = m_tabView->addTab(viewWrapper, tr("View %1").arg(m_tabView->count() + 1));
+m_tabView->setCurrentIndex(index);
 
+鼠标交互都在 viewWrapper 中处理.
 
-viewWrapper 又有两个成员变量：   m_scene  m_glView 
+- 在 viewWrapper 又有两个成员变量：  m_glView（MarchView，用于渲染）和 m_scene（Scene，用于数据管理）。
+m_glView = new MRender::MarchView(this);
+m_scene = new MEngine::Scene();
 
-    m_scene = new MEngine::Scene();
-    m_glView = new MRender::MarchView(this);
+m_glView 则是用来做渲染的：
+class MRENDER_API MarchView : public QOpenGLWidget, protected QOpenGLFunctions_4_0_Core
+
 
 m_scene 是一个普通的类， 它里面又有一些成员变量 主要用于数据的管理
-m_glView 则是用来做渲染的：
-    class MRENDER_API MarchView : public QOpenGLWidget, protected QOpenGLFunctions_4_0_Core
+尤其是有一個矩阵变量 matOrtho, viewWrapper对视图缩放移动等操作都在这个矩阵变量 matOrtho 上进行
+然后再将这個 matOrtho 传递给 m_glView 进行渲染。
 
 
-Scene 和 MarchView 都是在另一个DLL中的类， 
+且 Scene 和 MarchView 都是在另一个DLL中的类， 
 
-我现在在MainWindow 中有一个按钮， 点击按钮后， 在m_scene 中添加一个新的对象， 然后在m_glView 中重新渲染， 请问怎么实现？
-
-
-
+我现在在MainWindow 中有一个工具栏， 点击上面的按钮后， 会进行 点/线/圆/矩形 的绘制， 然后再点击 编辑 按钮， 就可以对这些点/线/圆/矩形进行移动， 缩放， 旋转等操作。
+我现在的问题是，这些点/线/圆/矩形的绘制都是在 m_scene 中进行的，而且每种图元的绘制方式都是通过鼠标交互来实现的， 如何将这些操作进行区分
 
 
 
