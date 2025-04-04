@@ -33,15 +33,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     # ${CMAKE_SOURCE_DIR}/MRenderInterface/include
 )
 
-if(OUT_CMAKE_MSG)
-message("===== ${PROJECT_NAME} 包含目录路径如下:")
-message(STATUS "1. ${CMAKE_CURRENT_SOURCE_DIR}/include")
-message(STATUS "2. ${CMAKE_CURRENT_SOURCE_DIR}/include/Entity") 
-message(STATUS "3. ${CMAKE_SOURCE_DIR}/MLog/include")
-message(STATUS "4. ${CMAKE_SOURCE_DIR}/Utility/include")
-message(" ==============\n")
-endif(OUT_CMAKE_MSG)
-
 # 链接 Boost 库
 if(Boost_FOUND)
     target_include_directories(${PROJECT_NAME} PUBLIC ${Boost_INCLUDE_DIRS})

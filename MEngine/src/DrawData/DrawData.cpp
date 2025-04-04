@@ -1,12 +1,16 @@
 #include "DrawData/DrawData.h"
 #include "DrawData/LineData.h"
 
+#include "Scene/Group.h"
+#include "Scene/Previews.h"
+
 namespace MEngine
 {
     class DrawData::Impl
     {
     public:
         std::unique_ptr<LineData> m_lineData{ nullptr };
+        std::unique_ptr<LineData> m_previewData{ nullptr };
     };
 
     DrawData::DrawData()
@@ -20,7 +24,6 @@ namespace MEngine
     }
 
     void DrawData::processEntities(Group* group)
-
     {
         if (!group)
             return;
@@ -30,47 +33,66 @@ namespace MEngine
 
         pImpl->m_lineData->clear();
 
-        // auto collectData = [&](Entity* entity) {
-        //     switch (entity->m_eType) {
-        //     case ETYPE::POINT:
-        //         // points.push_back(entity->m_basePt);
-        //         break;
-        //     case ETYPE::LINE:
-        //     {
-        //         Line* line = static_cast<Line*>(entity);
-        //         m_lineData->collectLineData(line);
-        //         break;
-        //     }
-        //     //case ETYPE::ARC:
-        //     //    arcs.push_back(entity);
-        //     //    break;
-        //     //case ETYPE::CIRCLE:
-        //     //    circles.push_back(entity);
-        //     //    break;
-        //     //case ETYPE::LWPOLYLINE:
-        //     //    lwpolylines.push_back(entity);
-        //     //    break;
-        //     //case ETYPE::SPLINE:
-        //     //    splines.push_back(entity);
-        //     //    break;
-        //     //case ETYPE::TEXT:
-        //     //    texts.push_back(entity);
-        //     //    break;
-        //     //case ETYPE::UNKNOWN:
-        //     //    unknowns.push_back(entity);
-        //     //    break;
-        //     default:
-        //         break;
-        //     }
-        // };
 
-        // group->forEachEntity(collectData);
-
-        for (size_t i = 0; i < group->getChildrenCount(); ++i)
+        for (size_t i = 0; i < group->getChildrenCount(); i++)
         {
             Entity* entity = group->getChild(i);
             if (entity)
-            { // 检查指针是否有效
+            {
+                switch (entity->m_eType)
+                {
+                case ETYPE::POINT:
+                    // points.push_back(entity->m_basePt);
+                    break;
+                case ETYPE::LINE:
+                {
+                    auto line = static_cast<Line*>(entity);
+                    pImpl->m_lineData->collectLineData(line);
+                    break;
+                }
+                //case ETYPE::ARC:
+                //    arcs.push_back(entity);
+                //    break;
+                //case ETYPE::CIRCLE:
+                //    circles.push_back(entity);
+                //    break;
+                //case ETYPE::LWPOLYLINE:
+                //    lwpolylines.push_back(entity);
+                //    break;
+                //case ETYPE::SPLINE:
+                //    splines.push_back(entity);
+                //    break;
+                //case ETYPE::TEXT:
+                //    texts.push_back(entity);
+                //    break;
+                //case ETYPE::UNKNOWN:
+                //    unknowns.push_back(entity);
+                //    break;
+                default:
+                    break;
+                }
+            }
+        }
+
+
+    }
+
+
+    void DrawData::processPreviews(Previews* previews)
+    {
+        if (!previews)
+            return;
+
+        if (!pImpl->m_previewData)
+            pImpl->m_previewData = std::make_unique<LineData>();
+
+        pImpl->m_previewData->clear();
+
+        for (size_t i = 0; i < previews->getChildrenCount(); i++)
+        {
+            Entity* entity = previews->getChild(i);
+            if (entity)
+            {
                 switch (entity->m_eType)
                 {
                 case ETYPE::POINT:
@@ -108,17 +130,13 @@ namespace MEngine
     }
 
 
-    float* DrawData::getLineData(size_t& sz) const
-    {
-        if (nullptr == pImpl->m_lineData)
-            return nullptr;
-
-        sz = pImpl->m_lineData->m_vLinePts.size();
-        return pImpl->m_lineData->m_vLinePts.data();
-    }
-
     std::pair<float*, size_t> DrawData::getLineData() const
     {
         return { pImpl->m_lineData->m_vLinePts.data(), pImpl->m_lineData->m_vLinePts.size() };
+    }
+
+    std::pair<float*, size_t> DrawData::getPreviewData() const
+    {
+        return { pImpl->m_previewData->m_vLinePts.data(), pImpl->m_previewData->m_vLinePts.size() };
     }
 }

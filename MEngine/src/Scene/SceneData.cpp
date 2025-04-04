@@ -1,6 +1,10 @@
 #include "Scene/SceneData.h"
 
 #include "Logger.h"
+#include "Scene/Group.h"
+#include "Scene/Previews.h"
+
+#include "Command/CommandManager.h"
 
 namespace MEngine
 {
@@ -15,6 +19,7 @@ namespace MEngine
         SAFE_DEL(m_entTree);
         SAFE_DEL(m_cmdManager);
         SAFE_DEL(m_drawData);
+        SAFE_DEL(m_previews);
     }
 
     void SceneData::init()
@@ -25,7 +30,7 @@ namespace MEngine
         m_cmdManager = new CommandManager(20);
         m_entTree = new EntityIndex();
         m_drawData = new DrawData();
-
+        m_previews = new Previews();
         m_matOrtho.identity();
     }
 

@@ -32,10 +32,10 @@ void OptDrawPolygon::mouseMoveEvent(QMouseEvent* event)
 
 void OptDrawPolygon::wheelEvent(QWheelEvent* event)
 {
-    // 可根据需要添加自定义处理逻辑
+    
 }
 
 void OptDrawPolygon::keyPressEvent(QKeyEvent* event)
 {
-    // 可根据需要添加自定义处理逻辑
+    
 }

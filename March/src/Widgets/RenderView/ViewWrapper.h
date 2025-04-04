@@ -4,9 +4,12 @@
 #include <QWidget>
 #include <QPoint>
 #include <vector>
+#include "def.h"
 #include "Scene/Scene.h"
 #include "Render/MarchView.h"
-#include "Operation/OptBase.h"
+
+class OptBase;
+class OptManager;
 
 class ViewWrapper : public QWidget
 {
@@ -27,7 +30,7 @@ public:
     void updateRender();
     void updateScene();
 
-    void setOperation(std::shared_ptr<OptBase> operation);
+    void setOperation(int nType);
 
 signals:
     void sigCoordChanged(float x, float y); // 信号：鼠标坐标变化
@@ -51,22 +54,8 @@ private:
     MRender::MarchView* m_glView{ nullptr };
     MEngine::Scene* m_scene{ nullptr };
 
-    QPoint m_lastPos;
 
-    qint64 m_lastMiddleClickTime = 0;// 中键点击时间
-    QPoint m_lastMiddlePos;// 鼠标位置
-
-    bool m_bPanning = false; // 是否平移
-    QPoint m_lastPanPos; // 上次平移位置
-
-    // 窗、交选
-    bool m_bSelecting = false;
-    Ut::Vec2d m_selectStart;
-    Ut::Vec2d m_selectEnd;
-
-    std::shared_ptr<OptBase> m_selectOpt = nullptr; 
-    std::shared_ptr<OptBase> m_curOpt = nullptr;
-
+    std::shared_ptr<OptManager> m_optManager = nullptr;
 };
 
 #endif // VIEWWRAPPER_H

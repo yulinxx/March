@@ -5,6 +5,11 @@
 
 using Super = OptBase;
 
+namespace MEngine
+{
+    class Line;
+}
+
 class OptDrawLine : public OptBase
 {
 public:
@@ -24,13 +29,15 @@ public:
     void keyPressEvent(QKeyEvent* event) override;
 
 private:
-    
-    void drawLine(); // 绘制直线
+    void drawLine();
+
 private:
     size_t m_nPts = 0;
     Ut::Vec2d m_startPoint;
     Ut::Vec2d m_endPoint;
 
+
+    std::shared_ptr<MEngine::Line> m_linePreview= nullptr;
 };
 
 #endif // OPTDRAWLINE_H

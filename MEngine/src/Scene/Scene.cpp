@@ -1,6 +1,8 @@
 #include "Scene/Scene.h"
 #include "Logger.h"
 
+#include "Scene/Previews.h"
+
 namespace MEngine
 {
     Scene::Scene()
@@ -41,9 +43,20 @@ namespace MEngine
         return m_sceneData->m_cmdManager;
     }
 
+    void Scene::addPreview(Entity* entity)
+    {
+        m_sceneData->m_previews->addEntity(entity);
+    }
+
+    void Scene::removePreview(Entity* entity)
+    {
+        m_sceneData->m_previews->removeEntity(entity);
+    }
+
     void Scene::paint()
     {
         m_sceneData->m_drawData->processEntities(m_sceneData->m_rootGroup);
+        m_sceneData->m_drawData->processPreviews(m_sceneData->m_previews);
     }
 
     DrawData* Scene::getDrawData()

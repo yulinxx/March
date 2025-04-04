@@ -22,7 +22,7 @@ REM 设置主目录
 set main_dir=D:\CAD\
 
 REM 设置子仓库列表
-set "submodules=Algorithm CadCore Depends FileParser OpenGLRHI PathOptimization PolygonFill RDCAM RdImgProcess RDNet RenderInterface RHI_DX11 RuiDaUi UiInterface WHBusCAM WuHanRuiDaUi"
+set "submodules=RHI_DX11 RuiDaUi UiInterface WHBusCAM WuHanRuiDaUi"
 
 set /p choice="请输入 1(拉)、2(推) 或 3(CMake) 4(Git仓库状态) (默认 1):  "
 if "%choice%"=="" set choice=1

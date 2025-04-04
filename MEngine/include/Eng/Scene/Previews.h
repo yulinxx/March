@@ -1,5 +1,5 @@
-#ifndef GROUP_H
-#define GROUP_H
+#ifndef PREVIEWS_H
+#define PREVIEWS_H
 
 #include "MEngineAPI.h"
 #include <memory>
@@ -8,11 +8,11 @@ namespace MEngine
 {
     class Entity;
 
-    class MENGINE_API Group
+    class MENGINE_API Previews
     {
     public:
-        Group();
-        ~Group();
+    Previews();
+        ~Previews();
 
     public:
         void addEntity(Entity* entity);
@@ -20,6 +20,7 @@ namespace MEngine
 
         size_t getChildrenCount() const;
         Entity* getChild(size_t index) const;
+
 
         template<typename Func>
         void forEachEntity(Func&& func) const;
@@ -30,4 +31,4 @@ namespace MEngine
     };
 }
 
-#endif // GROUP_H
+#endif // PREVIEWS_H

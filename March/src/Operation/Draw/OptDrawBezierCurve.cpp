@@ -3,6 +3,7 @@
 OptDrawBezierCurve::OptDrawBezierCurve(MEngine::Scene* scene)
     : OptBase(scene), m_pointCount(0)
 {
+    m_drawType = DrawType::BezierCurve;
 }
 
 void OptDrawBezierCurve::mousePressEvent(QMouseEvent* event)
@@ -21,20 +22,16 @@ void OptDrawBezierCurve::mousePressEvent(QMouseEvent* event)
 
 void OptDrawBezierCurve::mouseReleaseEvent(QMouseEvent* event)
 {
-    // 处理鼠标释放事件
 }
 
 void OptDrawBezierCurve::mouseMoveEvent(QMouseEvent* event)
 {
-    // 处理鼠标移动事件
 }
 
 void OptDrawBezierCurve::wheelEvent(QWheelEvent* event)
 {
-    // 处理鼠标滚轮事件
 }
 
 void OptDrawBezierCurve::keyPressEvent(QKeyEvent* event)
 {
-    // 处理按键事件
 }

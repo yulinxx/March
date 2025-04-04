@@ -9,11 +9,16 @@ namespace MEngine
         std::vector<Entity*> m_vecEntities;
     };
 
-    Group::Group() : m_pImpl(std::make_unique<Impl>())
+    Group::Group()
     {
+        m_pImpl = new Impl();
     }
 
-    Group::~Group() = default;
+    Group::~Group()
+    {
+        delete m_pImpl;
+        m_pImpl = nullptr;
+    }
 
     void Group::addEntity(Entity* entity)
     {
@@ -25,7 +30,9 @@ namespace MEngine
 
     bool Group::removeEntity(Entity* entity)
     {
-        if (!entity) return false;
+        if (!entity) 
+            return false;
+
         auto it = std::find(m_pImpl->m_vecEntities.begin(), m_pImpl->m_vecEntities.end(), entity);
         if (it != m_pImpl->m_vecEntities.end())
         {

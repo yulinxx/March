@@ -2,6 +2,7 @@
 
 OptDrawArc::OptDrawArc(MEngine::Scene* scene) : OptBase(scene)
 {
+    m_drawType = DrawType::Arc;
 }
 
 void OptDrawArc::mousePressEvent(QMouseEvent* event)
@@ -35,10 +36,10 @@ void OptDrawArc::mouseMoveEvent(QMouseEvent* event)
 
 void OptDrawArc::wheelEvent(QWheelEvent* event)
 {
-    // 可根据需要添加自定义处理逻辑
+    
 }
 
 void OptDrawArc::keyPressEvent(QKeyEvent* event)
 {
-    // 可根据需要添加自定义处理逻辑
+    
 }

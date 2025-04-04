@@ -1,7 +1,6 @@
 #include "OptDrawLine.h"
 
 #include "Command/AddEntityCmd.h"
-#include "Widgets/RenderView/ViewWrapper.h"
 
 #include "Render/MarchView.h"
 #include "Eng/Entity/Line.h"
@@ -9,19 +8,26 @@
 OptDrawLine::OptDrawLine(MEngine::Scene* scene)
     : OptBase(scene)
 {
+    m_drawType = DrawType::Line;
+
+    m_linePreview = std::make_unique<MEngine::Line>();
+    m_scene->addPreview(m_linePreview.get());
 }
 
 OptDrawLine::~OptDrawLine()
 {
+    m_linePreview.reset();
 }
 
 void OptDrawLine::enter()
 {
     m_nPts = 0;
+
 }
 
 void OptDrawLine::exit()
 {
+    m_scene->addPreview(m_linePreview.get());
     m_nPts = 0;
 }
 
@@ -34,6 +40,9 @@ void OptDrawLine::mousePressEvent(QMouseEvent* event)
         auto posW = m_scene->screenToWorld(Ut::Vec2d(pos.x(), pos.y()));
         if (m_nPts == 0)
         {
+            m_linePreview->m_basePt = posW;
+            m_linePreview->m_secPoint = posW;
+
             m_startPoint = std::move(posW);
             m_nPts++;
         }
@@ -64,6 +73,15 @@ void OptDrawLine::mouseReleaseEvent(QMouseEvent* event)
 
 void OptDrawLine::mouseMoveEvent(QMouseEvent* event)
 {
+    if (m_nPts == 1)
+    {
+        auto pos = event->pos();
+        auto posW = m_scene->screenToWorld({pos.x(), pos.y()});
+        m_linePreview->m_secPoint = posW;
+
+        m_viewWrap->updateRender();
+    }
+
     //if (event->buttons() & Qt::LeftButton)
     //{
     //    QPointF start = m_scene->getStartPoint();

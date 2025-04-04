@@ -3,8 +3,7 @@
 
 #include "DrawData/DrawData.h"
 #include "Scene/EntityIndex.h"
-#include "Scene/Group.h"
-#include "Command/CommandManager.h"
+
 // #include "RI/IRenderInterface.h"
 
 #include "Ut/Matrix.h"
@@ -13,6 +12,10 @@
 
 namespace  MEngine
 {
+    class Group;
+    class Previews;
+    class CommandManager;
+
     class MENGINE_API SceneData final
     {
     public:
@@ -36,6 +39,9 @@ namespace  MEngine
         Group* m_rootGroup{ nullptr };
         EntityIndex* m_entTree{ nullptr };
         CommandManager* m_cmdManager{ nullptr };
+
+        Previews* m_previews{ nullptr };
+
         //IRender::IRenderInterface* m_iRender{ nullptr };
         DrawData* m_drawData{ nullptr };
 

@@ -24,13 +24,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_SOURCE_DIR}/Utility/include
 )
 
-if(OUT_CMAKE_MSG)
-message("===== ${PROJECT_NAME} 包含目录路径如下:")
-message(STATUS "1. ${CMAKE_CURRENT_SOURCE_DIR}/include")
-message(STATUS "2. ${CMAKE_SOURCE_DIR}/MLog/include")
-message(STATUS "3. ${CMAKE_SOURCE_DIR}/Utility/include")
-endif(OUT_CMAKE_MSG)
-
 target_link_libraries(${PROJECT_NAME} PRIVATE
     Eigen3::Eigen
     MLog

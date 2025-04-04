@@ -71,7 +71,7 @@ void DrawToolBar::initUI()
     m_toolbar->addAction(m_mapActions[static_cast<int>(DrawType::Select)]);
 
     m_toolbar->addSeparator();
-    for (size_t i = 1; i < 7; ++i)
+    for (int i = 1; i < 7; ++i)
     {
         m_toolbar->addAction(m_mapActions[i]);
     }

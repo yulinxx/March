@@ -179,14 +179,21 @@ void OptBase::mouseMoveEvent(QMouseEvent* event)
     }
 }
 
+void OptBase::mouseDoubleClickEvent(QMouseEvent* event)
+{
+
+}
+
 void OptBase::wheelEvent(QWheelEvent* event)
 {
-    QPoint curPos = event->pos();
+    QPointF curPos = event->position();
     auto world = m_scene->screenToWorld({ curPos.x(), curPos.y() });
 
     float delta = event->angleDelta().y() > 0 ? 1.1f : 0.9f;
 
+    // 中心点缩放
     m_scene->zoomAt(Ut::Vec2{ world.x(), world.y() }, delta);
+    // 视图中心点缩放
     //m_scene->setZoom(delta);
 
     Ut::Mat3& matView = m_scene->getViewMatrix();
@@ -195,7 +202,6 @@ void OptBase::wheelEvent(QWheelEvent* event)
     m_glView->update();
 
     //sigCoordChanged(world.x(), world.y());
-
 }
 
 void OptBase::keyPressEvent(QKeyEvent* event)
@@ -203,7 +209,7 @@ void OptBase::keyPressEvent(QKeyEvent* event)
     if (event->key() == Qt::Key_Escape)
     {
         m_bPanning = false;
-        m_viewWrap->setOperation(nullptr);
+        m_viewWrap->setOperation(0);
     }
     if (event->key() == Qt::Key_Delete)
     {
@@ -212,13 +218,24 @@ void OptBase::keyPressEvent(QKeyEvent* event)
     }
 }
 
+void OptBase::keyReleaseEvent(QKeyEvent* event)
+{
+
+}
+
 void OptBase::resizeEvent(QResizeEvent* event)
 {
-    auto sz = m_glView->size();
-    m_scene->setView(sz.width(), sz.height());
 
-    auto& mat = m_scene->getViewMatrix();
-    m_glView->setViewMatrix(mat);
+}
+
+void OptBase::enterEvent(QEnterEvent* event)
+{
+
+}
+
+void OptBase::leaveEvent(QEvent* event)
+{
+
 }
 
 void OptBase::resetView()
@@ -232,7 +249,7 @@ void OptBase::resetView()
     m_glView->update();
 }
 
-void OptBase::setParent(ViewWrapper* parent)
+void OptBase::setViewWidget(ViewWrapper* parent)
 {
     m_viewWrap = parent;
 }

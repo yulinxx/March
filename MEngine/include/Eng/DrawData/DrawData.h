@@ -4,13 +4,15 @@
 #include <vector>
 #include <memory>
 #include "MEngineAPI.h"
-#include "Scene/Group.h"
 
-// 前向声明
-class LineData;
+
 
 namespace MEngine
 {
+    class LineData;
+    class Group;
+    class Previews;
+
     class MENGINE_API DrawData final
     {
     public:
@@ -19,13 +21,14 @@ namespace MEngine
 
     public:
         void processEntities(Group* group);
+        void processPreviews(Previews* previews);
 
-        float* getLineData(size_t& sz) const;
         std::pair<float*, size_t> getLineData() const;
+        std::pair<float*, size_t> getPreviewData() const;
 
     private:
         class Impl;
-        Impl* pImpl; 
+        Impl* pImpl;
     };
 }
 

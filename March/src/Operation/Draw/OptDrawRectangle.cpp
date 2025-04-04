@@ -2,6 +2,7 @@
 
 OptDrawRectangle::OptDrawRectangle(MEngine::Scene* scene) : OptBase(scene)
 {
+    m_drawType = DrawType::Rectangle;
 }
 
 void OptDrawRectangle::mousePressEvent(QMouseEvent* event)
@@ -35,10 +36,8 @@ void OptDrawRectangle::mouseMoveEvent(QMouseEvent* event)
 
 void OptDrawRectangle::wheelEvent(QWheelEvent* event)
 {
-    // 可根据需要添加自定义处理逻辑
 }
 
 void OptDrawRectangle::keyPressEvent(QKeyEvent* event)
 {
-    // 可根据需要添加自定义处理逻辑
 }

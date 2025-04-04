@@ -1,20 +1,20 @@
 #include "OptDrawText.h"
 
-OptDrawText::OptDrawText(MEngine::Scene* scene) : OptBase(scene) {}
-OptDrawText::~OptDrawText() {}
-
-// 实现enter()函数
-void OptDrawText::enter()
+OptDrawText::OptDrawText(MEngine::Scene* scene) : OptBase(scene)
 {
-    // 这里可以添加进入绘制文本操作时的具体逻辑
-    // 例如，初始化文本绘制所需的数据、显示提示信息等
+    m_drawType = DrawType::Text;
 }
 
-// 实现exit()函数
+OptDrawText::~OptDrawText()
+{
+}
+
+void OptDrawText::enter()
+{
+}
+
 void OptDrawText::exit()
 {
-    // 这里可以添加退出绘制文本操作时的具体逻辑
-    // 例如，清理文本绘制相关的数据、保存状态等
 }
 
 void OptDrawText::mousePressEvent(QMouseEvent* event)

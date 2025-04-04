@@ -1,21 +1,20 @@
 #include "OptDrawSpline.h"
 
-OptDrawSpline::OptDrawSpline(MEngine::Scene* scene) : OptBase(scene) {}
-
-OptDrawSpline::~OptDrawSpline() {}
-
-// 实现enter()函数
-void OptDrawSpline::enter()
+OptDrawSpline::OptDrawSpline(MEngine::Scene* scene) : OptBase(scene)
 {
-    // 这里可以添加进入绘制样条曲线操作时的具体逻辑
-    // 例如，初始化样条曲线绘制所需的数据、显示提示信息等
+    m_drawType = DrawType::Spline;
 }
 
-// 实现exit()函数
+OptDrawSpline::~OptDrawSpline()
+{
+}
+
+void OptDrawSpline::enter()
+{
+}
+
 void OptDrawSpline::exit()
 {
-    // 这里可以添加退出绘制样条曲线操作时的具体逻辑
-    // 例如，清理样条曲线绘制相关的数据、保存状态等
 }
 
 void OptDrawSpline::mousePressEvent(QMouseEvent* event)

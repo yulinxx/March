@@ -18,6 +18,8 @@ namespace MRender
         format.setProfile(QSurfaceFormat::CoreProfile);
         setFormat(format);
 
+        setMouseTracking(true);
+
         m_crossPoints = {
             {-0.9f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f}, // 红色
             {0.9f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f},  // 红色

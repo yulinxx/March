@@ -6,11 +6,15 @@
 #include <QWheelEvent>
 #include <QKeyEvent>
 
+#include "def.h"
+
+#include "Widgets/RenderView/ViewWrapper.h"
 #include "Scene/Scene.h"
 
 
-class ViewWrapper;
+//class ViewWrapper;
 namespace MRender { class MarchView; }
+class IOperation;
 
 class OptBase
 {
@@ -26,19 +30,31 @@ public:
     virtual void mousePressEvent(QMouseEvent* event);
     virtual void mouseReleaseEvent(QMouseEvent* event);
     virtual void mouseMoveEvent(QMouseEvent* event);
+    virtual void mouseDoubleClickEvent(QMouseEvent* event);
+
     virtual void wheelEvent(QWheelEvent* event);
+
     virtual void keyPressEvent(QKeyEvent* event);
+    virtual void keyReleaseEvent(QKeyEvent* event);
 
     virtual void resizeEvent(QResizeEvent* event);
+
+    virtual void enterEvent(QEnterEvent* event);
+    virtual void leaveEvent(QEvent* event);
+
 
 public:
     void resetView();
 
-    void setParent(ViewWrapper* parent);
+    void setViewWidget(ViewWrapper* parent);
     void setGLView(MRender::MarchView* glView);
+
+    DrawType getDrawType() { return m_drawType; }
 
 //private:
 public:
+    DrawType m_drawType = DrawType::Select;
+
     ViewWrapper* m_viewWrap = nullptr;
     MEngine::Scene* m_scene = nullptr;
     MRender::MarchView* m_glView = nullptr;
@@ -53,6 +69,7 @@ public:
     bool m_bSelecting = false;
     Ut::Vec2d m_selectStart;
     Ut::Vec2d m_selectEnd;
+
 };
 
 #endif // OPTBASE_H

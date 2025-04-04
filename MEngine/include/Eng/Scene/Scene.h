@@ -2,6 +2,7 @@
 #define SCENE_H
 
 #include "Scene/SceneData.h"
+#include "Command/CommandManager.h"
 
 //#include "IRender/IRenderInterface.h"
 
@@ -14,6 +15,9 @@ namespace MEngine
         ~Scene();
 
     public:
+        void addPreview(Entity* entity);
+        void removePreview(Entity* entity);
+
         // void addEntity(Entity* entity, Group* parent = nullptr);
         // bool removeEntity(Entity* entity);
 

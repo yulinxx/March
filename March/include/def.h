@@ -1,19 +1,18 @@
 #ifndef DEF_H
 #define DEF_H
 
-enum class EntityOpt
+enum EntityOpt
 {
-    Select,
     Move,
     Rotate,
     Scale,
     Mirror,
     Delete,
-    None
 };
 
 enum class DrawType
 {
+    Select = 0,
     Point,
     Line,
     Polyline,
@@ -24,6 +23,8 @@ enum class DrawType
     Spline,
     Text,
     Image,
+    BezierCurve,
+    Rectangle,
     None
 };
 
