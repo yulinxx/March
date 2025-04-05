@@ -16,7 +16,6 @@ public:
     OptDrawLine(MEngine::Scene* scene);
     ~OptDrawLine() override;
 
-
 public:
     void enter() override;
     void exit() override;
@@ -36,8 +35,7 @@ private:
     Ut::Vec2d m_startPoint;
     Ut::Vec2d m_endPoint;
 
-
-    std::shared_ptr<MEngine::Line> m_linePreview= nullptr;
+    std::shared_ptr<MEngine::Line> m_linePreview = nullptr;
 };
 
 #endif // OPTDRAWLINE_H

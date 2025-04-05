@@ -9,13 +9,14 @@ namespace MEngine
     class MENGINE_API Text : public Entity
     {
     public:
+        Text();
+        ~Text() override;
+
+    public:
         // double BaseHeight;
         // std::string FontName;
         // double Height;
         // std::string text;
-
-        Text();
-        ~Text() override;
     };
 }
 

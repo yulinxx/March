@@ -37,8 +37,10 @@ namespace MRender
         void setTranslation(const QVector2D& translation);
 
         void addLinePoint(const ColorPoint& point);
+        void addLinesPoint(const ColorPoint& point);
 
         void clearLinePoints();
+        void clearLinesPoints();
 
     protected:
         void initializeGL() override;
@@ -54,19 +56,27 @@ namespace MRender
 
     private:
         void updateLineBuffer();
+        void updateLinesBuffer();
         void updateCrossBuffer();
         void updateRuler();
 
     private:
+        // 原有线条资源
         QOpenGLShaderProgram* m_lineProgram{ nullptr };
         GLuint m_lineVao;
         GLuint m_lineVbo;
+        
+        // 新增线条带资源
+        GLuint m_linesVao;  // 新增VAO
+        GLuint m_linesVbo;  // 新增VBO
+        QOpenGLShaderProgram* m_linesProgram{ nullptr }; // 新增shader program
 
         //float m_scale = 1.0f;
         QVector2D m_translation;
         QPoint m_lastPos;
 
         std::vector<ColorPoint> m_linePoints;
+        std::vector<ColorPoint> m_linesPoints;
         std::vector<ColorPoint> m_crossPoints;
         GLuint m_crossVao, m_crossVbo;
         QOpenGLShaderProgram* m_crossProgram;

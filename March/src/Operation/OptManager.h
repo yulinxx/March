@@ -53,7 +53,6 @@ private:
     ViewWrapper* m_viewWrap = nullptr;
     MRender::MarchView* m_glView = nullptr;
     MEngine::Scene* m_scene = nullptr;
-
 };
 
 #endif // OPTMANAGER_H

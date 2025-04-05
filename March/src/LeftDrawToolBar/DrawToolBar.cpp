@@ -25,18 +25,19 @@ void DrawToolBar::initUI()
     setAllowedAreas(Qt::AllDockWidgetAreas);
     setWidget(m_toolbar);
 
-
     // 使用有序map管理操作类型与action的对应关系
     const std::map<int, std::pair<QString, QString>> mapActionCfg{
-        {static_cast<int>(DrawType::Select),  {tr("Select"),  "://icons/draw-select.png"}},
-        {static_cast<int>(DrawType::Point),   {tr("Point"),   "://icons/draw-point.png"}},
-        {static_cast<int>(DrawType::Line),    {tr("Line"),    "://icons/draw-line.png"}},
-        {static_cast<int>(DrawType::Polyline),{tr("Polyline"),"://icons/draw-pline.png"}},
-        {static_cast<int>(DrawType::Circle),  {tr("Circle"),  "://icons/draw-circle.png"}},
-        {static_cast<int>(DrawType::Text),    {tr("Text"),    "://icons/draw-text.png"}},
-        {static_cast<int>(DrawType::Arc),     {tr("Arc"),     "://icons/draw-elliptic-arc.png"}},
-        {static_cast<int>(DrawType::Polygon), {tr("Polygon"), "://icons/draw-polygon.png"}},
-        {static_cast<int>(DrawType::Image),   {tr("Image"),   "://icons/draw-image.png"}}
+        {static_cast<int>(DrawType::Select),    {tr("Select"),    "://icons/draw-select.png"}},
+        {static_cast<int>(DrawType::Point),     {tr("Point"),     "://icons/draw-point.png"}},
+        {static_cast<int>(DrawType::Line),      {tr("Line"),      "://icons/draw-line.png"}},
+        {static_cast<int>(DrawType::Polyline),  {tr("Polyline"),  "://icons/draw-pline.png"}},
+        {static_cast<int>(DrawType::Polygon),   {tr("Polygon"),   "://icons/draw-polygon.png"}},
+        {static_cast<int>(DrawType::Rectangle), {tr("Rectangle"), "://icons/draw-rectangle.png"}},
+        {static_cast<int>(DrawType::Arc),       {tr("Arc"),       "://icons/draw-arc.png"}},
+        {static_cast<int>(DrawType::Circle),    {tr("Circle"),    "://icons/draw-circle.png"}},
+        {static_cast<int>(DrawType::Ellipse),   {tr("Ellipse"),   "://icons/draw-ellipse.png"}},
+        {static_cast<int>(DrawType::Text),      {tr("Text"),      "://icons/draw-text.png"}},
+        {static_cast<int>(DrawType::Image),     {tr("Image"),     "://icons/draw-image.png"}}
     };
 
     // 批量创建并配置action

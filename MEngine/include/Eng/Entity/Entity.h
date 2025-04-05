@@ -4,7 +4,8 @@
 #include "MEngineAPI.h"
 #include "Ut/tools.h"
 
-#include <Eigen/Eigen>
+
+// #include <Eigen/Eigen>
 #include <string>
 
 #include "Ut/Vec.h"
@@ -12,7 +13,8 @@
 
 namespace MEngine
 {
-    enum class ETYPE
+
+    enum class EntType
     {
         POINT,
         LINE,
@@ -20,6 +22,7 @@ namespace MEngine
         CIRCLE,
         LWPOLYLINE,
         SPLINE,
+        POLYGON,
         TEXT,
         UNKNOWN
     };
@@ -43,7 +46,7 @@ namespace MEngine
         // const std::string& getName() const;
         //void setName(const std::string& name);
 
-        ETYPE m_eType;
+        EntType m_eType;
         size_t m_nId;
         // EigenVector2dWrapper m_basePt;
         Ut::Vec2d m_basePt;

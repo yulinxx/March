@@ -10,11 +10,14 @@ namespace MEngine
     class MENGINE_API PolyLine : public Entity
     {
     public:
-        // std::vector<std::unique_ptr<Entity>> entitylist;
 
         PolyLine();
         ~PolyLine() override;
 
+    public:
+        //std::pair<float*, size_t> getLinesData() const;
+
+        // std::vector<std::unique_ptr<Entity>> entitylist;
         // Vec2 getValue(double t) override;
         // double EvalParam(const Vec2& p) override;
     };

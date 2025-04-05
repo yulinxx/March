@@ -6,7 +6,7 @@ namespace MEngine
 {
     Arc::Arc()
     {
-        m_eType = ETYPE::ARC;
+        m_eType = EntType::ARC;
     }
     Arc::~Arc()
     {

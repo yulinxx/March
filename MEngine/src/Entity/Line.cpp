@@ -7,7 +7,7 @@ namespace MEngine
 {
     Line::Line()
     {
-        m_eType = ETYPE::LINE;
+        m_eType = EntType::LINE;
     }
 
     Line::Line(Ut::Vec2d& ptS, Ut::Vec2d& ptE)

@@ -4,12 +4,12 @@ namespace MEngine
 {
     Point::Point()
     {
-        m_eType = ETYPE::POINT;
+        m_eType = EntType::POINT;
     }
 
     Point::Point(Ut::Vec2d pos)
     {
-        m_eType = ETYPE::POINT;
+        m_eType = EntType::POINT;
         m_vPos = pos;
     }
 

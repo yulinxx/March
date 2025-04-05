@@ -5,8 +5,6 @@
 #include <memory>
 #include "MEngineAPI.h"
 
-
-
 namespace MEngine
 {
     class LineData;
@@ -23,8 +21,11 @@ namespace MEngine
         void processEntities(Group* group);
         void processPreviews(Previews* previews);
 
+    public:
         std::pair<float*, size_t> getLineData() const;
+        std::pair<float*, size_t> getLinesData() const;
         std::pair<float*, size_t> getPreviewData() const;
+        std::pair<float*, size_t> getPreviewsData() const;
 
     private:
         class Impl;

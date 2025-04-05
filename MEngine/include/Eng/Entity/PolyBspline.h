@@ -13,6 +13,8 @@ namespace MEngine
         ~PolyBspline() override;
 
     public:
+        std::pair<float*, size_t> getLinesData() const;
+
         int degree;
         // std::vector<double> knots;
         // std::vector<double> weights;

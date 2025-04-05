@@ -6,7 +6,7 @@ namespace MEngine
 {
     struct Previews::Impl
     {
-        std::set<Entity*> m_setEntities; 
+        std::set<Entity*> m_setEntities;
     };
 
     Previews::Previews()
@@ -19,19 +19,21 @@ namespace MEngine
         delete m_pImpl;
         m_pImpl = nullptr;
     }
+
     void Previews::addEntity(Entity* entity)
     {
-        if (entity) {
+        if (entity)
+        {
             m_pImpl->m_setEntities.insert(entity);
         }
     }
 
     bool Previews::removeEntity(Entity* entity)
     {
-        if (!entity) 
+        if (!entity)
             return false;
 
-        auto it = m_pImpl->m_setEntities.find(entity); 
+        auto it = m_pImpl->m_setEntities.find(entity);
         if (it != m_pImpl->m_setEntities.end())
         {
             m_pImpl->m_setEntities.erase(it);
@@ -44,18 +46,16 @@ namespace MEngine
     {
         return m_pImpl->m_setEntities.size();
     }
-    
+
     Entity* Previews::getChild(size_t index) const
     {
         if (index >= m_pImpl->m_setEntities.size())
             return nullptr;
-            
+
         auto it = m_pImpl->m_setEntities.begin();
-        std::advance(it, index);  // 使用迭代器跳跃访问set元素
+        std::advance(it, index);
         return *it;
     }
-
-
 
     template<typename Func>
     void Previews::forEachEntity(Func&& func) const

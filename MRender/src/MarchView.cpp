@@ -35,6 +35,10 @@ namespace MRender
         glDeleteBuffers(1, &m_lineVbo);
         delete m_lineProgram;
 
+        glDeleteVertexArrays(1, &m_linesVao);
+        glDeleteBuffers(1, &m_linesVbo);
+        delete m_linesProgram;
+
         glDeleteVertexArrays(1, &m_crossVao);
         glDeleteBuffers(1, &m_crossVbo);
         delete m_crossProgram;
@@ -54,8 +58,7 @@ namespace MRender
         }
 
         // Line
-        {
-            const char* lineVS = R"(
+        const char* lineVS = R"(
             #version 400
             layout(location = 0) in vec3 position;
             layout(location = 1) in vec3 color;
@@ -71,7 +74,7 @@ namespace MRender
             }
         )";
 
-            const char* lineFS = R"(
+        const char* lineFS = R"(
             #version 400
             in vec3 fragColor;
             out vec4 outColor;
@@ -81,7 +84,9 @@ namespace MRender
             }
         )";
 
-            m_lineProgram = new QOpenGLShaderProgram;
+        {
+
+            m_lineProgram = new QOpenGLShaderProgram(this);;
             m_lineProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, lineVS);
             m_lineProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, lineFS);
             m_lineProgram->link();
@@ -90,6 +95,31 @@ namespace MRender
             glGenBuffers(1, &m_lineVbo);
             glBindVertexArray(m_lineVao);
             glBindBuffer(GL_ARRAY_BUFFER, m_lineVbo);
+
+            glEnableVertexAttribArray(0);
+
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ColorPoint), nullptr);
+            glEnableVertexAttribArray(1);
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ColorPoint), (void*)(3 * sizeof(float)));
+            glEnableVertexAttribArray(1);
+
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glBindVertexArray(0);
+        }
+
+        // 初始化lines program
+        {
+            m_linesProgram = new QOpenGLShaderProgram(this);
+            m_linesProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, lineVS);
+            m_linesProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, lineFS);
+            m_linesProgram->link();
+            
+            // glGenVertexArrays(1, &m_linesVao);
+            // glGenBuffers(1, &m_linesVbo);
+            glGenVertexArrays(1, &m_linesVao);
+            glGenBuffers(1, &m_linesVbo);
+            glBindVertexArray(m_linesVao);
+            glBindBuffer(GL_ARRAY_BUFFER, m_linesVbo);
 
             glEnableVertexAttribArray(0);
 
@@ -216,6 +246,17 @@ namespace MRender
             m_lineProgram->release();
         }
 
+        if (m_linesPoints.size() >= 2 && m_linesProgram->bind())
+        {
+            m_linesProgram->setUniformValue("projection", m_viewMatrix);
+            m_linesProgram->setUniformValue("translation", m_translation);
+            //m_lineProgram->setUniformValue("scale", m_scale);
+            glBindVertexArray(m_linesVao);
+            glDrawArrays(GL_LINE_STRIP, 0, GLsizei(m_linesPoints.size()));
+            glBindVertexArray(0);
+            m_linesProgram->release();
+        }
+
         if (m_crossPoints.size() >= 2 && m_crossProgram->bind())
         {
             glBindVertexArray(m_crossVao);
@@ -322,6 +363,33 @@ namespace MRender
             }
             GLsizei nBufferSz = static_cast<GLsizei>(bufferSize);
             glBufferData(GL_ARRAY_BUFFER, nBufferSz, m_linePoints.data(), GL_STATIC_DRAW);
+        }
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ColorPoint), nullptr);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ColorPoint), (void*)(3 * sizeof(float)));
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+    }
+
+    void MarchView::updateLinesBuffer()
+    {
+        glBindVertexArray(m_linesVao);
+        glBindBuffer(GL_ARRAY_BUFFER, m_linesVbo);
+        if (m_linesPoints.empty())
+        {
+            glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_STATIC_DRAW);
+        }
+        else
+        {
+            size_t bufferSize = m_linesPoints.size() * sizeof(ColorPoint);
+            if (bufferSize > static_cast<size_t>(std::numeric_limits<GLsizei>::max()))
+            {
+                qWarning() << "Buffer size exceeds GLsizei limit";
+                return;
+            }
+            GLsizei nBufferSz = static_cast<GLsizei>(bufferSize);
+            glBufferData(GL_ARRAY_BUFFER, nBufferSz, m_linesPoints.data(), GL_STATIC_DRAW);
         }
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ColorPoint), nullptr);
         glEnableVertexAttribArray(0);
@@ -454,6 +522,12 @@ namespace MRender
         updateLineBuffer();
     }
 
+    void MarchView::addLinesPoint(const ColorPoint& point)
+    {
+        m_linesPoints.push_back(point);
+        updateLinesBuffer();
+    }
+
     void MarchView::clearLinePoints()
     {
         m_linePoints.clear();
@@ -490,5 +564,13 @@ namespace MRender
         m_linePoints.push_back({ rect.x1, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b });
 
         updateLineBuffer();
+    }
+
+    void MarchView::clearLinesPoints()
+    {
+        m_linesPoints.clear();
+        m_linesPoints.shrink_to_fit();
+
+        updateLinesBuffer();
     }
 }

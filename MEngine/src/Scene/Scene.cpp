@@ -266,5 +266,4 @@ namespace MEngine
 
         m_sceneData->m_matOrtho.identity();
     }
-
 } // namespace MEngine

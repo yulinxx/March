@@ -10,6 +10,8 @@ enum EntityOpt
     Delete,
 };
 
+
+
 enum class DrawType
 {
     Select = 0,
@@ -17,9 +19,9 @@ enum class DrawType
     Line,
     Polyline,
     Polygon,
+    Arc,
     Circle,
     Ellipse,
-    Arc,
     Spline,
     Text,
     Image,

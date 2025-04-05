@@ -8,7 +8,7 @@ namespace MEngine
 {
     struct ArcData
     {
-        void clear(); // 清空ArcData中的数据，用于清除上一次的渲染数据
+        void clear();
 
         // 收集Arc数据的函数
         void collectArcData(const Arc* arc);

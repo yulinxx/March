@@ -4,7 +4,7 @@ namespace MEngine
 {
     Text::Text()
     {
-        m_eType = ETYPE::TEXT;
+        m_eType = EntType::TEXT;
     }
 
     Text::~Text()

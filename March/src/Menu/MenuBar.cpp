@@ -175,7 +175,7 @@ void MenuBar::initDrawMenu(QMenu* menu)
     m_actDrawPline = new QAction(QIcon("://icons/draw-pline.png"), tr("Polyline"), this);
     m_actDrawCircle = new QAction(QIcon("://icons/draw-circle.png"), tr("Circle"), this);
     m_actDrawText = new QAction(QIcon("://icons/draw-text.png"), tr("Text"), this);
-    m_actDrawArc = new QAction(QIcon("://icons/draw-elliptic-arc.png"), tr("Arc"), this);
+    m_actDrawArc = new QAction(QIcon("://icons/draw-arc.png"), tr("Arc"), this);
     m_actDrawPolygon = new QAction(QIcon("://icons/draw-polygon.png"), tr("Polygon"), this);
     m_actDrawImage = new QAction(QIcon("://icons/draw-image.png"), tr("Image"), this);
 

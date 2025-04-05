@@ -7,6 +7,7 @@
 #include <QApplication>
 
 #include <algorithm>
+#include "def.h"
 #include <random>
 
 OptBase::OptBase(MEngine::Scene* scene)
@@ -20,12 +21,12 @@ OptBase::~OptBase()
 
 void OptBase::enter()
 {
-
 }
 
 void OptBase::exit()
 {
-
+    if (m_viewWrap)
+        m_viewWrap->setOperation(static_cast<int>(DrawType::Select));
 }
 
 void OptBase::mousePressEvent(QMouseEvent* event)
@@ -80,7 +81,6 @@ void OptBase::mousePressEvent(QMouseEvent* event)
     {
         if (0)
         {
-
             std::random_device rd;
             std::mt19937 gen(rd());
             std::uniform_real_distribution<float> disColor(0.0f, 1.0f);
@@ -106,12 +106,16 @@ void OptBase::mousePressEvent(QMouseEvent* event)
             }
             m_glView->update();
         }
-
     }
     else if (event->button() == Qt::MiddleButton)
     {
         m_lastPos = event->pos();
     }
+}
+
+DrawType OptBase::getDrawType()
+{
+    return m_drawType;
 }
 
 void OptBase::mouseReleaseEvent(QMouseEvent* event)
@@ -181,7 +185,6 @@ void OptBase::mouseMoveEvent(QMouseEvent* event)
 
 void OptBase::mouseDoubleClickEvent(QMouseEvent* event)
 {
-
 }
 
 void OptBase::wheelEvent(QWheelEvent* event)
@@ -220,22 +223,18 @@ void OptBase::keyPressEvent(QKeyEvent* event)
 
 void OptBase::keyReleaseEvent(QKeyEvent* event)
 {
-
 }
 
 void OptBase::resizeEvent(QResizeEvent* event)
 {
-
 }
 
 void OptBase::enterEvent(QEnterEvent* event)
 {
-
 }
 
 void OptBase::leaveEvent(QEvent* event)
 {
-
 }
 
 void OptBase::resetView()

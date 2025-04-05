@@ -1,7 +1,7 @@
 #include "DrawData/LineData.h"
 namespace MEngine
 {
-    void LineData::clear() // 清空LineData中的数据，用于清除上一次的渲染数据
+    void LineData::clear()
     {
         m_vLinePts.clear();
         m_vLinePts.shrink_to_fit();

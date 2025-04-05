@@ -6,7 +6,7 @@ namespace MEngine
 {
     Circle::Circle()
     {
-        m_eType = ETYPE::CIRCLE;
+        m_eType = EntType::CIRCLE;
         m_bClosed = true;
     }
     Circle::~Circle()

@@ -5,8 +5,9 @@ namespace MEngine
 {
     PolyLine::PolyLine()
     {
-        m_eType = ETYPE::LWPOLYLINE;
+        m_eType = EntType::LWPOLYLINE;
     }
+
     PolyLine::~PolyLine()
     {
     }

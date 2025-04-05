@@ -30,8 +30,7 @@ ViewWrapper::ViewWrapper(QWidget* parent) : QWidget(parent)
 
     m_optManager = std::make_shared<OptManager>(this, m_scene, m_glView);
 
-
-    setMouseTracking(true);
+    // setMouseTracking(true);
     setFocusPolicy(Qt::StrongFocus);
 }
 
@@ -56,7 +55,6 @@ const std::vector<MRender::ColorPoint>& ViewWrapper::getLinePoints() const
     return m_glView->getLinePoints();
 }
 
-
 MRender::MarchView* ViewWrapper::getGlView() const
 {
     return m_glView;
@@ -67,35 +65,50 @@ MEngine::Scene* ViewWrapper::getScene()
     return m_scene;
 }
 
-
 void ViewWrapper::updateRender()
 {
     m_scene->paint();
 
     m_glView->clearLinePoints();
 
-    auto pairLinesData = m_scene->getDrawData()->getLineData();
-    float* ptLines = pairLinesData.first;
-    size_t szLines = pairLinesData.second;
-
-    for (size_t i = 0; i < szLines; i += 2)
     {
-        MRender::ColorPoint pts{ *(ptLines + i), *(ptLines + i + 1), 0.0f, 1.0f, 0.0f, 0.0f };
-        m_glView->addLinePoint(pts);
+        auto pairLinesData = m_scene->getDrawData()->getLineData();
+        float* ptLines = pairLinesData.first;
+        size_t szLines = pairLinesData.second;
+
+        for (size_t i = 0; i < szLines; i += 2)
+        {
+            MRender::ColorPoint pt{ *(ptLines + i), *(ptLines + i + 1), 0.0f, 1.0f, 0.0f, 0.0f };
+            m_glView->addLinePoint(pt);
+        }
     }
 
-    auto pairPreviewData = m_scene->getDrawData()->getLineData();
+    m_glView->clearLinesPoints();
+
+    {
+        auto pairLinesData = m_scene->getDrawData()->getLinesData();
+        float* ptLines = pairLinesData.first;
+        size_t szLines = pairLinesData.second;
+
+        for (size_t i = 0; i < szLines; i += 2)
+        {
+            MRender::ColorPoint pt{ *(ptLines + i), *(ptLines + i + 1), 0.0f, 1.0f, 0.0f, 0.0f };
+            m_glView->addLinesPoint(pt);
+        }
+    }
+
+
+    auto pairPreviewData = m_scene->getDrawData()->getPreviewData();
     float* ptPreview = pairPreviewData.first;
     size_t szPreview = pairPreviewData.second;
 
     for (size_t i = 0; i < szPreview; i += 2)
     {
-        MRender::ColorPoint pts{ *(ptPreview + i), *(ptPreview + i + 1), 0.0f, 1.0f, 0.0f, 0.0f };
-        m_glView->addLinePoint(pts);
+        MRender::ColorPoint pt{ *(ptPreview + i), *(ptPreview + i + 1), 0.0f, 1.0f, 0.0f, 0.0f };
+        m_glView->addLinePoint(pt);
     }
 
     m_glView->update();
-
 }
 
 void ViewWrapper::updateScene()
@@ -108,7 +121,7 @@ void ViewWrapper::updateScene()
         for (size_t i = 0; i < rootGroup->getChildrenCount(); ++i)
         {
             auto ent = rootGroup->getChild(i);
-            if (ent && ent->m_eType == MEngine::ETYPE::LINE)
+            if (ent && ent->m_eType == MEngine::EntType::LINE)
             {
                 auto line = static_cast<MEngine::Line*>(ent);
 
@@ -156,11 +169,11 @@ bool ViewWrapper::eventFilter(QObject* obj, QEvent* event)
             m_optManager->mouseReleaseEvent(static_cast<QMouseEvent*>(event));
             return true;
         }
-        else if (event->type() == QEvent::MouseMove) 
-{
-    m_optManager->mouseMoveEvent(static_cast<QMouseEvent*>(event));
-    return true;
-}
+        else if (event->type() == QEvent::MouseMove)
+        {
+            m_optManager->mouseMoveEvent(static_cast<QMouseEvent*>(event));
+            return true;
+        }
         else if (event->type() == QEvent::KeyPress)
         {
             m_optManager->keyPressEvent(static_cast<QKeyEvent*>(event));
@@ -168,6 +181,11 @@ bool ViewWrapper::eventFilter(QObject* obj, QEvent* event)
         else if (event->type() == QEvent::KeyRelease)
         {
             m_optManager->keyReleaseEvent(static_cast<QKeyEvent*>(event));
+            return true;
+        }
+        else if (event->type() == QEvent::Wheel)
+        {
+            m_optManager->wheelEvent(static_cast<QWheelEvent*>(event));
             return true;
         }
         else if (event->type() == QEvent::FocusIn)
@@ -223,7 +241,7 @@ void ViewWrapper::mouseReleaseEvent(QMouseEvent* event)
 
 void ViewWrapper::wheelEvent(QWheelEvent* event)
 {
-    //m_optManager->wheelEvent(event);
+    m_optManager->wheelEvent(event);
 
     QWidget::wheelEvent(event);
 }
@@ -235,7 +253,6 @@ void ViewWrapper::mouseMoveEvent(QMouseEvent* event)
 
     //m_optManager->mouseMoveEvent(event);
 
-
     //sigCoordChanged(world.x(), world.y());
 
     QWidget::mouseMoveEvent(event);
@@ -243,7 +260,7 @@ void ViewWrapper::mouseMoveEvent(QMouseEvent* event)
 
 void ViewWrapper::keyPressEvent(QKeyEvent* event)
 {
-    //m_optManager->keyPressEvent(event);
+    m_optManager->keyPressEvent(event);
 
     QWidget::keyPressEvent(event);
 }

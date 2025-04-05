@@ -11,7 +11,7 @@ namespace MEngine
     class MENGINE_API Previews
     {
     public:
-    Previews();
+        Previews();
         ~Previews();
 
     public:
@@ -20,7 +20,6 @@ namespace MEngine
 
         size_t getChildrenCount() const;
         Entity* getChild(size_t index) const;
-
 
         template<typename Func>
         void forEachEntity(Func&& func) const;

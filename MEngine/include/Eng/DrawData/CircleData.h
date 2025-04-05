@@ -8,7 +8,7 @@ namespace MEngine
 {
     struct CircleData
     {
-        void clear(); // 清空CircleData中的数据，用于清除上一次的渲染数据
+        void clear();
 
         // 收集Circle数据的函数
         void collectCircleData(const Circle* circle);

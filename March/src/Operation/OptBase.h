@@ -11,9 +11,11 @@
 #include "Widgets/RenderView/ViewWrapper.h"
 #include "Scene/Scene.h"
 
-
 //class ViewWrapper;
-namespace MRender { class MarchView; }
+namespace MRender
+{
+    class MarchView;
+}
 class IOperation;
 
 class OptBase
@@ -42,16 +44,16 @@ public:
     virtual void enterEvent(QEnterEvent* event);
     virtual void leaveEvent(QEvent* event);
 
-
 public:
     void resetView();
 
     void setViewWidget(ViewWrapper* parent);
     void setGLView(MRender::MarchView* glView);
 
-    DrawType getDrawType() { return m_drawType; }
+    DrawType getDrawType();
 
-//private:
+
+    //private:
 public:
     DrawType m_drawType = DrawType::Select;
 
@@ -69,7 +71,6 @@ public:
     bool m_bSelecting = false;
     Ut::Vec2d m_selectStart;
     Ut::Vec2d m_selectEnd;
-
 };
 
 #endif // OPTBASE_H

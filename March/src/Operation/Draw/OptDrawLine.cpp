@@ -22,12 +22,12 @@ OptDrawLine::~OptDrawLine()
 void OptDrawLine::enter()
 {
     m_nPts = 0;
-
 }
 
 void OptDrawLine::exit()
 {
-    m_scene->addPreview(m_linePreview.get());
+    m_scene->removePreview(m_linePreview.get());
+    Super::exit();
     m_nPts = 0;
 }
 
@@ -36,49 +36,31 @@ void OptDrawLine::mousePressEvent(QMouseEvent* event)
     if (event->button() == Qt::LeftButton)
     {
         QPointF pos = event->pos();
-
         auto posW = m_scene->screenToWorld(Ut::Vec2d(pos.x(), pos.y()));
-        if (m_nPts == 0)
-        {
-            m_linePreview->m_basePt = posW;
-            m_linePreview->m_secPoint = posW;
-
-            m_startPoint = std::move(posW);
-            m_nPts++;
-        }
-        else
-        {
-            m_endPoint = std::move(posW);
-            drawLine();
-        }
+        
+        // 开始绘制时直接记录起点
+        m_startPoint = posW;
+        m_linePreview->m_basePt = posW;
+        m_linePreview->m_secPoint = posW;
+        m_nPts = 1;  // 进入绘制状态
     }
     else if (event->button() == Qt::MiddleButton)
     {
-       Super::mousePressEvent(event);
+        Super::mousePressEvent(event);
     }
     else if (event->button() == Qt::RightButton)
     {
-       Super::mousePressEvent(event);
+        Super::mousePressEvent(event);
     }
-}
-
-void OptDrawLine::mouseReleaseEvent(QMouseEvent* event)
-{
-    if (event->button() == Qt::LeftButton)
-    {
-    }
-
-    Super::mouseReleaseEvent(event);
 }
 
 void OptDrawLine::mouseMoveEvent(QMouseEvent* event)
 {
-    if (m_nPts == 1)
+    if (m_nPts == 1)  // 在绘制状态下
     {
         auto pos = event->pos();
-        auto posW = m_scene->screenToWorld({pos.x(), pos.y()});
-        m_linePreview->m_secPoint = posW;
-
+        Ut::Vec2d posW = m_scene->screenToWorld({ pos.x(), pos.y() });
+        m_linePreview->m_secPoint = posW;  // 实时更新预览线终点
         m_viewWrap->updateRender();
     }
 
@@ -92,6 +74,27 @@ void OptDrawLine::mouseMoveEvent(QMouseEvent* event)
     Super::mouseMoveEvent(event);
 }
 
+void OptDrawLine::mouseReleaseEvent(QMouseEvent* event)
+{
+    if (event->button() == Qt::LeftButton && m_nPts == 1)
+    {
+        auto pos = event->pos();
+        m_endPoint = m_scene->screenToWorld({ pos.x(), pos.y() });
+        
+        // 有效距离时创建直线
+        if ((m_endPoint - m_startPoint).length() > 1e-6) {
+            drawLine();
+        }
+        
+        // 重置状态
+        m_nPts = 0;
+        m_linePreview->m_basePt = m_startPoint;
+        m_linePreview->m_secPoint = m_startPoint;
+        m_viewWrap->updateRender();
+    }
+    Super::mouseReleaseEvent(event);
+}
+
 void OptDrawLine::wheelEvent(QWheelEvent* event)
 {
     Super::wheelEvent(event);
@@ -101,11 +104,20 @@ void OptDrawLine::keyPressEvent(QKeyEvent* event)
 {
     if (event->key() == Qt::Key_Escape)
     {
-
+        if (m_nPts == 0)
+        {
+            exit();
+        }
+        else if (m_nPts == 1)
+        {
+            m_nPts = 0;
+            m_linePreview->m_basePt = m_startPoint;
+            m_linePreview->m_secPoint = m_startPoint;
+            m_viewWrap->updateRender();
+        }
     }
     Super::keyPressEvent(event);
 }
-
 
 void OptDrawLine::drawLine()
 {

@@ -30,7 +30,7 @@ namespace MEngine
 
     bool Group::removeEntity(Entity* entity)
     {
-        if (!entity) 
+        if (!entity)
             return false;
 
         auto it = std::find(m_pImpl->m_vecEntities.begin(), m_pImpl->m_vecEntities.end(), entity);
