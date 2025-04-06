@@ -10,8 +10,8 @@ namespace MEngine
     // 收集Circle数据的函数实现
     void CircleData::collectCircleData(const Circle* circle)
     {
-        m_vCirclePts.push_back(float(circle->m_basePt.x()));
-        m_vCirclePts.push_back(float(circle->m_basePt.y()));
+        //m_vCirclePts.push_back(float(circle->m_basePt.x()));
+        //m_vCirclePts.push_back(float(circle->m_basePt.y()));
         //m_vCirclePts.push_back(circle->m_basePt.z);
     }
 

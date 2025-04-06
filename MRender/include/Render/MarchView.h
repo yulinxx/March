@@ -65,7 +65,7 @@ namespace MRender
         QOpenGLShaderProgram* m_lineProgram{ nullptr };
         GLuint m_lineVao;
         GLuint m_lineVbo;
-        
+
         // 新增线条带资源
         GLuint m_linesVao;  // 新增VAO
         GLuint m_linesVbo;  // 新增VBO

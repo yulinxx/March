@@ -14,9 +14,10 @@ namespace MEngine
         void collectPointData(const Point* point);
 
         // 将Point数据转换为适合渲染的浮点数组
-        std::vector<float>& getPointData();
+        Ut::Vec2d& getPointData();
 
-        std::vector<float> m_vPointPts;
+        Ut::Vec2d vPt;
+        //std::vector<float> m_vPointPts;
     };
 }
 #endif // POINTDATA_H

@@ -10,23 +10,21 @@ enum EntityOpt
     Delete,
 };
 
-
-
 enum class DrawType
 {
     Select = 0,
     Point,
     Line,
     Polyline,
+    Rectangle,
     Polygon,
     Arc,
     Circle,
     Ellipse,
     Spline,
+    CubicBezier,
     Text,
     Image,
-    BezierCurve,
-    Rectangle,
     None
 };
 

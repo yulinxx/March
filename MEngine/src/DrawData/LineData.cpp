@@ -10,11 +10,14 @@ namespace MEngine
     // 收集Line数据的函数实现
     void LineData::collectLineData(Line* line)
     {
-        m_vLinePts.push_back(static_cast<float>(line->m_basePt.x()));
-        m_vLinePts.push_back(static_cast<float>(line->m_basePt.y()));
+        Ut::Vec2 startPoint;
+        Ut::Vec2 endPoint;
+        line->getPoints(startPoint, endPoint);
+        m_vLinePts.push_back(static_cast<float>(startPoint.x()));
+        m_vLinePts.push_back(static_cast<float>(startPoint.y()));
         //m_vLinePts.push_back(line->m_basePt.z);
-        m_vLinePts.push_back(static_cast<float>(line->m_secPoint.x()));
-        m_vLinePts.push_back(static_cast<float>(line->m_secPoint.y()));
+        m_vLinePts.push_back(static_cast<float>(endPoint.x()));
+        m_vLinePts.push_back(static_cast<float>(endPoint.y()));
         //m_vLinePts.push_back(line->m_secPoint.z);
     }
 

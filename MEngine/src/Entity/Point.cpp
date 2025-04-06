@@ -1,24 +1,55 @@
 #include "Entity/Point.h"
+#include <stdexcept>
 
 namespace MEngine
 {
+    struct Point::Impl
+    {
+        // Ut::Vec2 position;         // 点的位置
+        // std::vector<Ut::Vec2> vertices; // 顶点数据（仅一个点）
+    };
+
     Point::Point()
     {
-        m_eType = EntType::POINT;
-    }
-
-    Point::Point(Ut::Vec2d pos)
-    {
-        m_eType = EntType::POINT;
-        m_vPos = pos;
+        m_impl = new Impl();
+        setType(EntType::POINT);
+        setClosed(false); // 点不闭合
     }
 
     Point::~Point()
     {
+        delete m_impl;
+        m_impl = nullptr;
     }
 
-    Ut::Rect2d Point::getRect() const
+    void Point::clear()
     {
-        return Ut::Rect2d(m_vPos, m_vPos);
+        //m_impl->vertices.clear();
+        //m_impl->vertices.shrink_to_fit();
+    }
+
+    void Point::setPosition(const Ut::Vec2& position)
+    {
+        clear();
+        setBasePoint(position);
+        // m_impl->position = position;
+        updateVertex();
+    }
+
+    void Point::updateVertex()
+    {
+        // clear();
+        // m_impl->vertices.push_back(m_impl->position);
+    }
+
+    // std::pair<Ut::Vec2*, size_t> Point::getData() const
+    // {
+    //     return { m_impl->vertices.data(), m_impl->vertices.size() };
+    // }
+
+    Ut::Vec2 Point::getPosition() const
+    {
+        //return m_impl->position;
+        return getBasePoint();
     }
 }

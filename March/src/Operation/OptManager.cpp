@@ -3,17 +3,20 @@
 #include <QKeyEvent>
 
 #include "Operation/OptBase.h"
+#include "Operation/Draw/OptDrawPoint.h"
+#include "Operation/Draw/OptDrawLine.h"
+#include "Operation/Draw/OptDrawPolyLine.h"
+#include "Operation/Draw/OptDrawRectangle.h"
+#include "Operation/Draw/OptDrawPolygon.h"
 #include "Operation/Draw/OptDrawArc.h"
 #include "Operation/Draw/OptDrawCircle.h"
-#include "Operation/Draw/OptDrawImage.h"
-#include "Operation/Draw/OptDrawLine.h"
 #include "Operation/Draw/OptDrawEllipse.h"
-#include "Operation/Draw/OptDrawRectangle.h"
-#include "Operation/Draw/OptDrawBezierCurve.h"
-#include "Operation/Draw/OptDrawPoint.h"
-#include "Operation/Draw/OptDrawPolygon.h"
 #include "Operation/Draw/OptDrawSpline.h"
+#include "Operation/Draw/OptDrawCubicBezier.h"
 #include "Operation/Draw/OptDrawText.h"
+#include "Operation/Draw/OptDrawImage.h"
+
+#include "MLog/Logger.h"
 
 OptManager::OptManager(ViewWrapper* viewWidget,
     MEngine::Scene* scene,
@@ -41,7 +44,9 @@ void OptManager::set(int nType)
     if (static_cast<int>(m_curOpt->getDrawType()) == nType)
         return;
 
-    //m_curOpt->exit();
+    m_curOpt->exit();
+
+    MLog::Logger::LogInfo("Current Operation: " + std::to_string(nType));
 
     switch (nType)
     {
@@ -54,20 +59,32 @@ void OptManager::set(int nType)
     case static_cast<int>(DrawType::Line):
         m_curOpt = std::make_shared<OptDrawLine>(m_scene);
         break;
-        //case static_cast<int>(DrawType::Polyline):
-        //    m_curOpt = std::make_shared<OptDrawPline>(m_scene);
-        //    break;
-    case static_cast<int>(DrawType::Circle):
-        m_curOpt = std::make_shared<OptDrawCircle>(m_scene);
+    case static_cast<int>(DrawType::Polyline):
+        m_curOpt = std::make_shared<OptDrawPolyLine>(m_scene);
         break;
-    case static_cast<int>(DrawType::Text):
-        m_curOpt = std::make_shared<OptDrawText>(m_scene);
+    case static_cast<int>(DrawType::Rectangle):
+        m_curOpt = std::make_shared<OptDrawRectangle>(m_scene);
+        break;
+    case static_cast<int>(DrawType::Polygon):
+        m_curOpt = std::make_shared<OptDrawPolygon>(m_scene);
         break;
     case static_cast<int>(DrawType::Arc):
         m_curOpt = std::make_shared<OptDrawArc>(m_scene);
         break;
-    case static_cast<int>(DrawType::Polygon):
-        m_curOpt = std::make_shared<OptDrawPolygon>(m_scene);
+    case static_cast<int>(DrawType::Circle):
+        m_curOpt = std::make_shared<OptDrawCircle>(m_scene);
+        break;
+    case static_cast<int>(DrawType::Ellipse):
+        m_curOpt = std::make_shared<OptDrawEllipse>(m_scene);
+        break;
+    case static_cast<int>(DrawType::Spline):
+        m_curOpt = std::make_shared<OptDrawSpline>(m_scene);
+        break;
+    case static_cast<int>(DrawType::CubicBezier):
+        m_curOpt = std::make_shared<OptDrawCubicBezier>(m_scene);
+        break;
+    case static_cast<int>(DrawType::Text):
+        m_curOpt = std::make_shared<OptDrawText>(m_scene);
         break;
     case static_cast<int>(DrawType::Image):
         m_curOpt = std::make_shared<OptDrawImage>(m_scene);
@@ -76,6 +93,8 @@ void OptManager::set(int nType)
         m_curOpt = m_selectOpt; // 默认操作
         break;
     }
+
+    m_curOpt->enter();
 
     m_curOpt->setViewWidget(m_viewWrap);
     m_curOpt->setGLView(m_glView);

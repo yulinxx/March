@@ -11,8 +11,8 @@ namespace MEngine
     // 收集Arc数据的函数实现
     void ArcData::collectArcData(const Arc* arc)
     {
-        m_vArcPts.push_back(static_cast<float>(arc->m_basePt.x()));
-        m_vArcPts.push_back(static_cast<float>(arc->m_basePt.y()));
+        //m_vArcPts.push_back(static_cast<float>(arc->m_basePt.x()));
+        //m_vArcPts.push_back(static_cast<float>(arc->m_basePt.y()));
         //m_vArcPts.push_back(arc->m_basePt.z);
     }
 

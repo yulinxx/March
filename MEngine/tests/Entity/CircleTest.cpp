@@ -26,6 +26,6 @@ namespace MEngineTest
 
     TEST_F(CircleTest, CircleCircumference)
     {
-        // EXPECT_NEAR(testCircle->circumference(), 2 * M_PI * 3.0, 1e-6);
+        // EXPECT_NEAR(testCircle->circumference(), 2 * M_PI * 3.0, 1e-3);
     }
 } // namespace MEngineTest

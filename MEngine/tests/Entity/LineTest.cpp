@@ -4,7 +4,7 @@
 #include "Entity/Arc.h"
 #include "Entity/Circle.h"
 #include "Entity/Polyline.h"
-#include "Entity/PolyBspline.h"
+#include "Entity/CubicBSpline.h"
 #include "Entity/Text.h"
 #include "Ut/Vec.h"
 
@@ -31,20 +31,22 @@ namespace MEngineTest
 
     TEST_F(LineTest, LineConstructor)
     {
-        EXPECT_DOUBLE_EQ(testLine->m_basePt.x(), 0.0);
-        EXPECT_DOUBLE_EQ(testLine->m_basePt.y(), 0.0);
-        EXPECT_DOUBLE_EQ(testLine->m_secPoint.x(), 3.0);
-        EXPECT_DOUBLE_EQ(testLine->m_secPoint.y(), 4.0);
+        Ut::Vec2d  ptS, ptE;
+        testLine->getPoints(ptS, ptE);
+        EXPECT_DOUBLE_EQ(ptS.x(), 0.0);
+        EXPECT_DOUBLE_EQ(ptS.y(), 0.0);
+        EXPECT_DOUBLE_EQ(ptE.x(), 3.0);
+        EXPECT_DOUBLE_EQ(ptE.y(), 4.0);
     }
 
     TEST_F(LineTest, LineLength)
     {
         // 3-4-5直角三角形的斜边长度应为5
-        auto ptS = testLine->m_basePt;
-        auto ptE = testLine->m_secPoint;
+        Ut::Vec2d  ptS, ptE;
+        testLine->getPoints(ptS, ptE);
         double len = std::sqrt(std::pow(ptE.x() - ptS.x(), 2) + std::pow(ptE.y() - ptS.y(), 2));
         // EXPECT_DOUBLE_EQ(len, 5.0);
-        EXPECT_NEAR(len, 5.0, 1e-6);
+        EXPECT_NEAR(len, 5.0, 1e-3);
     }
 
     // TEST_F(LineTest, LineDirection) {

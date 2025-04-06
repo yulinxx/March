@@ -39,7 +39,7 @@ namespace MEngine
         // 按 m_nId 排序的比较函数
         static bool compareById(Entity* a, Entity* b)
         {
-            return a->m_nId < b->m_nId;
+            return a->getId() < b->getId();
         }
     };
 }

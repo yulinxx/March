@@ -48,7 +48,4 @@ void EntityDrawAdapter::slotCreateEntity(int n)
 
     m_view->setOperation(n);
     return;
-
-
-
 }

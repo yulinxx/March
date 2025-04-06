@@ -1,36 +1,93 @@
 #include "Entity/Entity.h"
 #include <string>
 
-// #define _SILENCE_ALL_CXX23_DEPRECATION_WARNINGS
-// #include <Eigen/src/Core/arch/Default/BFloat16.h>
-
 namespace MEngine
 {
+    struct Entity::Impl
+    {
+        EntType type = EntType::UNKNOWN;  // 实体类型
+        size_t id = 0;                    // 实体 ID
+        Ut::Vec2d basePt;                 // 基准点
+        bool reverse = false;             // 是否反向
+        bool closed = false;              // 是否闭合
+        Ut::Rect2d rect;
+    };
+
     Entity::Entity()
     {
+        m_impl = new Impl();
     }
 
     Entity::~Entity()
     {
+        delete m_impl;
+        m_impl = nullptr;
     }
-
-    // const std::string &Entity::getName() const
-    // {
-    //     return m_strName;
-    // }
-
-    // void Entity::setName(const std::string &name)
-    // {
-    //     m_strName = name;
-    // }
 
     Ut::Vec2d Entity::getValue(double t)
     {
-        return m_basePt;
+        return m_impl->basePt;  // 默认返回基准点
     }
 
     double Entity::EvalParam(const Ut::Vec2& p)
     {
-        return 0;
+        return 0;  // 默认返回 0
+    }
+
+    Ut::Rect2d& Entity::getRect() const
+    {
+        return m_impl->rect;
+    }
+
+    // 获取属性
+    EntType Entity::getType() const
+    {
+        return m_impl->type;
+    }
+
+    size_t Entity::getId() const
+    {
+        return m_impl->id;
+    }
+
+    Ut::Vec2d& Entity::getBasePoint() const
+    {
+        return m_impl->basePt;
+    }
+
+    bool Entity::isReversed() const
+    {
+        return m_impl->reverse;
+    }
+
+    bool Entity::isClosed() const
+    {
+        return m_impl->closed;
+    }
+
+    // 设置属性
+    void Entity::setType(EntType type)
+    {
+        m_impl->type = type;
+    }
+
+    void Entity::setId(size_t id)
+    {
+        m_impl->id = id;
+    }
+
+    void Entity::setBasePoint(const Ut::Vec2d& basePt)
+    {
+        m_impl->basePt = basePt;
+    }
+
+    void Entity::setReversed(bool reverse)
+    {
+        m_impl->reverse = reverse;
+    }
+
+    void Entity::setClosed(bool closed)
+    {
+        m_impl->closed = closed;
     }
 }

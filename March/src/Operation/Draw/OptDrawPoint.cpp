@@ -22,26 +22,21 @@ void OptDrawPoint::mousePressEvent(QMouseEvent* event)
     if (event->button() == Qt::LeftButton)
     {
         QPointF pos = event->pos();
-        //m_scene->addPoint(Ut::Vec2d(pos.x(), pos.y()));
     }
 }
 
 void OptDrawPoint::mouseReleaseEvent(QMouseEvent* event)
 {
-    
 }
 
 void OptDrawPoint::mouseMoveEvent(QMouseEvent* event)
 {
-    
 }
 
 void OptDrawPoint::wheelEvent(QWheelEvent* event)
 {
-    
 }
 
 void OptDrawPoint::keyPressEvent(QKeyEvent* event)
 {
-    
 }

@@ -2,6 +2,7 @@
 #define POINT_H
 
 #include "Entity.h"
+#include <vector>
 
 namespace MEngine
 {
@@ -9,20 +10,26 @@ namespace MEngine
     {
     public:
         Point();
-        Point(Ut::Vec2d pos);
-
-        template<typename T>
-        Point(T x, T y) : m_vPos(double(x), double(y))
-        {
-        }
-
         ~Point() override;
 
     public:
-        virtual Ut::Rect2d getRect() const override;
+        void clear();
+
+        // 设置点的位置
+        void setPosition(const Ut::Vec2& position);
+
+        // 获取顶点数据，用于绘制
+        // std::pair<Ut::Vec2*, size_t> getData() const;
+
+        // 获取点的位置
+        Ut::Vec2 getPosition() const;
 
     private:
-        Ut::Vec2d m_vPos;
+        void updateVertex();
+
+    private:
+        struct Impl;
+        Impl* m_impl;
     };
 }
 

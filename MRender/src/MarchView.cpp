@@ -85,7 +85,6 @@ namespace MRender
         )";
 
         {
-
             m_lineProgram = new QOpenGLShaderProgram(this);;
             m_lineProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, lineVS);
             m_lineProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, lineFS);
@@ -113,9 +112,7 @@ namespace MRender
             m_linesProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, lineVS);
             m_linesProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, lineFS);
             m_linesProgram->link();
-            
-            // glGenVertexArrays(1, &m_linesVao);
-            // glGenBuffers(1, &m_linesVbo);
+
             glGenVertexArrays(1, &m_linesVao);
             glGenBuffers(1, &m_linesVbo);
             glBindVertexArray(m_linesVao);
@@ -229,17 +226,11 @@ namespace MRender
 
         float aspect = float(width()) / height();
         float orthoSize = 1000.0f;
-        // QMatrix4x4 projection;
-        // projection.ortho(-orthoSize * aspect, orthoSize * aspect,
-        //     -orthoSize, orthoSize,
-        //     -1.0f, 1.0f);
 
         if (m_linePoints.size() >= 2 && m_lineProgram->bind())
         {
-            // m_lineProgram->setUniformValue("projection", projection);
             m_lineProgram->setUniformValue("projection", m_viewMatrix);
             m_lineProgram->setUniformValue("translation", m_translation);
-            //m_lineProgram->setUniformValue("scale", m_scale);
             glBindVertexArray(m_lineVao);
             glEnable(GL_PRIMITIVE_RESTART);
             glDrawArrays(GL_LINES, 0, GLsizei(m_linePoints.size()));
@@ -252,7 +243,6 @@ namespace MRender
         {
             m_linesProgram->setUniformValue("projection", m_viewMatrix);
             m_linesProgram->setUniformValue("translation", m_translation);
-            //m_lineProgram->setUniformValue("scale", m_scale);
             glBindVertexArray(m_linesVao);
             glDrawArrays(GL_LINE_STRIP, 0, GLsizei(m_linesPoints.size()));
             glBindVertexArray(0);

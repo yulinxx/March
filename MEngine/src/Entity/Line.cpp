@@ -1,69 +1,83 @@
 #include "Entity/Line.h"
-#include "Ut/Rect.h"
-
 #include <stdexcept>
+#include <cmath>
 
 namespace MEngine
 {
+    struct Line::Impl
+    {
+        //Ut::Vec2 start;           // 起点
+        Ut::Vec2 end;             // 终点
+        std::vector<Ut::Vec2> vertices; // 顶点数据（两个点）
+    };
+
     Line::Line()
     {
-        m_eType = EntType::LINE;
+        m_impl = new Impl();
+
+        setType(EntType::LINE);
+        setClosed(false);
     }
 
-    Line::Line(Ut::Vec2d& ptS, Ut::Vec2d& ptE)
+    Line::Line(const Ut::Vec2& start, const Ut::Vec2& end)
     {
-        m_basePt = ptS;
-        m_secPoint = ptE;
+        setPoints(start, end);
     }
 
     Line::~Line()
     {
+        delete m_impl;
+        m_impl = nullptr;
     }
 
-    // AABB快速计算（直接取坐标极值） AxisAlignedBoundingBox
-    Ut::AxisAlignedBoundingBox Line::CalcAABB()
+    void Line::clear()
     {
-        return Ut::AxisAlignedBoundingBox(
-            Ut::Vec2d(std::min(m_basePt.x(), m_secPoint.x()),
-                std::min(m_basePt.y(), m_secPoint.y())),
-            Ut::Vec2d(std::max(m_basePt.x(), m_secPoint.x()),
-                std::max(m_basePt.y(), m_secPoint.y()))
-        );
+        m_impl->vertices.clear();
+        m_impl->vertices.shrink_to_fit();
     }
 
-    // 紧密包围盒（实际就是线段本身） TightBoundingBox
-    // Ut::TBB Line::CalcTightBBox()
-    // {
-    //     return Ut::TBB(m_basePt, m_secPoint);
-    // }
+    void Line::setPoints(const Ut::Vec2& start, const Ut::Vec2& end)
+    {
+        clear();
+        setBasePoint(start);
+        m_impl->end = end;
+        updateVertices();
+    }
 
-// Vec2 Line::getValue(double t, bool m_bReverse)
-// {
-//     if (t < 0 || t > 1)
-//         throw std::runtime_error("t out of range");
-//     if (m_bReverse)
-//         t = 1 - t;
-//     return m_basePt + t * (m_secPoint - m_basePt).normalized();
-// }
+    void Line::setEndPoint(const Ut::Vec2& end)
+    {
+        m_impl->end = end;
+    }
 
-// double Line::EvalParam(const Vec2 &p)
-// {
-//     Vec2 &a = m_basePt;
-//     Vec2 &b = m_secPoint;
-//     Vec2 ab = b - a;
-//     Vec2 ap = p - a;
-//     const double c1 = ap.dot(ab);
-//     if (c1 <= 0.0)
-//         return 0;
+    void Line::updateVertices()
+    {
+        clear();
+        auto& start = getBasePoint();
+        m_impl->vertices.push_back(start);
+        m_impl->vertices.push_back(m_impl->end);
+    }
 
-//     double c2 = ab.dot(ab);
-//     if (c2 <= c1)
-//         return 1;
+    std::pair<Ut::Vec2*, size_t> Line::getData() const
+    {
+        return { m_impl->vertices.data(), m_impl->vertices.size() };
+    }
 
-//     double t = c1 / c2;
-//     if (m_bReverse)
-//         return 1 - t;
+    void Line::getPoints(Ut::Vec2& start, Ut::Vec2& end) const
+    {
+        start = getBasePoint();
+        end = m_impl->end;
+    }
 
-//     return t;
-// }
+    void Line::getEndPoint(Ut::Vec2& end) const
+    {
+        end = m_impl->end;
+    }
+
+    double Line::getLength() const
+    {
+        auto start = getBasePoint();
+        double dx = m_impl->end.x() - start.x();
+        double dy = m_impl->end.y() - start.y();
+        return sqrt(dx * dx + dy * dy);
+    }
 }

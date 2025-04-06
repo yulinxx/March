@@ -27,7 +27,6 @@ void OptDrawLine::enter()
 void OptDrawLine::exit()
 {
     m_scene->removePreview(m_linePreview.get());
-    Super::exit();
     m_nPts = 0;
 }
 
@@ -37,11 +36,14 @@ void OptDrawLine::mousePressEvent(QMouseEvent* event)
     {
         QPointF pos = event->pos();
         auto posW = m_scene->screenToWorld(Ut::Vec2d(pos.x(), pos.y()));
-        
+
         // 开始绘制时直接记录起点
         m_startPoint = posW;
-        m_linePreview->m_basePt = posW;
-        m_linePreview->m_secPoint = posW;
+        m_linePreview->setBasePoint(posW);
+        // m_linePreview->m_basePt = posW;
+        // m_linePreview->m_secPoint = posW;
+        m_linePreview->setPoints(posW, posW);
+
         m_nPts = 1;  // 进入绘制状态
     }
     else if (event->button() == Qt::MiddleButton)
@@ -60,7 +62,7 @@ void OptDrawLine::mouseMoveEvent(QMouseEvent* event)
     {
         auto pos = event->pos();
         Ut::Vec2d posW = m_scene->screenToWorld({ pos.x(), pos.y() });
-        m_linePreview->m_secPoint = posW;  // 实时更新预览线终点
+        m_linePreview->setEndPoint(posW);  // 实时更新预览线终点
         m_viewWrap->updateRender();
     }
 
@@ -80,16 +82,17 @@ void OptDrawLine::mouseReleaseEvent(QMouseEvent* event)
     {
         auto pos = event->pos();
         m_endPoint = m_scene->screenToWorld({ pos.x(), pos.y() });
-        
+
         // 有效距离时创建直线
-        if ((m_endPoint - m_startPoint).length() > 1e-6) {
+        if ((m_endPoint - m_startPoint).length() > 1e-3)
+        {
             drawLine();
         }
-        
+
         // 重置状态
         m_nPts = 0;
-        m_linePreview->m_basePt = m_startPoint;
-        m_linePreview->m_secPoint = m_startPoint;
+        m_linePreview->setBasePoint(m_startPoint);
+        m_linePreview->setEndPoint(m_startPoint);
         m_viewWrap->updateRender();
     }
     Super::mouseReleaseEvent(event);
@@ -111,8 +114,8 @@ void OptDrawLine::keyPressEvent(QKeyEvent* event)
         else if (m_nPts == 1)
         {
             m_nPts = 0;
-            m_linePreview->m_basePt = m_startPoint;
-            m_linePreview->m_secPoint = m_startPoint;
+            m_linePreview->setBasePoint(m_startPoint);
+            m_linePreview->setEndPoint(m_startPoint);
             m_viewWrap->updateRender();
         }
     }
@@ -126,11 +129,11 @@ void OptDrawLine::drawLine()
     MEngine::Line* line = new MEngine::Line();
     // auto line = std::make_shared<MEngine::Line>();
 
-    if ((m_endPoint - m_startPoint).length() < 1e-6)
+    if ((m_endPoint - m_startPoint).length() < 1e-3)
         return;
 
-    line->m_basePt = m_startPoint;
-    line->m_secPoint = m_endPoint;
+    line->setBasePoint(m_startPoint);
+    line->setEndPoint(m_endPoint);
     // line->m_nId = i;
     // i++;
 

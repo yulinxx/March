@@ -12,8 +12,11 @@ protected:
         for (int i = 0; i < 100; i++)
         {
             Line* line = new Line();
-            line->m_nId = i;
-            line->m_basePt.x() = i;
+            line->setId(i);
+            //line->m_basePt.x() = i;
+            auto& basePt = line->getBasePoint();
+            basePt.x() = i;
+            line->setBasePoint(basePt);
             m_vLines.push_back(line);
         }
     }
@@ -49,7 +52,7 @@ TEST_F(OrderManagerTest, EntityOrderConsistency)
     // 验证初始添加顺序
     for (size_t i = 0; i < entities.size(); ++i)
     {
-        EXPECT_EQ(static_cast<Line*>(entities[i])->m_nId, i);
+        EXPECT_EQ(static_cast<Line*>(entities[i])->getId(), i);
     }
 }
 

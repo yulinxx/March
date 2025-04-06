@@ -27,7 +27,6 @@ public:
     void keyPressEvent(QKeyEvent* event) override;
 
 private:
-    void setPolygonData(MEngine::Polygon* polygon);
     void drawPolygon();
 
 private:

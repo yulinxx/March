@@ -31,8 +31,8 @@ void DrawToolBar::initUI()
         {static_cast<int>(DrawType::Point),     {tr("Point"),     "://icons/draw-point.png"}},
         {static_cast<int>(DrawType::Line),      {tr("Line"),      "://icons/draw-line.png"}},
         {static_cast<int>(DrawType::Polyline),  {tr("Polyline"),  "://icons/draw-pline.png"}},
-        {static_cast<int>(DrawType::Polygon),   {tr("Polygon"),   "://icons/draw-polygon.png"}},
         {static_cast<int>(DrawType::Rectangle), {tr("Rectangle"), "://icons/draw-rectangle.png"}},
+        {static_cast<int>(DrawType::Polygon),   {tr("Polygon"),   "://icons/draw-polygon.png"}},
         {static_cast<int>(DrawType::Arc),       {tr("Arc"),       "://icons/draw-arc.png"}},
         {static_cast<int>(DrawType::Circle),    {tr("Circle"),    "://icons/draw-circle.png"}},
         {static_cast<int>(DrawType::Ellipse),   {tr("Ellipse"),   "://icons/draw-ellipse.png"}},
@@ -54,7 +54,7 @@ void DrawToolBar::initUI()
             DrawType type = static_cast<DrawType>(action->data().toInt());
             if (type == DrawType::Select)
             {
-                emit sigEntityOpration(static_cast<int>(type));
+                emit sigCreateEntity(static_cast<int>(type));
             }
             else
             {
@@ -72,9 +72,14 @@ void DrawToolBar::initUI()
     m_toolbar->addAction(m_mapActions[static_cast<int>(DrawType::Select)]);
 
     m_toolbar->addSeparator();
-    for (int i = 1; i < 7; ++i)
+    for (const auto& [type, _] : mapActionCfg)
     {
-        m_toolbar->addAction(m_mapActions[i]);
+        if (type == static_cast<int>(DrawType::Select))
+            continue;
+        else if (type == static_cast<int>(DrawType::Image))
+            continue;
+        else
+            m_toolbar->addAction(m_mapActions[type]);
     }
     m_toolbar->addSeparator();
     m_toolbar->addAction(m_mapActions[static_cast<int>(DrawType::Image)]);

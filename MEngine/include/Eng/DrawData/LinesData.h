@@ -2,7 +2,16 @@
 #define LINESDATA_H
 
 #include <vector>
+#include "Entity/Point.h"
+#include "Entity/Line.h"
+#include "Entity/PolyLine.h"
 #include "Entity/Polygon.h"
+#include "Entity/Rectangle.h"
+#include "Entity/Arc.h"
+#include "Entity/Circle.h"
+#include "Entity/Ellipse.h"
+#include "Entity/CubicBezier.h"
+#include "Entity/CubicBSpline.h"
 
 namespace MEngine
 {
@@ -11,7 +20,14 @@ namespace MEngine
         void clear();
 
         // 收集Line数据的函数
-        void collectLinesData(Polygon* line);
+        void collectLinesData(PolyLine* pl);
+        void collectLinesData(Polygon* polygon);
+        void collectLinesData(Rectangle* rect);
+        void collectLinesData(Arc* arc);
+        void collectLinesData(Circle* circle);
+        void collectLinesData(Ellipse* ellipse);
+        void collectLinesData(CubicBezier* bezier);
+        void collectLinesData(CubicBSpline* bsPline);
 
         std::vector<float>& getLinesData();
 

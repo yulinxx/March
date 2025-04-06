@@ -23,6 +23,6 @@ namespace MEngineTest
     //
     //TEST_F(ArcTest, ArcAngles) {
     //    EXPECT_DOUBLE_EQ(testArc->startAngle(), 0.0);
-    //    EXPECT_NEAR(testArc->endAngle(), M_PI/2, 1e-6);
+    //    EXPECT_NEAR(testArc->endAngle(), M_PI/2, 1e-3);
     //}
 } // namespace MEngineTest

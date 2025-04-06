@@ -23,8 +23,6 @@ void OptDrawText::mousePressEvent(QMouseEvent* event)
     {
         // 记录文本起始位置
         QPointF pos = event->pos();
-        // 可以在这里弹出输入框输入文本
-        // 然后调用 m_scene->addText(...)
     }
 }
 

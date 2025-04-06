@@ -97,7 +97,6 @@ void ViewWrapper::updateRender()
         }
     }
 
-
     auto pairPreviewData = m_scene->getDrawData()->getPreviewData();
     float* ptPreview = pairPreviewData.first;
     size_t szPreview = pairPreviewData.second;
@@ -121,12 +120,12 @@ void ViewWrapper::updateScene()
         for (size_t i = 0; i < rootGroup->getChildrenCount(); ++i)
         {
             auto ent = rootGroup->getChild(i);
-            if (ent && ent->m_eType == MEngine::EntType::LINE)
+            if (ent && ent->getType() == MEngine::EntType::LINE)
             {
                 auto line = static_cast<MEngine::Line*>(ent);
 
-                auto ptS = line->m_basePt;
-                auto ptE = line->m_secPoint;
+                Ut::Vec2 ptS, ptE;
+                line->getPoints(ptS, ptE);
 
                 MRender::ColorPoint pt1{ static_cast<float>(ptS.x()), static_cast<float>(ptS.y()), 0.0f, 1.0f, 0.0f, 0.0f };
                 MRender::ColorPoint pt2{ static_cast<float>(ptE.x()), static_cast<float>(ptE.y()), 0.0f, 1.0f, 0.0f, 0.0f };

@@ -3,7 +3,7 @@
 namespace XC
 {
     XCPolyLine::XCPolyLine(const XCPolyLine& other)
-        : XCEntity(other)  // 调用基类拷贝构造函数
+        : XCEntity(other)
     {
         // 深拷贝 m_vEntities
         m_vEntities.reserve(other.m_vEntities.size());
@@ -31,6 +31,7 @@ namespace XC
                     m_vEntities.push_back(cloneEntity(entity.get()));
                 }
             }
+
             // 拷贝基类成员
             eType = other.eType;
             id = other.id;
@@ -38,7 +39,7 @@ namespace XC
             basePoint = other.basePoint;
             reverse = other.reverse;
             isClosed = other.isClosed;
-            m_LayerName = other.m_LayerName; // 注意：这里假设 m_LayerName 是浅拷贝
+            m_LayerName = other.m_LayerName;
         }
         return *this;
     }
@@ -72,7 +73,6 @@ namespace XC
             return basePoint; // 如果没有实体，返回基点
         }
 
-        // 假设 t 在 [0, 1] 范围内，均匀分配到每个实体
         double segmentLength = 1.0 / m_vEntities.size();
         size_t segmentIndex = static_cast<size_t>(t / segmentLength);
         if (segmentIndex >= m_vEntities.size())
@@ -112,10 +112,9 @@ namespace XC
 
     std::unique_ptr<XCEntity> XCPolyLine::cloneEntity(const XCEntity* entity) const
     {
-        if (!entity) return nullptr;
-        // 这里假设 XCEntity 有虚函数 clone() 或类似机制来实现深拷贝
-        // 如果没有，需要根据具体情况实现深拷贝逻辑
-        // return std::unique_ptr<XCEntity>(entity->clone());
+        if (!entity)
+            return nullptr;
+
         // 临时实现：简单创建一个新对象并复制基本属性
         std::unique_ptr<XCEntity> newEntity = std::make_unique<XCEntity>();
         newEntity->eType = entity->eType;

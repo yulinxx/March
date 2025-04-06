@@ -126,7 +126,7 @@ void MenuBar::initFileMenu(QMenu* menu)
                 qApp->setStyleSheet(styleSheet);
                 file.close();
             }
-            // emit sigSwitchSkin(filePath); // 假设这里有一个信号用于通知皮肤切换
+            // emit sigSwitchSkin(filePath);
             });
     }
 }

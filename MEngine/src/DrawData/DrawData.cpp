@@ -46,7 +46,7 @@ namespace MEngine
             Entity* entity = group->getChild(i);
             if (entity)
             {
-                switch (entity->m_eType)
+                switch (entity->getType())
                 {
                 case EntType::POINT:
                     // points.push_back(entity->m_basePt);
@@ -55,32 +55,60 @@ namespace MEngine
                 {
                     auto line = static_cast<Line*>(entity);
                     pImpl->m_lineData->collectLineData(line);
-                    break;
                 }
+                break;
                 case EntType::POLYGON:
                 {
                     auto pg = static_cast<Polygon*>(entity);
                     pImpl->m_linesData->collectLinesData(pg);
-                    break;
                 }
-                //case EntType::ARC:
-                //    arcs.push_back(entity);
-                //    break;
-                //case EntType::CIRCLE:
-                //    circles.push_back(entity);
-                //    break;
-                //case EntType::LWPOLYLINE:
-                //    lwpolylines.push_back(entity);
-                //    break;
-                //case EntType::SPLINE:
-                //    splines.push_back(entity);
-                //    break;
-                //case EntType::TEXT:
-                //    texts.push_back(entity);
-                //    break;
-                //case EntType::UNKNOWN:
-                //    unknowns.push_back(entity);
-                //    break;
+                break;
+                case EntType::RECTANGLE:
+                {
+                    auto rect = static_cast<Rectangle*>(entity);
+                    pImpl->m_linesData->collectLinesData(rect);
+                }
+                break;
+                case EntType::ARC:
+                {
+                    auto arc = static_cast<Arc*>(entity);
+                    pImpl->m_linesData->collectLinesData(arc);
+                }
+                break;
+                case EntType::CIRCLE:
+                {
+                    auto cc = static_cast<Circle*>(entity);
+                    pImpl->m_linesData->collectLinesData(cc);
+                }
+                break;
+                case EntType::ELLIPSE:
+                {
+                    auto ellipse = static_cast<Ellipse*>(entity);
+                    pImpl->m_linesData->collectLinesData(ellipse);
+                }
+                break;
+                case EntType::LWPOLYLINE:
+                {
+                    auto pl = static_cast<PolyLine*>(entity);
+                    pImpl->m_linesData->collectLinesData(pl);
+                }
+                break;
+                case EntType::BSPLINE:
+                {
+                    auto sp = static_cast<CubicBSpline*>(entity);
+                    pImpl->m_linesData->collectLinesData(sp);
+                }
+                break;
+                case EntType::BEZIER:
+                {
+                    auto bz = static_cast<CubicBezier*>(entity);
+                    pImpl->m_linesData->collectLinesData(bz);
+                }
+                break;
+                case EntType::TEXT:
+                    break;
+                case EntType::UNKNOWN:
+                    break;
                 default:
                     break;
                 }
@@ -106,9 +134,10 @@ namespace MEngine
         for (size_t i = 0; i < previews->getChildrenCount(); i++)
         {
             Entity* entity = previews->getChild(i);
+
             if (entity)
             {
-                switch (entity->m_eType)
+                switch (entity->getType())
                 {
                 case EntType::POINT:
                     // points.push_back(entity->m_basePt);
@@ -117,32 +146,60 @@ namespace MEngine
                 {
                     auto line = static_cast<Line*>(entity);
                     pImpl->m_lineData->collectLineData(line);
-                    break;
                 }
+                break;
                 case EntType::POLYGON:
                 {
                     auto pg = static_cast<Polygon*>(entity);
                     pImpl->m_linesData->collectLinesData(pg);
+                }
+                break;
+                case EntType::RECTANGLE:
+                {
+                    auto rect = static_cast<Rectangle*>(entity);
+                    pImpl->m_linesData->collectLinesData(rect);
                     break;
                 }
-                //case EntType::ARC:
-                //    arcs.push_back(entity);
-                //    break;
-                //case EntType::CIRCLE:
-                //    circles.push_back(entity);
-                //    break;
-                //case EntType::LWPOLYLINE:
-                //    lwpolylines.push_back(entity);
-                //    break;
-                //case EntType::SPLINE:
-                //    splines.push_back(entity);
-                //    break;
-                //case EntType::TEXT:
-                //    texts.push_back(entity);
-                //    break;
-                //case EntType::UNKNOWN:
-                //    unknowns.push_back(entity);
-                //    break;
+                case EntType::ARC:
+                {
+                    auto arc = static_cast<Arc*>(entity);
+                    pImpl->m_linesData->collectLinesData(arc);
+                }
+                break;
+                case EntType::CIRCLE:
+                {
+                    auto cc = static_cast<Circle*>(entity);
+                    pImpl->m_linesData->collectLinesData(cc);
+                }
+                break;
+                case EntType::ELLIPSE:
+                {
+                    auto ellipse = static_cast<Ellipse*>(entity);
+                    pImpl->m_linesData->collectLinesData(ellipse);
+                }
+                break;
+                case EntType::LWPOLYLINE:
+                {
+                    auto pl = static_cast<PolyLine*>(entity);
+                    pImpl->m_linesData->collectLinesData(pl);
+                }
+                break;
+                case EntType::BSPLINE:
+                {
+                    auto sp = static_cast<CubicBSpline*>(entity);
+                    pImpl->m_linesData->collectLinesData(sp);
+                }
+                break;
+                case EntType::BEZIER:
+                {
+                    auto bz = static_cast<CubicBezier*>(entity);
+                    pImpl->m_linesData->collectLinesData(bz);
+                }
+                break;
+                case EntType::TEXT:
+                    break;
+                case EntType::UNKNOWN:
+                    break;
                 default:
                     break;
                 }

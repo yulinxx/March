@@ -9,23 +9,27 @@ namespace MEngine
     {
     public:
         Polygon();
-        ~Polygon() override; // 需要显式声明析构
+        ~Polygon() override;
 
     public:
         void clear();
-        void addVertex(const Ut::Vec2& vertex);
-        
-        void closePolygon();
+        // void addVertex(const Ut::Vec2& vertex);
 
-        std::pair<Ut::Vec2*, size_t> getLinesData() const;
+        void setStartPoint(const Ut::Vec2& start);
+        void setEndPoint(const Ut::Vec2& end);
+
+        void setPts(const Ut::Vec2& start, const Ut::Vec2& end, size_t nSides = 5);
+        void setSide(size_t nSides);
+
+        std::pair<Ut::Vec2*, size_t> getData() const;
+
+    private:
+        void updatePolygon();
+        void closePolygon();
 
     private:
         struct Impl;
         Impl* m_impl;
-
-        // 保留可能需要重写的接口
-        // Ut::Vec2 getValue(double t) override;
-        // double EvalParam(const Ut::Vec2& p) override;
     };
 }
 
