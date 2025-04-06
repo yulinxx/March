@@ -241,7 +241,9 @@ namespace MRender
             m_lineProgram->setUniformValue("translation", m_translation);
             //m_lineProgram->setUniformValue("scale", m_scale);
             glBindVertexArray(m_lineVao);
+            glEnable(GL_PRIMITIVE_RESTART);
             glDrawArrays(GL_LINES, 0, GLsizei(m_linePoints.size()));
+            glDisable(GL_PRIMITIVE_RESTART);
             glBindVertexArray(0);
             m_lineProgram->release();
         }

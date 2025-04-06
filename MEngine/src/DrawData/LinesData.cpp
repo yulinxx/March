@@ -20,6 +20,11 @@ namespace MEngine
             m_vLinesPts.push_back(static_cast<float>(pts[i].x()));
             m_vLinesPts.push_back(static_cast<float>(pts[i].y()));
         }
+        
+        // 添加分隔符（IEEE NaN值）
+        constexpr float nan = std::numeric_limits<float>::quiet_NaN();
+        m_vLinesPts.push_back(nan);
+        m_vLinesPts.push_back(nan);
     }
 
     // 将Line数据转换为适合渲染的浮点数组实现

@@ -29,11 +29,11 @@ void OptDrawPolygon::mousePressEvent(QMouseEvent* event)
     {
         QPointF pos = event->pos();
         Ut::Vec2d posW = m_scene->screenToWorld({ pos.x(), pos.y() });
-        
+
         // 记录起始点并开始绘制
         m_startPoint = posW;
         m_polygonPreview->m_basePt = posW;
-        m_bFirst = false;  // 进入绘制状态
+        m_bFirst = false;
     }
     else if (event->button() == Qt::MiddleButton)
     {
@@ -47,12 +47,11 @@ void OptDrawPolygon::mousePressEvent(QMouseEvent* event)
 
 void OptDrawPolygon::mouseMoveEvent(QMouseEvent* event)
 {
-    if (!m_bFirst)  // 在绘制状态下
+    if (!m_bFirst)
     {
         QPointF pos = event->pos();
         m_endPoint = m_scene->screenToWorld({ pos.x(), pos.y() });
-        
-        // 实时更新预览图形
+
         setPolygonData(m_polygonPreview.get());
         m_viewWrap->updateRender();
 
@@ -65,18 +64,18 @@ void OptDrawPolygon::mouseReleaseEvent(QMouseEvent* event)
 {
     if (event->button() == Qt::LeftButton)
     {
-        // 计算两点距离
         double distance = (m_endPoint - m_startPoint).length();
-        
-        if (distance > 1e-6) {  // 有效距离时创建多边形
+
+        if (distance > 1e-3)
+        {
             drawPolygon();
         }
-        
-        m_bFirst = true;  // 重置绘制状态
-        m_polygonPreview->clear();  // 清除预览
+
+        m_bFirst = true;
+        m_polygonPreview->clear();
         m_viewWrap->updateRender();
     }
-    
+
     Super::mouseReleaseEvent(event);
 }
 
@@ -100,18 +99,23 @@ void OptDrawPolygon::setPolygonData(MEngine::Polygon* polygon)
 
     const int nSides = 5;
     const Ut::Vec2d center = m_startPoint;
-    const double radius = (m_endPoint - center).length();
+    // 计算半径和起始角度（根据第二个点确定）
+    const double dx = m_endPoint.x() - center.x();
+    const double dy = m_endPoint.y() - center.y();
+    const double radius = sqrt(dx*dx + dy*dy);
+    const double startAngle = atan2(dy, dx);  // 获取第二个点相对中心的极角
 
     for (int i = 0; i < nSides; ++i)
     {
-        double angle = 2 * Ut::PI * i / nSides;
+        // 从起始角度开始均匀分布顶点
+        double angle = startAngle + 2 * Ut::PI * i / nSides;
         Ut::Vec2d vertex(
             center.x() + radius * cos(angle),
             center.y() + radius * sin(angle)
         );
         polygon->addVertex(vertex);
     }
-
+    polygon->closePolygon();
 }
 
 void OptDrawPolygon::drawPolygon()
