@@ -14,19 +14,20 @@ namespace MEngine
     public:
         void clear();
 
-        // ÉèÖÃ±´Èû¶ûÇúÏß£ºÍ¨¹ıËÄ¸ö¿ØÖÆµã
+        // è®¾ç½®è´å¡å°”æ›²çº¿ï¼šé€šè¿‡å››ä¸ªæ§åˆ¶ç‚¹
         void setByControlPoints(const Ut::Vec2& p0, const Ut::Vec2& p1,
             const Ut::Vec2& p2, const Ut::Vec2& p3);
-        // ÉèÖÃ²ÉÑùµãÊı£¨¿ØÖÆÆ½»¬¶È£©
+        // è®¾ç½®é‡‡æ ·ç‚¹æ•°ï¼ˆæ§åˆ¶å¹³æ»‘åº¦ï¼‰
         void setSegments(size_t nSegments);
 
-        // »ñÈ¡¶¥µãÊı¾İ£¬ÓÃÓÚ»æÖÆ
-        std::pair<Ut::Vec2*, size_t> getData() const;
+        // è·å–é¡¶ç‚¹æ•°æ®ï¼Œç”¨äºç»˜åˆ¶
+        virtual std::pair<Ut::Vec2*, size_t> getData() const;
+        // virtual Ut::Rect2d& getRect() const;
 
-        // »ñÈ¡¿ØÖÆµã
+        // è·å–æ§åˆ¶ç‚¹
         void getControlPoints(Ut::Vec2& p0, Ut::Vec2& p1, Ut::Vec2& p2, Ut::Vec2& p3) const;
 
-        // »ñÈ¡ÇúÏßÉÏµÄµã£¨²ÎÊı t ´Ó 0 µ½ 1£©
+        // è·å–æ›²çº¿ä¸Šçš„ç‚¹ï¼ˆå‚æ•° t ä» 0 åˆ° 1ï¼‰
         Ut::Vec2 evaluate(double t) const;
 
     private:
@@ -45,16 +46,16 @@ int main()
 {
     MEngine::CubicBezier bezier;
     bezier.setByControlPoints(
-        Ut::Vec2(0.0, 0.0),    // Æğµã P0
-        Ut::Vec2(1.0, 2.0),    // ¿ØÖÆµã P1
-        Ut::Vec2(2.0, 2.0),    // ¿ØÖÆµã P2
-        Ut::Vec2(3.0, 0.0)     // ÖÕµã P3
+        Ut::Vec2(0.0, 0.0),    // èµ·ç‚¹ P0
+        Ut::Vec2(1.0, 2.0),    // æ§åˆ¶ç‚¹ P1
+        Ut::Vec2(2.0, 2.0),    // æ§åˆ¶ç‚¹ P2
+        Ut::Vec2(3.0, 0.0)     // ç»ˆç‚¹ P3
     );
     bezier.setSegments(32);
 
     renderBezier(bezier);
 
-    // Ê¾Àı£º»ñÈ¡ t=0.5 ´¦µÄµã
+    // è·å– t=0.5 å¤„çš„ç‚¹
     Ut::Vec2 midPoint = bezier.evaluate(0.5);
     std::cout << "Mid point: (" << midPoint.x() << ", " << midPoint.y() << ")\n";
 

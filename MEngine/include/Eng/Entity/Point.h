@@ -24,6 +24,8 @@ namespace MEngine
         // 获取点的位置
         Ut::Vec2 getPosition() const;
 
+        virtual std::pair<Ut::Vec2*, size_t> getData() const;
+        //virtual Ut::Rect2d& getRect() const;
     private:
         void updateVertex();
 

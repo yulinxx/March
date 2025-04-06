@@ -15,20 +15,23 @@ namespace MEngine
     public:
         void clear();
 
-        // ÉèÖÃ¿ØÖÆµã
+        // è®¾ç½®æ§åˆ¶ç‚¹
         void setControlPoints(const std::vector<Ut::Vec2>& points, bool closed = false);
-        // ÉèÖÃ²ÉÑùµãÊı£¨Ã¿¶ÎÇúÏßµÄ²ÉÑùµã£©
+        // è®¾ç½®é‡‡æ ·ç‚¹æ•°ï¼ˆæ¯æ®µæ›²çº¿çš„é‡‡æ ·ç‚¹ï¼‰
         void setSegmentsPerSpan(size_t nSegments);
-        // ÉèÖÃÊÇ·ñ±ÕºÏÇúÏß
+        // è®¾ç½®æ˜¯å¦é—­åˆæ›²çº¿
         void setClosed(bool closed);
 
-        // »ñÈ¡¶¥µãÊı¾İ£¬ÓÃÓÚ»æÖÆ
-        std::pair<Ut::Vec2*, size_t> getData() const;
+        // è·å–é¡¶ç‚¹æ•°æ®ï¼Œç”¨äºç»˜åˆ¶
 
-        // »ñÈ¡¿ØÖÆµã
+        virtual std::pair<Ut::Vec2*, size_t> getData() const;
+        //std::pair<Ut::Vec2*, size_t> getData() const;
+        //virtual Ut::Rect2d& getRect() const;
+
+        // è·å–æ§åˆ¶ç‚¹
         std::vector<Ut::Vec2> getControlPoints() const;
 
-        // »ñÈ¡ÇúÏßÉÏµÄµã£¨²ÎÊı t ´Ó 0 µ½ 1£©
+        // è·å–æ›²çº¿ä¸Šçš„ç‚¹ï¼ˆå‚æ•° t ä» 0 åˆ° 1ï¼‰
         Ut::Vec2 evaluate(double t) const;
 
     private:
@@ -56,16 +59,16 @@ namespace MEngine
             Ut::Vec2(3.0, 0.0),
             Ut::Vec2(4.0, -1.0)
         };
-        spline.setControlPoints(points, false); // ¿ªºÏÇúÏß
+        spline.setControlPoints(points, false); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         spline.setSegmentsPerSpan(32);
 
         renderBSpline(spline);
 
-        // Ê¾Àı£º±ÕºÏÇúÏß
+        // Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½Õºï¿½ï¿½ï¿½ï¿½ï¿½
         spline.setClosed(true);
         renderBSpline(spline);
 
-        // Ê¾Àı£º»ñÈ¡ t=0.5 ´¦µÄµã
+        // Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ t=0.5 ï¿½ï¿½ï¿½Äµï¿½
         Ut::Vec2 midPoint = spline.evaluate(0.5);
         std::cout << "Mid point: (" << midPoint.x() << ", " << midPoint.y() << ")\n";
 

@@ -100,6 +100,11 @@ namespace MEngine
         return { m_impl->vertices.data(), m_impl->vertices.size() };
     }
 
+    // Ut::Rect2d& CubicBezier::getRect() const
+    // {
+
+    // }
+
     void CubicBezier::getControlPoints(Ut::Vec2& p0, Ut::Vec2& p1,
         Ut::Vec2& p2, Ut::Vec2& p3) const
     {

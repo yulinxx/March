@@ -181,6 +181,8 @@ void OptBase::mouseMoveEvent(QMouseEvent* event)
             m_lastPanPos = curPos;
         }
     }
+
+    //m_viewWrap->set
 }
 
 void OptBase::mouseDoubleClickEvent(QMouseEvent* event)

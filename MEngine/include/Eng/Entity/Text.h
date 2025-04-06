@@ -13,6 +13,17 @@ namespace MEngine
         ~Text() override;
 
     public:
+        virtual std::pair<Ut::Vec2*, size_t> getData() const
+        {
+            return std::pair<Ut::Vec2*, size_t>(nullptr, 0);
+        }
+
+        virtual Ut::Rect2d& getRect() const
+        {
+            return Entity::getRect();
+        }
+
+    public:
         // double BaseHeight;
         // std::string FontName;
         // double Height;

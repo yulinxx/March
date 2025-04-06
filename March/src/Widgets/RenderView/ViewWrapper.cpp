@@ -171,7 +171,7 @@ bool ViewWrapper::eventFilter(QObject* obj, QEvent* event)
         else if (event->type() == QEvent::MouseMove)
         {
             m_optManager->mouseMoveEvent(static_cast<QMouseEvent*>(event));
-            return true;
+            return false;
         }
         else if (event->type() == QEvent::KeyPress)
         {

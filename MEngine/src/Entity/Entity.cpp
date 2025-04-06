@@ -5,11 +5,11 @@ namespace MEngine
 {
     struct Entity::Impl
     {
-        EntType type = EntType::UNKNOWN;  // ÊµÌåÀàÐÍ
-        size_t id = 0;                    // ÊµÌå ID
-        Ut::Vec2d basePt;                 // »ù×¼µã
-        bool reverse = false;             // ÊÇ·ñ·´Ïò
-        bool closed = false;              // ÊÇ·ñ±ÕºÏ
+        EntType type = EntType::UNKNOWN;  // å®žä½“ç±»åž‹
+        size_t id = 0;                    // å®žä½“ ID
+        Ut::Vec2d basePt;                 // åŸºå‡†ç‚¹
+        bool reverse = false;             // æ˜¯å¦åå‘
+        bool closed = false;              // æ˜¯å¦é—­åˆ
         Ut::Rect2d rect;
     };
 
@@ -26,20 +26,25 @@ namespace MEngine
 
     Ut::Vec2d Entity::getValue(double t)
     {
-        return m_impl->basePt;  // Ä¬ÈÏ·µ»Ø»ù×¼µã
+        return m_impl->basePt;
     }
 
     double Entity::EvalParam(const Ut::Vec2& p)
     {
-        return 0;  // Ä¬ÈÏ·µ»Ø 0
+        return 0;  
     }
+
 
     Ut::Rect2d& Entity::getRect() const
     {
         return m_impl->rect;
     }
 
-    // »ñÈ¡ÊôÐÔ
+    void Entity::setRect(Ut::Rect2d& rect) 
+    {
+        m_impl->rect = rect;
+    }
+
     EntType Entity::getType() const
     {
         return m_impl->type;
@@ -65,7 +70,7 @@ namespace MEngine
         return m_impl->closed;
     }
 
-    // ÉèÖÃÊôÐÔ
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     void Entity::setType(EntType type)
     {
         m_impl->type = type;

@@ -16,20 +16,23 @@ namespace MEngine
     public:
         void clear();
 
-        // ÉèÖÃÏß¶ÎµÄÁ½¸ö¶Ëµã
+        // è®¾ç½®çº¿æ®µçš„ä¸¤ä¸ªç«¯ç‚¹
         void setPoints(const Ut::Vec2& start, const Ut::Vec2& end);
 
-        // ÉèÖÃÖÕµã
+        // è®¾ç½®ç»ˆç‚¹
         void setEndPoint(const Ut::Vec2& end);
 
-        // »ñÈ¡¶¥µãÊı¾İ£¬ÓÃÓÚ»æÖÆ
-        std::pair<Ut::Vec2*, size_t> getData() const;
+        // è·å–é¡¶ç‚¹æ•°æ®ï¼Œç”¨äºç»˜åˆ¶
+        virtual std::pair<Ut::Vec2*, size_t> getData() const;
+        //virtual Ut::Rect2d& getRect() const;
 
-        // »ñÈ¡¶Ëµã
+        //std::pair<Ut::Vec2*, size_t> getData() const;
+
+        // è·å–ç«¯ç‚¹
         void getPoints(Ut::Vec2& start, Ut::Vec2& end) const;
         void getEndPoint(Ut::Vec2& end) const;
 
-        // »ñÈ¡³¤¶È
+        // è·å–é•¿åº¦
         double getLength() const;
 
     private:

@@ -117,9 +117,19 @@ namespace Ut
             for (size_t i = 0; i < N; ++i) data[i] += other[i];
             return *this;
         }
+        Vec& operator+=(const T value)
+        {
+            for (size_t i = 0; i < N; ++i) data[i] += value;
+            return *this;
+        }
         Vec& operator-=(const Vec& other)
         {
             for (size_t i = 0; i < N; ++i) data[i] -= other[i];
+            return *this;
+        }
+        Vec& operator-=(const T value)
+        {
+            for (size_t i = 0; i < N; ++i) data[i] -= value;
             return *this;
         }
         Vec& operator*=(T scalar)

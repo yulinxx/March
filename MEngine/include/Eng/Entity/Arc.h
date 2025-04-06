@@ -27,7 +27,8 @@ namespace MEngine
         void setSides(size_t nSides);
 
         // 获取顶点数据，用于渲染
-        std::pair<Ut::Vec2*, size_t> getData() const;
+        virtual std::pair<Ut::Vec2*, size_t> getData() const;
+        virtual Ut::Rect2d& getRect() const;
 
         // 获取圆弧属性
         void getRadius(double& radius) const;

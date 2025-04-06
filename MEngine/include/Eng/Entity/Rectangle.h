@@ -18,7 +18,9 @@ namespace MEngine
         void setEndPoint(const Ut::Vec2& end);
         void setPts(const Ut::Vec2& start, const Ut::Vec2& end);
 
-        std::pair<Ut::Vec2*, size_t> getData() const;
+        //std::pair<Ut::Vec2*, size_t> getData() const;
+        virtual std::pair<Ut::Vec2*, size_t> getData() const;
+        //virtual Ut::Rect2d& getRect() const;
 
     private:
         void updateRect();

@@ -30,7 +30,7 @@ private:
     void drawPolygon();
 
 private:
-    bool m_bFirst= true;
+    bool m_bFirst = true;
 
     Ut::Vec2d m_startPoint;
     Ut::Vec2d m_endPoint;

@@ -39,7 +39,6 @@ namespace MEngine
     {
         if (radius < 1e-6)
         {
-            //throw std::runtime_error("Radius must be positive");
             return;
         }
         clear();
@@ -93,7 +92,6 @@ namespace MEngine
             if (m_impl->endAngle < m_impl->startAngle) m_impl->endAngle += 2.0 * Ut::PI;
             if (midAngle > m_impl->endAngle)
             {
-                //throw std::runtime_error("Mid point is not between start and end");
                 return;
             }
         }
@@ -103,7 +101,6 @@ namespace MEngine
             if (m_impl->endAngle > m_impl->startAngle) m_impl->endAngle -= 2.0 * Ut::PI;
             if (midAngle < m_impl->endAngle)
             {
-                //throw std::runtime_error("Mid point is not between start and end");
                 return;
             }
         }
@@ -115,7 +112,6 @@ namespace MEngine
     {
         if (nSides < 3)
         {
-            //throw std::runtime_error("Number of sides must be at least 3");
             return;
         }
         m_impl->nSides = nSides;
@@ -158,11 +154,34 @@ namespace MEngine
             );
             m_impl->vertices.push_back(vertex);
         }
+
+        //setRect(Ut::Rect2d();
     }
 
     std::pair<Ut::Vec2*, size_t> Arc::getData() const
     {
         return { m_impl->vertices.data(), m_impl->vertices.size() };
+    }
+
+    Ut::Rect2d& Arc::getRect() const
+    {
+
+        //double minX = m_impl->vertices[0].x();
+        //double maxX = minX;
+        //double minY = m_impl->vertices[0].y();
+        //double maxY = minY;
+
+        //for (const auto& vertex : m_impl->vertices) {
+        //    minX = std::min(minX, vertex.x());
+        //    maxX = std::max(maxX, vertex.x());
+        //    minY = std::min(minY, vertex.y());
+        //    maxY = std::max(maxY, vertex.y());
+        //}
+
+        //auto rect = Ut::Rect2d(Ut::Vec2d(minX, minY), Ut::Vec2d(maxX, maxY));
+        //setRect(rect); 
+
+        return getRect();
     }
 
     void Arc::getRadius(double& radius) const
