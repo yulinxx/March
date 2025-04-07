@@ -62,6 +62,17 @@ namespace MEngine
         return { m_impl->vertices.data(), m_impl->vertices.size() };
     }
 
+    Ut::Rect2d& Line::getRect()
+    {
+        auto ptMin = m_impl->end;
+        auto& ptMax = getBasePoint();
+        
+        Ut::Rect2d rect{ ptMin, ptMax };
+        setRect(rect);
+
+        return getRect();
+    }
+
     void Line::getPoints(Ut::Vec2& start, Ut::Vec2& end) const
     {
         start = getBasePoint();

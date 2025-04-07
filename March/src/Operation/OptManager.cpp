@@ -3,6 +3,7 @@
 #include <QKeyEvent>
 
 #include "Operation/OptBase.h"
+#include "Operation/Select/OptSelect.h"
 #include "Operation/Draw/OptDrawPoint.h"
 #include "Operation/Draw/OptDrawLine.h"
 #include "Operation/Draw/OptDrawPolyLine.h"
@@ -33,9 +34,11 @@ OptManager::OptManager(ViewWrapper* viewWidget,
     m_scene = scene;
     m_glView = glView;
 
-    m_selectOpt = std::make_shared<OptBase>(m_scene); // 初始化默认操作
+    m_selectOpt = std::make_shared<OptSelect>(m_scene); // 初始化默认操作
+    m_selectOpt->setViewWidget(m_viewWrap);
+    m_selectOpt->setGLView(m_glView);
+
     m_curOpt = m_selectOpt;
-    m_curOpt->setGLView(m_glView);
 }
 
 void OptManager::set(int nType)
@@ -51,7 +54,7 @@ void OptManager::set(int nType)
     switch (nType)
     {
     case static_cast<int>(DrawType::Select):
-        m_curOpt = std::make_shared<OptBase>(m_scene);
+        m_curOpt = std::make_shared<OptSelect>(m_scene);
         break;
     case static_cast<int>(DrawType::Point):
         m_curOpt = std::make_shared<OptDrawPoint>(m_scene);

@@ -47,7 +47,8 @@ void OptDrawSpline::mousePressEvent(QMouseEvent* event)
         // 检查是否靠近已有控制点，若是则准备拖动
         for (int i = 0; i < m_controlPoints.size(); ++i)
         {
-            if ((posW - m_controlPoints[i]).length() < DRAG_THRESHOLD / m_scene->getZoom())
+            //if ((posW - m_controlPoints[i]).length() < DRAG_THRESHOLD / m_scene->getZoom())
+            if ((posW - m_controlPoints[i]).length() < DRAG_THRESHOLD)
             {
                 m_isDragging = true;
                 m_selectedPointIndex = i;

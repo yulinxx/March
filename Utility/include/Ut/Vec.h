@@ -81,18 +81,35 @@ namespace Ut
         {
             return at(index);
         }
+
         Vec operator+(const Vec& other) const
         {
             Vec result;
             for (size_t i = 0; i < N; ++i) result[i] = data[i] + other[i];
             return result;
         }
+        
+        Vec operator+(const T value) const
+        {
+            Vec result;
+            for (size_t i = 0; i < N; ++i) result[i] = data[i] + value;
+            return result;
+        }
+
         Vec operator-(const Vec& other) const
         {
             Vec result;
             for (size_t i = 0; i < N; ++i) result[i] = data[i] - other[i];
             return result;
         }
+
+        Vec operator-(const T value) const
+        {
+            Vec result;
+            for (size_t i = 0; i < N; ++i) result[i] = data[i] - value;
+            return result;
+        }
+
         Vec operator*(T scalar) const
         {
             Vec result;
@@ -127,6 +144,7 @@ namespace Ut
             for (size_t i = 0; i < N; ++i) data[i] -= other[i];
             return *this;
         }
+        
         Vec& operator-=(const T value)
         {
             for (size_t i = 0; i < N; ++i) data[i] -= value;

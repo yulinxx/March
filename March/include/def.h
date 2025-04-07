@@ -12,7 +12,8 @@ enum EntityOpt
 
 enum class DrawType
 {
-    Select = 0,
+    View = 0,
+    Select = 1,
     Point,
     Line,
     Polyline,

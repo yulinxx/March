@@ -25,7 +25,8 @@ namespace MEngine
         Ut::Vec2 getPosition() const;
 
         virtual std::pair<Ut::Vec2*, size_t> getData() const;
-        //virtual Ut::Rect2d& getRect();
+        virtual Ut::Rect2d& getRect();
+
     private:
         void updateVertex();
 

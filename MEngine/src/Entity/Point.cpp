@@ -53,6 +53,15 @@ namespace MEngine
         return { &getBasePoint(), 1};
     }
 
+    Ut::Rect2d& Point::getRect()
+    {
+        auto& ptMin = getBasePoint();
+        Ut::Rect2d rect({ ptMin, ptMin });
+        setRect(rect);
+
+        return getRect();
+    }
+
     Ut::Vec2 Point::getPosition() const
     {
         //return m_impl->position;

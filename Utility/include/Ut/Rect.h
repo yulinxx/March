@@ -14,34 +14,35 @@ namespace Ut
         static_assert(DIM == 2 || DIM == 3, "Rect dimension must be 2 or 3");
 
     public:
-        Rect() : min_(Vec<T, DIM>()), max_(Vec<T, DIM>())
+        Rect() : minPt(Vec<T, DIM>()), maxPt(Vec<T, DIM>())
         {
         }
+
         Rect(const Vec<T, DIM>& min, const Vec<T, DIM>& max)
-            : min_(min), max_(max)
+            : minPt(min), maxPt(max)
         {
         }
 
         const Vec<T, DIM>& min() const
         {
-            return min_;
+            return minPt;
         }
         const Vec<T, DIM>& max() const
         {
-            return max_;
+            return maxPt;
         }
         void setMin(const Vec<T, DIM>& min)
         {
-            min_ = min;
+            minPt = min;
         }
         void setMax(const Vec<T, DIM>& max)
         {
-            max_ = max;
+            maxPt = max;
         }
 
         bool operator==(const Rect& other) const
         {
-            return min_ == other.min_ && max_ == other.max_;
+            return minPt == other.minPt && maxPt == other.maxPt;
         }
         bool operator!=(const Rect& other) const
         {
@@ -52,29 +53,46 @@ namespace Ut
         {
             for (int i = 0; i < DIM; ++i)
             {
-                min_[i] = std::min(min_[i], other.min_[i]);
-                max_[i] = std::max(max_[i], other.max_[i]);
+                minPt[i] = std::min(minPt[i], other.minPt[i]);
+                maxPt[i] = std::max(maxPt[i], other.maxPt[i]);
             }
             return *this;
         }
 
+        void expand(const Vec<T, DIM>& point)
+        {
+            for (int i = 0; i < DIM; ++i)
+            {
+                minPt[i] = std::min(minPt[i], point[i]);
+                maxPt[i] = std::max(maxPt[i], point[i]);
+            }
+        }
+
+        void expand(double delta)
+        {
+            minPt -= Vec2d(delta, delta);
+            maxPt += Vec2d(delta, delta);
+        }
+
+
+
         T area() const
         {
             static_assert(DIM == 2, "Area is only defined for 2D rectangles");
-            return (max_.x() - min_.x()) * (max_.y() - min_.y());
+            return (maxPt.x() - minPt.x()) * (maxPt.y() - minPt.y());
         }
 
         T volume() const
         {
             static_assert(DIM == 3, "Volume is only defined for 3D rectangles");
-            return (max_.x() - min_.x()) * (max_.y() - min_.y()) * (max_.z() - min_.z());
+            return (maxPt.x() - minPt.x()) * (maxPt.y() - minPt.y()) * (maxPt.z() - minPt.z());
         }
 
         bool intersects(const Rect& other) const
         {
             for (int i = 0; i < DIM; ++i)
             {
-                if (max_[i] < other.min_[i] || min_[i] > other.max_[i]) return false;
+                if (maxPt[i] < other.minPt[i] || minPt[i] > other.maxPt[i]) return false;
             }
             return true;
         }
@@ -83,7 +101,7 @@ namespace Ut
         {
             for (int i = 0; i < DIM; ++i)
             {
-                if (point[i] < min_[i] || point[i] > max_[i]) return false;
+                if (point[i] < minPt[i] || point[i] > maxPt[i]) return false;
             }
             return true;
         }
@@ -92,7 +110,7 @@ namespace Ut
         {
             for (int i = 0; i < DIM; ++i)
             {
-                if (other.min_[i] < min_[i] || other.max_[i] > max_[i]) return false;
+                if (other.minPt[i] < minPt[i] || other.maxPt[i] > maxPt[i]) return false;
             }
             return true;
         }
@@ -104,77 +122,78 @@ namespace Ut
 
         Vec<T, DIM> getCenter() const
         {
-            return (min_ + max_) * T(0.5);
+            return (minPt + maxPt) * T(0.5);
         }
         Vec<T, DIM> getSize() const
         {
-            return max_ - min_;
+            return maxPt - minPt;
         }
 
         // 获取宽度（仅适用于二维和三维矩形）
         T width() const
         {
             static_assert(DIM == 2 || DIM == 3, "Width is only defined for 2D and 3D rectangles");
-            return max_.x() - min_.x();
+            return maxPt.x() - minPt.x();
         }
 
         // 获取高度（仅适用于二维和三维矩形）
         T height() const
         {
             static_assert(DIM == 2 || DIM == 3, "Height is only defined for 2D and 3D rectangles");
-            return max_.y() - min_.y();
+            return maxPt.y() - minPt.y();
         }
-    private:
-        Vec<T, DIM> min_;
-        Vec<T, DIM> max_;
-    };
-
-    class UTILITY_API AxisAlignedBoundingBox
-    {
-    public:
-        AxisAlignedBoundingBox();
-        AxisAlignedBoundingBox(const Vec2d& min, const Vec2d& max);
-
-        void setBounds(const Vec2d& min, const Vec2d& max);
-        Vec2d getCenter() const;
-        Vec2d getExtent() const;
-        Vec2d getMinPt() const
-        {
-            return minPt;
-        }
-        Vec2d getMaxPt() const
-        {
-            return maxPt;
-        }
-        Vec2d getSize() const;
-        double getWidth() const;
-        double getHeight() const;
-
-        void expand(double delta);
-        void expand(const Vec2d& delta);
-        void expand(const AxisAlignedBoundingBox& aabb);
-
-        bool contains(const Vec2d& point) const;
 
     private:
-        Vec2d minPt;
-        Vec2d maxPt;
+        Vec<T, DIM> minPt;
+        Vec<T, DIM> maxPt;
     };
 
-    class UTILITY_API TightBoundingBox
-    {
-    public:
-        TightBoundingBox();
+    // class UTILITY_API AxisAlignedBoundingBox
+    // {
+    // public:
+    //     AxisAlignedBoundingBox();
+    //     AxisAlignedBoundingBox(const Vec2d& min, const Vec2d& max);
 
-        void computeFromPoints(const std::vector<Vec2d>& points);
-        Vec2d getCenter() const;
-        Vec2d getExtent() const;
-        bool contains(const Vec2d& point) const;
+    //     void setBounds(const Vec2d& min, const Vec2d& max);
+    //     Vec2d getCenter() const;
+    //     Vec2d getExtent() const;
+    //     Vec2d getMinPt() const
+    //     {
+    //         return minPt;
+    //     }
+    //     Vec2d getMaxPt() const
+    //     {
+    //         return maxPt;
+    //     }
+    //     Vec2d getSize() const;
+    //     double getWidth() const;
+    //     double getHeight() const;
 
-    public:
-        Vec2d minPt;
-        Vec2d maxPt;
-    };
+    //     void expand(double delta);
+    //     void expand(const Vec2d& delta);
+    //     void expand(const AxisAlignedBoundingBox& aabb);
+
+    //     bool contains(const Vec2d& point) const;
+
+    // private:
+    //     Vec2d minPt;
+    //     Vec2d maxPt;
+    // };
+
+    // class UTILITY_API TightBoundingBox
+    // {
+    // public:
+    //     TightBoundingBox();
+
+    //     void computeFromPoints(const std::vector<Vec2d>& points);
+    //     Vec2d getCenter() const;
+    //     Vec2d getExtent() const;
+    //     bool contains(const Vec2d& point) const;
+
+    // public:
+    //     Vec2d minPt;
+    //     Vec2d maxPt;
+    // };
 
     using Box = Ut::Rect<double, 2>;
     using Rect2d = Rect<double, 2>;
@@ -182,8 +201,8 @@ namespace Ut
     using Rect3d = Rect<double, 3>;
     using Rect3f = Rect<float, 3>;
 
-    using AABB = AxisAlignedBoundingBox;
-    using TBB = TightBoundingBox;
+    //using AABB = AxisAlignedBoundingBox;
+    //using TBB = TightBoundingBox;
 } // namespace Ut
 
 #endif // RECT_H

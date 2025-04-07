@@ -267,7 +267,7 @@ void ViewWrapper::wheelEvent(QWheelEvent* event)
 void ViewWrapper::mouseMoveEvent(QMouseEvent* event)
 {
     QPoint curPos = event->pos();
-    auto world = m_scene->screenToWorld({ curPos.x(), curPos.y() });
+    Ut::Vec2d world = m_scene->screenToWorld({ curPos.x(), curPos.y() });
 
     m_optManager->mouseMoveEvent(event);
 

@@ -24,7 +24,7 @@ namespace MEngine
 
         // 获取顶点数据，用于绘制
         virtual std::pair<Ut::Vec2*, size_t> getData() const;
-        //virtual Ut::Rect2d& getRect();
+        virtual Ut::Rect2d& getRect();
 
         //std::pair<Ut::Vec2*, size_t> getData() const;
 

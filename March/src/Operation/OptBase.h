@@ -11,12 +11,10 @@
 #include "Widgets/RenderView/ViewWrapper.h"
 #include "Scene/Scene.h"
 
-//class ViewWrapper;
 namespace MRender
 {
     class MarchView;
 }
-class IOperation;
 
 class OptBase
 {
@@ -55,7 +53,7 @@ public:
 
     //private:
 public:
-    DrawType m_drawType = DrawType::Select;
+    DrawType m_drawType = DrawType::View;
 
     ViewWrapper* m_viewWrap = nullptr;
     MEngine::Scene* m_scene = nullptr;
@@ -68,9 +66,11 @@ public:
     QPoint m_lastPanPos; // 上次平移位置
 
     // 窗、交选
-    bool m_bSelecting = false;
-    Ut::Vec2d m_selectStart;
-    Ut::Vec2d m_selectEnd;
+    // bool m_bSelecting = false;
+    // Ut::Vec2d m_selectStart;
+    // Ut::Vec2d m_selectEnd;
+
+
 };
 
 #endif // OPTBASE_H
