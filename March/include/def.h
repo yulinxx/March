@@ -22,7 +22,7 @@ enum class DrawType
     Circle,
     Ellipse,
     Spline,
-    CubicBezier,
+    Bezier,
     Text,
     Image,
     None

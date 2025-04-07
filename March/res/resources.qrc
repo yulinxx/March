@@ -18,6 +18,7 @@
         <file>icons/draw-ellipse.png</file>
         <file>icons/draw-text.png</file>
         <file>icons/draw-image.png</file>
+        <file>icons/draw-spline.png</file>
         <file>icons/draw-bezier.png</file>
         <file>icons/draw-three-point-arc.png</file>
         <file>icons/draw-cad-object.png</file>

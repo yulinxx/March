@@ -205,7 +205,7 @@ namespace MEngine
         Ut::Rect2d rect = { {left, top}, {right - left, top - bottom } };
 
         //auto rect = Ut::Rect2d(Ut::Vec2d(minX, minY), Ut::Vec2d(maxX, maxY));
-        //setRect(rect); 
+        setRect(rect);
 
         return getRect();
     }

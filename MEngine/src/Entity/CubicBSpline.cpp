@@ -6,18 +6,17 @@ namespace MEngine
 {
     struct CubicBSpline::Impl
     {
-        std::vector<Ut::Vec2> controlPoints; // ¿ØÖÆµã
-        std::vector<double> knots;           // ½ÚµãÏòÁ¿
-        size_t nSegmentsPerSpan = 32;        // Ã¿¶ÎÇúÏßµÄ²ÉÑùµãÊı
-        // bool closed = false;                 // ÊÇ·ñ±ÕºÏ
-        std::vector<Ut::Vec2> vertices;      // ¶¥µãÊı¾İ
+        std::vector<Ut::Vec2> controlPoints; // æ§åˆ¶ç‚¹
+        std::vector<double> knots;           // èŠ‚ç‚¹å‘é‡
+        size_t nSegmentsPerSpan = 32;        // æ¯æ®µæ›²çº¿çš„é‡‡æ ·ç‚¹æ•°
+        std::vector<Ut::Vec2> vertices;      // é¡¶ç‚¹æ•°æ®
     };
 
     CubicBSpline::CubicBSpline()
     {
         m_impl = new Impl();
         setType(EntType::BSPLINE);
-        setClosed(false);
+        setClosed(false); // é»˜è®¤ä¸é—­åˆ
     }
 
     CubicBSpline::~CubicBSpline()
@@ -31,20 +30,23 @@ namespace MEngine
         m_impl->vertices.clear();
         m_impl->vertices.shrink_to_fit();
         m_impl->knots.clear();
+        m_impl->controlPoints.clear();
     }
 
     void CubicBSpline::setControlPoints(const std::vector<Ut::Vec2>& points, bool closed)
     {
         if (points.size() < 4)
         {
-            throw std::runtime_error("Cubic B-Spline requires at least 4 control points");
+            //throw std::runtime_error("Cubic B-Spline requires at least 4 control points");
+            return;
         }
 
         clear();
         m_impl->controlPoints = points;
-        // m_impl->closed = closed;
+        isClosed();
 
-        setClosed(closed);
+        Entity::setClosed(closed);
+
         computeKnots();
         updateVertices();
     }
@@ -53,17 +55,17 @@ namespace MEngine
     {
         if (nSegments < 2)
         {
-            throw std::runtime_error("Number of segments per span must be at least 2");
+            //throw std::runtime_error("Number of segments per span must be at least 2");
+            return;
         }
+
         m_impl->nSegmentsPerSpan = nSegments;
         updateVertices();
     }
 
     void CubicBSpline::setClosed(bool closed)
     {
-        // m_impl->closed = closed;
-        // m_bClosed = closed;
-        setClosed(closed);
+        Entity::setClosed(closed);
         computeKnots();
         updateVertices();
     }
@@ -71,33 +73,36 @@ namespace MEngine
     void CubicBSpline::computeKnots()
     {
         m_impl->knots.clear();
-        size_t n = m_impl->controlPoints.size() - 1; // ¿ØÖÆµãÊı - 1
-        size_t k = 3; // Èı´Î B ÑùÌõµÄ½×Êı (degree = k = 3)
+        if (m_impl->controlPoints.size() < 4) 
+            return; // è‡³å°‘éœ€è¦4ä¸ªæ§åˆ¶ç‚¹
+
+        int n = m_impl->controlPoints.size() - 1; // æ§åˆ¶ç‚¹æ•° - 1
+        int k = 3; // ä¸‰æ¬¡ B æ ·æ¡çš„é˜¶æ•° (degree = k = 3)
 
         if (isClosed())
         {
-            // ±ÕºÏÇúÏß£º¾ùÔÈ½Úµã£¬¶îÍâÌí¼Ó¿ØÖÆµã
-            int totalKnots = n + k + 1 + k; // ¶îÍâÌí¼Ó k ¸ö½Úµã
+            // é—­åˆæ›²çº¿ï¼šå‡åŒ€èŠ‚ç‚¹ï¼Œé¢å¤–æ·»åŠ æ§åˆ¶ç‚¹
+            int totalKnots = n + k + 1 + k; // é¢å¤–æ·»åŠ  k ä¸ªèŠ‚ç‚¹
             for (int i = 0; i < totalKnots; ++i)
             {
                 m_impl->knots.push_back(static_cast<double>(i) / (n + k + 1));
             }
-            // ±ÕºÏÊ±¸´ÖÆÇ° k ¸ö¿ØÖÆµãµ½Ä©Î²
-            for (int i = 0; i < k; ++i)
+            // é—­åˆæ—¶å¤åˆ¶å‰ k ä¸ªæ§åˆ¶ç‚¹åˆ°æœ«å°¾
+            for (int i = 0; i < k && i < n; ++i) // æ·»åŠ è¾¹ç•Œæ£€æŸ¥
+
             {
                 m_impl->controlPoints.push_back(m_impl->controlPoints[i]);
             }
         }
         else
         {
-            // ¿ªºÏÇúÏß£º¾ùÔÈ½Úµã£¬±ß½çÖØ¸´
+            // å¼€åˆæ›²çº¿ï¼šå‡åŒ€èŠ‚ç‚¹ï¼Œè¾¹ç•Œé‡å¤
             int totalKnots = n + k + 1;
             for (int i = 0; i < totalKnots; ++i)
             {
                 double t = static_cast<double>(i) / (totalKnots - 1 - k);
-                if (i < k + 1)
-                    t = 0.0;           // Ç° k+1 ¸ö½ÚµãÎª 0
-                else if (i >= n + 1) t = 1.0;     // ºó k ¸ö½ÚµãÎª 1
+                if (i < k + 1) t = 0.0;           // å‰ k+1 ä¸ªèŠ‚ç‚¹ä¸º 0
+                else if (i >= n + 1) t = 1.0;     // å k ä¸ªèŠ‚ç‚¹ä¸º 1
                 else t = static_cast<double>(i - k) / (n - k + 1);
                 m_impl->knots.push_back(t);
             }
@@ -106,20 +111,27 @@ namespace MEngine
 
     double CubicBSpline::basisFunction(int i, int k, double t, const std::vector<double>& knots) const
     {
+        // æ£€æŸ¥åŸºç¡€æƒ…å†µå’Œè¾¹ç•Œ
+        if (i < 0 || i >= static_cast<int>(knots.size()) || i + 1 >= static_cast<int>(knots.size()))
+        {
+            return 0.0;
+        }
         if (k == 0)
         {
             return (t >= knots[i] && t < knots[i + 1]) ? 1.0 : 0.0;
         }
 
         double denom1 = knots[i + k] - knots[i];
-        double denom2 = knots[i + k + 1] - knots[i + 1];
+        double denom2 = (i + k + 1 < static_cast<int>(knots.size())) ? knots[i + k + 1] - knots[i + 1] : 0.0;
         double b1 = 0.0, b2 = 0.0;
 
-        if (denom1 > 1e-6)
+        // åªåœ¨ denom1 æœ‰æ•ˆæ—¶è®¡ç®— b1
+        if (denom1 > 1e-6 && i + k < static_cast<int>(knots.size()))
         {
             b1 = (t - knots[i]) / denom1 * basisFunction(i, k - 1, t, knots);
         }
-        if (denom2 > 1e-6)
+        // åªåœ¨ denom2 æœ‰æ•ˆæ—¶è®¡ç®— b2
+        if (denom2 > 1e-6 && i + k + 1 < static_cast<int>(knots.size()))
         {
             b2 = (knots[i + k + 1] - t) / denom2 * basisFunction(i + 1, k - 1, t, knots);
         }
@@ -133,17 +145,18 @@ namespace MEngine
         {
             throw std::runtime_error("Parameter t must be between 0 and 1");
         }
-        if (m_impl->controlPoints.empty())
+
+        if (m_impl->controlPoints.empty() || m_impl->knots.empty())
         {
             return Ut::Vec2(0.0, 0.0);
         }
 
         int n = m_impl->controlPoints.size() - 1;
-        size_t k = 3; // Èı´ÎÑùÌõ
+        int k = 3; // ä¸‰æ¬¡æ ·æ¡
         double tScaled = m_impl->knots[k] + t * (m_impl->knots[n + 1] - m_impl->knots[k]);
 
         Ut::Vec2 point(0.0, 0.0);
-        for (size_t i = 0; i <= n; ++i)
+        for (int i = 0; i <= n; ++i)
         {
             double b = basisFunction(i, k, tScaled, m_impl->knots);
             point += m_impl->controlPoints[i] * b;
@@ -153,7 +166,9 @@ namespace MEngine
 
     void CubicBSpline::updateVertices()
     {
-        clear();
+        //clear();
+        m_impl->vertices.clear();
+
 
         if (m_impl->controlPoints.size() < 4 || m_impl->nSegmentsPerSpan < 2)
         {

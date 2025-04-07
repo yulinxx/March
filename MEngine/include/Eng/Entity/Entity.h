@@ -41,6 +41,7 @@ namespace MEngine
 
     public:
         Ut::Vec2d getValue(double t);
+
         // 获取和设置属性
         EntType getType() const;
         size_t getId() const;

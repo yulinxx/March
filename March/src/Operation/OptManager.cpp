@@ -80,7 +80,7 @@ void OptManager::set(int nType)
     case static_cast<int>(DrawType::Spline):
         m_curOpt = std::make_shared<OptDrawSpline>(m_scene);
         break;
-    case static_cast<int>(DrawType::CubicBezier):
+    case static_cast<int>(DrawType::Bezier):
         m_curOpt = std::make_shared<OptDrawCubicBezier>(m_scene);
         break;
     case static_cast<int>(DrawType::Text):

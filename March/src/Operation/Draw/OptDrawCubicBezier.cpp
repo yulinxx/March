@@ -5,7 +5,7 @@
 OptDrawCubicBezier::OptDrawCubicBezier(MEngine::Scene* scene)
     : OptBase(scene)
 {
-    m_drawType = DrawType::CubicBezier;
+    m_drawType = DrawType::Bezier;
 
     m_bezierPreview = std::make_shared<MEngine::CubicBezier>();
     m_scene->addPreview(m_bezierPreview.get());
@@ -17,7 +17,7 @@ OptDrawCubicBezier::~OptDrawCubicBezier()
 
 void OptDrawCubicBezier::enter()
 {
-    m_drawType = DrawType::CubicBezier;
+    m_drawType = DrawType::Bezier;
     m_bDrawing = true;
     m_controlPoints.clear();
 }

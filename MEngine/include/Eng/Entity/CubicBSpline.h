@@ -59,16 +59,17 @@ namespace MEngine
             Ut::Vec2(3.0, 0.0),
             Ut::Vec2(4.0, -1.0)
         };
-        spline.setControlPoints(points, false); // ��������
+
+        spline.setControlPoints(points, false); // 开合曲线
         spline.setSegmentsPerSpan(32);
 
         renderBSpline(spline);
 
-        // ʾ�����պ�����
+        // 示例：闭合曲线
         spline.setClosed(true);
         renderBSpline(spline);
 
-        // ʾ������ȡ t=0.5 ���ĵ�
+        // 示例：获取 t=0.5 处的点
         Ut::Vec2 midPoint = spline.evaluate(0.5);
         std::cout << "Mid point: (" << midPoint.x() << ", " << midPoint.y() << ")\n";
 

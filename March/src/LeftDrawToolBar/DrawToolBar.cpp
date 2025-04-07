@@ -36,6 +36,8 @@ void DrawToolBar::initUI()
         {static_cast<int>(DrawType::Arc),       {tr("Arc"),       "://icons/draw-arc.png"}},
         {static_cast<int>(DrawType::Circle),    {tr("Circle"),    "://icons/draw-circle.png"}},
         {static_cast<int>(DrawType::Ellipse),   {tr("Ellipse"),   "://icons/draw-ellipse.png"}},
+        {static_cast<int>(DrawType::Spline),    {tr("Spline"),    "://icons/draw-spline.png"}},
+        {static_cast<int>(DrawType::Bezier),    {tr("Bezier"),    "://icons/draw-bezier.png"}},
         {static_cast<int>(DrawType::Text),      {tr("Text"),      "://icons/draw-text.png"}},
         {static_cast<int>(DrawType::Image),     {tr("Image"),     "://icons/draw-image.png"}}
     };
