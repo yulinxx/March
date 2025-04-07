@@ -10,9 +10,8 @@ namespace MEngine
 
     DelEntityCmd::~DelEntityCmd()
     {
-        m_group->removeEntity(m_entity);
-
-        SAFE_DEL(m_entity);
+        // m_group->removeEntity(m_entity);
+        // SAFE_DEL(m_entity);
     }
 
     void DelEntityCmd::execute()

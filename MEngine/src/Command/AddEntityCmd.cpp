@@ -10,10 +10,10 @@ namespace MEngine
 
     AddEntityCmd::~AddEntityCmd()
     {
-        if (m_group && m_entity)
-            m_group->removeEntity(m_entity);
+        // if (m_group && m_entity)
+        //     m_group->removeEntity(m_entity);
 
-        SAFE_DEL(m_entity);
+        // SAFE_DEL(m_entity);
     }
 
     void AddEntityCmd::execute()
