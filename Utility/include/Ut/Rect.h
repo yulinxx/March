@@ -97,7 +97,7 @@ namespace Ut
             return true;
         }
 
-        const Rect<T, DIM>& getRect() const
+        const Rect<T, DIM>& getRect()
         {
             return *this;
         }

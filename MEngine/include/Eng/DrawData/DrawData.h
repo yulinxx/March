@@ -18,8 +18,16 @@ namespace MEngine
         ~DrawData();
 
     public:
+        void clear();
+        void clearPreviews();
+
+        void clearLinesData();
+        void clearLineData();
+
+    public:
         void processEntities(Group* group);
         void processPreviews(Previews* previews);
+
 
     public:
         std::pair<float*, size_t> getLineData() const;

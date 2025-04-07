@@ -10,15 +10,25 @@ namespace MEngine
     // 收集Line数据的函数实现
     void LineData::collectLineData(Line* line)
     {
-        Ut::Vec2 startPoint;
-        Ut::Vec2 endPoint;
-        line->getPoints(startPoint, endPoint);
-        m_vLinePts.push_back(static_cast<float>(startPoint.x()));
-        m_vLinePts.push_back(static_cast<float>(startPoint.y()));
-        //m_vLinePts.push_back(line->m_basePt.z);
-        m_vLinePts.push_back(static_cast<float>(endPoint.x()));
-        m_vLinePts.push_back(static_cast<float>(endPoint.y()));
-        //m_vLinePts.push_back(line->m_secPoint.z);
+        //Ut::Vec2 startPoint;
+        //Ut::Vec2 endPoint;
+        //line->getPoints(startPoint, endPoint);
+        //m_vLinePts.push_back(static_cast<float>(startPoint.x()));
+        //m_vLinePts.push_back(static_cast<float>(startPoint.y()));
+        ////m_vLinePts.push_back(line->m_basePt.z);
+        //m_vLinePts.push_back(static_cast<float>(endPoint.x()));
+        //m_vLinePts.push_back(static_cast<float>(endPoint.y()));
+        ////m_vLinePts.push_back(line->m_secPoint.z);
+
+        std::pair<Ut::Vec2*, size_t> pairData = line->getData();
+        Ut::Vec2* pts = pairData.first;
+        size_t sz = pairData.second;
+
+        for (size_t i = 0; i < sz; i++)
+        {
+            m_vLinePts.push_back(static_cast<float>(pts[i].x()));
+            m_vLinePts.push_back(static_cast<float>(pts[i].y()));
+        }
     }
 
     // 将Line数据转换为适合渲染的浮点数组实现

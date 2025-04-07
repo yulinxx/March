@@ -26,7 +26,7 @@ namespace MEngine
 
         virtual std::pair<Ut::Vec2*, size_t> getData() const;
         //std::pair<Ut::Vec2*, size_t> getData() const;
-        //virtual Ut::Rect2d& getRect() const;
+        //virtual Ut::Rect2d& getRect();
 
         // 获取控制点
         std::vector<Ut::Vec2> getControlPoints() const;

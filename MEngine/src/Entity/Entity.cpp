@@ -35,7 +35,7 @@ namespace MEngine
     }
 
 
-    Ut::Rect2d& Entity::getRect() const
+    Ut::Rect2d& Entity::getRect()
     {
         return m_impl->rect;
     }
@@ -70,7 +70,6 @@ namespace MEngine
         return m_impl->closed;
     }
 
-    // ��������
     void Entity::setType(EntType type)
     {
         m_impl->type = type;

@@ -5,6 +5,7 @@
 
 namespace MEngine
 {
+    class Line;
     class Arc;
 }
 
@@ -32,12 +33,13 @@ private:
     void updatePreview();
 
 private:
-    size_t m_nPts = 0;            // µ±Ç°µãµÄÊıÁ¿£¨0-3£©
-    Ut::Vec2d m_startPoint;       // Æğµã
-    Ut::Vec2d m_midPoint;         // ÖĞ¼äµã
-    Ut::Vec2d m_endPoint;         // ÖÕµã£¨Êó±êÒÆ¶¯Ê±µÄÔ¤ÀÀµã£©
+    size_t m_nPts = 0;            // å½“å‰ç‚¹çš„æ•°é‡ï¼ˆ0-3ï¼‰
+    Ut::Vec2d m_startPoint;       // èµ·ç‚¹
+    Ut::Vec2d m_midPoint;         // ä¸­é—´ç‚¹
+    Ut::Vec2d m_endPoint;         // ç»ˆç‚¹ï¼ˆé¼ æ ‡ç§»åŠ¨æ—¶çš„é¢„è§ˆç‚¹ï¼‰
 
-    std::shared_ptr<MEngine::Arc> m_arcPreview = nullptr;  // Ô¤ÀÀÔ²»¡
+    std::shared_ptr<MEngine::Line> m_linePreview = nullptr;
+    std::shared_ptr<MEngine::Arc> m_arcPreview = nullptr; 
 };
 
 #endif // OPTDRAWARC_H

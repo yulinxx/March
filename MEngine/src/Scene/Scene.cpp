@@ -55,6 +55,7 @@ namespace MEngine
 
     void Scene::paint()
     {
+        getDrawData()->clear();
         m_sceneData->m_drawData->processEntities(m_sceneData->m_rootGroup);
         m_sceneData->m_drawData->processPreviews(m_sceneData->m_previews);
     }

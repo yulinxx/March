@@ -23,7 +23,7 @@ namespace MEngine
 
         //std::pair<Ut::Vec2*, size_t> getData() const;
         virtual std::pair<Ut::Vec2*, size_t> getData() const;
-        //virtual Ut::Rect2d& getRect() const;
+        //virtual Ut::Rect2d& getRect();
     private:
         void updatePolygon();
         void closePolygon();

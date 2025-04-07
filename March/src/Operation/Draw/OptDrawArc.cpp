@@ -1,5 +1,7 @@
 #include "OptDrawArc.h"
 #include "Entity/Arc.h"
+#include "Eng/Entity/Line.h"
+
 #include "Command/AddEntityCmd.h"
 #include "Render/MarchView.h"
 
@@ -8,7 +10,10 @@ OptDrawArc::OptDrawArc(MEngine::Scene* scene)
 {
     m_drawType = DrawType::Arc;
 
+    m_linePreview = std::make_shared<MEngine::Line>();
     m_arcPreview = std::make_shared<MEngine::Arc>();
+
+    m_scene->addPreview(m_linePreview.get());
     m_scene->addPreview(m_arcPreview.get());
 }
 
@@ -25,8 +30,9 @@ void OptDrawArc::enter()
 
 void OptDrawArc::exit()
 {
-    m_scene->removePreview(m_arcPreview.get());
     m_nPts = 0;
+    m_scene->removePreview(m_linePreview.get());
+    m_scene->removePreview(m_arcPreview.get());
     m_arcPreview->clear();
 }
 
@@ -37,18 +43,22 @@ void OptDrawArc::mousePressEvent(QMouseEvent* event)
         QPointF pos = event->pos();
         Ut::Vec2d posW = m_scene->screenToWorld({ pos.x(), pos.y() });
 
-        if (m_nPts == 0)  // µÚÒ»¸öµã£ºÆðµã
+        if (m_nPts == 0)  // ç¬¬ä¸€ä¸ªç‚¹ï¼šèµ·ç‚¹
         {
+            m_linePreview->setPoints(posW, posW);  // åˆå§‹åŒ–é¢„è§ˆçº¿
             m_startPoint = posW;
             m_nPts = 1;
         }
-        else if (m_nPts == 1)  // µÚ¶þ¸öµã£ºÖÐ¼äµã
+        else if (m_nPts == 1)  // ç¬¬äºŒä¸ªç‚¹ï¼šä¸­é—´ç‚¹
         {
+            m_linePreview->clear();  // ç›´çº¿é¢„è§ˆçº¿
+
             m_midPoint = posW;
             m_nPts = 2;
         }
-        else if (m_nPts == 2)  // µÚÈý¸öµã£ºÖÕµã
+        else if (m_nPts == 2)  // ç¬¬ä¸‰ä¸ªç‚¹ï¼šç»ˆç‚¹
         {
+            m_linePreview->clear();
             m_endPoint = posW;
             if ((m_startPoint - m_midPoint).length() > 1e-3 &&
                 (m_midPoint - m_endPoint).length() > 1e-3 &&
@@ -64,7 +74,10 @@ void OptDrawArc::mousePressEvent(QMouseEvent* event)
     else if (event->button() == Qt::RightButton)
     {
         m_nPts = 0;
+
+        m_linePreview->clear();
         m_arcPreview->clear();
+
         m_viewWrap->updateRender();
     }
     else
@@ -80,12 +93,13 @@ void OptDrawArc::mouseReleaseEvent(QMouseEvent* event)
 
 void OptDrawArc::mouseMoveEvent(QMouseEvent* event)
 {
-    if (m_nPts > 0)  // ÔÚ»æÖÆ×´Ì¬ÏÂ
+    QPointF pos = event->pos();
+    auto posW = m_scene->screenToWorld({ pos.x(), pos.y() });
+    if (m_nPts > 0)  // åœ¨ç»˜åˆ¶çŠ¶æ€ä¸‹
     {
-        QPointF pos = event->pos();
-        m_endPoint = m_scene->screenToWorld({ pos.x(), pos.y() });
-
+        m_endPoint = posW;
         updatePreview();
+
         m_viewWrap->updateRender();
     }
 
@@ -112,7 +126,7 @@ void OptDrawArc::drawArc()
 {
     MEngine::Arc* arc = new MEngine::Arc();
     arc->setByThreePoints(m_startPoint, m_midPoint, m_endPoint);
-    arc->setSides(32);  // Ä¬ÈÏ 32 ¶Î£¬¿ØÖÆÆ½»¬¶È
+    arc->setSides(32);  // 32 æ®µï¼ŒæŽ§åˆ¶å¹³æ»‘åº¦
 
     auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene->getRootGroup(), arc);
     m_scene->execute(std::move(addCmd));
@@ -122,13 +136,16 @@ void OptDrawArc::drawArc()
 
 void OptDrawArc::updatePreview()
 {
-    if (m_nPts == 1)  // Ö»ÓÐÒ»¸öµãÊ±£¬Ô¤ÀÀÎªÖ±Ïß
+    m_linePreview->clear();
+
+    if (m_nPts == 1)  // åªæœ‰ä¸€ä¸ªç‚¹æ—¶ï¼Œé¢„è§ˆä¸ºç›´çº¿
     {
-        m_arcPreview->setByThreePoints(m_startPoint, m_startPoint, m_endPoint);  // ÍË»¯Îªµã
+        m_linePreview->setPoints(m_startPoint, m_endPoint);
+        m_arcPreview->setByThreePoints(m_startPoint, m_startPoint, m_endPoint);  // é€€åŒ–ä¸ºç‚¹
     }
-    else if (m_nPts == 2)  // ÓÐÁ½¸öµãÊ±£¬Ô¤ÀÀÔ²»¡
+    else if (m_nPts == 2)  // æœ‰ä¸¤ä¸ªç‚¹æ—¶ï¼Œé¢„è§ˆåœ†å¼§
     {
         m_arcPreview->setByThreePoints(m_startPoint, m_midPoint, m_endPoint);
-        m_arcPreview->setSides(32);
+        //m_arcPreview->setSides(32);
     }
 }

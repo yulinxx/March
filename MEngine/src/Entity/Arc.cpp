@@ -11,7 +11,7 @@ namespace MEngine
         double startAngle = 0.0;  // 起始角度（弧度）
         double endAngle = 0.0;    // 终止角度（弧度）
         bool ccw = true;          // 逆时针方向
-        size_t nSides = 32;       // 默认边数（CAD 中常用中等平滑度）
+        size_t nSides = 32;       // 默认边数（中等平滑度）
         std::vector<Ut::Vec2> vertices; // 顶点数据
     };
 
@@ -37,16 +37,17 @@ namespace MEngine
     void Arc::setByCenterRadius(const Ut::Vec2& center, double radius,
         double startAngle, double endAngle, bool ccw)
     {
-        if (radius < 1e-6)
-        {
+        if (radius < 1e-3)
             return;
-        }
+
         clear();
+
         m_impl->center = center;
         m_impl->radius = radius;
         m_impl->startAngle = startAngle;
         m_impl->endAngle = endAngle;
         m_impl->ccw = ccw;
+
         updateVertices();
     }
 
@@ -61,13 +62,12 @@ namespace MEngine
 
         // 计算垂直平分线的交点（圆心）
         double d = 2.0 * ((x1 - x3) * (y2 - y3) - (y1 - y3) * (x2 - x3));
-        if (fabs(d) < 1e-6)
-        {
+        if (fabs(d) < 1e-3)
             return;
-        }
 
         double cx = ((y2 - y3) * (x1 * x1 + y1 * y1 - x3 * x3 - y3 * y3) -
             (y1 - y3) * (x2 * x2 + y2 * y2 - x3 * x3 - y3 * y3)) / d;
+
         double cy = ((x1 - x3) * (x2 * x2 + y2 * y2 - x3 * x3 - y3 * y3) -
             (x2 - x3) * (x1 * x1 + y1 * y1 - x3 * x3 - y3 * y3)) / d;
 
@@ -88,21 +88,25 @@ namespace MEngine
         // 调整角度范围
         if (m_impl->ccw)
         {
-            if (midAngle < m_impl->startAngle) midAngle += 2.0 * Ut::PI;
-            if (m_impl->endAngle < m_impl->startAngle) m_impl->endAngle += 2.0 * Ut::PI;
+            if (midAngle < m_impl->startAngle)
+                midAngle += 2.0 * Ut::PI;
+
+            if (m_impl->endAngle < m_impl->startAngle)
+                m_impl->endAngle += 2.0 * Ut::PI;
+
             if (midAngle > m_impl->endAngle)
-            {
                 return;
-            }
         }
         else
         {
-            if (midAngle > m_impl->startAngle) midAngle -= 2.0 * Ut::PI;
-            if (m_impl->endAngle > m_impl->startAngle) m_impl->endAngle -= 2.0 * Ut::PI;
+            if (midAngle > m_impl->startAngle)
+                midAngle -= 2.0 * Ut::PI;
+
+            if (m_impl->endAngle > m_impl->startAngle)
+                m_impl->endAngle -= 2.0 * Ut::PI;
+
             if (midAngle < m_impl->endAngle)
-            {
                 return;
-            }
         }
 
         updateVertices();
@@ -111,9 +115,8 @@ namespace MEngine
     void Arc::setSides(size_t nSides)
     {
         if (nSides < 3)
-        {
             return;
-        }
+
         m_impl->nSides = nSides;
         updateVertices();
     }
@@ -122,10 +125,8 @@ namespace MEngine
     {
         clear();
 
-        if (m_impl->radius < 1e-6 || m_impl->nSides < 3)
-        {
+        if (m_impl->radius < 1e-3 || m_impl->nSides < 3)
             return;
-        }
 
         double startAng = m_impl->startAngle;
         double endAng = m_impl->endAngle;
@@ -133,11 +134,13 @@ namespace MEngine
         // 调整角度范围
         if (m_impl->ccw)
         {
-            while (endAng < startAng) endAng += 2.0 * Ut::PI;
+            while (endAng < startAng)
+                endAng += 2.0 * Ut::PI;
         }
         else
         {
-            while (endAng > startAng) endAng -= 2.0 * Ut::PI;
+            while (endAng > startAng)
+                endAng -= 2.0 * Ut::PI;
         }
 
         double angleSpan = endAng - startAng;
@@ -163,20 +166,43 @@ namespace MEngine
         return { m_impl->vertices.data(), m_impl->vertices.size() };
     }
 
-    Ut::Rect2d& Arc::getRect() const
+    Ut::Rect2d& Arc::getRect()
     {
 
-        //double minX = m_impl->vertices[0].x();
-        //double maxX = minX;
-        //double minY = m_impl->vertices[0].y();
-        //double maxY = minY;
+        // 计算起始点和终止点坐标
+        Ut::Vec2 startPoint = {
+            m_impl->center.x() + m_impl->radius * cos(m_impl->startAngle),
+            m_impl->center.y() + m_impl->radius * sin(m_impl->startAngle)
+        };
 
-        //for (const auto& vertex : m_impl->vertices) {
-        //    minX = std::min(minX, vertex.x());
-        //    maxX = std::max(maxX, vertex.x());
-        //    minY = std::min(minY, vertex.y());
-        //    maxY = std::max(maxY, vertex.y());
-        //}
+        Ut::Vec2 endPoint = {
+            m_impl->center.x() + m_impl->radius * cos(m_impl->endAngle),
+            m_impl->center.y() + m_impl->radius * sin(m_impl->endAngle)
+        };
+
+        // 角度归一化处理
+        double normalizedStart = fmod(m_impl->startAngle, 2 * Ut::PI);
+        double normalizedEnd = fmod(m_impl->endAngle, 2 * Ut::PI);
+
+        if (normalizedEnd < normalizedStart)
+            normalizedEnd += 2 * Ut::PI;
+
+        // 判断是否跨越关键角度
+        bool crosses0 = (normalizedStart <= 0 && normalizedEnd >= 0) ||
+            (normalizedStart <= 2 * Ut::PI && normalizedEnd >= 2 * Ut::PI);
+
+        bool crosses90 = normalizedStart <= Ut::PI / 2 && normalizedEnd >= Ut::PI / 2;
+        bool crosses180 = normalizedStart <= Ut::PI && normalizedEnd >= Ut::PI;
+        bool crosses270 = normalizedStart <= 3 * Ut::PI / 2 && normalizedEnd >= 3 * Ut::PI / 2;
+
+        // 计算边界值
+        double right = crosses0 ? (m_impl->center.x() + m_impl->radius) : std::max(startPoint.x(), endPoint.x());
+        double left = crosses180 ? (m_impl->center.x() - m_impl->radius) : std::min(startPoint.x(), endPoint.x());
+        double top = crosses90 ? (m_impl->center.y() + m_impl->radius) : std::max(startPoint.y(), endPoint.y());
+        double bottom = crosses270 ? (m_impl->center.y() - m_impl->radius) : std::min(startPoint.y(), endPoint.y());
+
+        // 包围框结果
+        Ut::Rect2d rect = { {left, top}, {right - left, top - bottom } };
 
         //auto rect = Ut::Rect2d(Ut::Vec2d(minX, minY), Ut::Vec2d(maxX, maxY));
         //setRect(rect); 

@@ -36,7 +36,7 @@ namespace MEngine
 
         virtual std::pair<Ut::Vec2*, size_t> getData() const = 0;
 
-        virtual Ut::Rect2d& getRect() const;
+        virtual Ut::Rect2d& getRect();
         void setRect(Ut::Rect2d& rect);
 
     public:

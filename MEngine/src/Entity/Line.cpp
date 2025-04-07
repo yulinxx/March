@@ -75,7 +75,7 @@ namespace MEngine
 
     double Line::getLength() const
     {
-        auto start = getBasePoint();
+        auto& start = getBasePoint();
         double dx = m_impl->end.x() - start.x();
         double dy = m_impl->end.y() - start.y();
         return sqrt(dx * dx + dy * dy);

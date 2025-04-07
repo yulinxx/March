@@ -70,6 +70,9 @@ void ViewWrapper::updateRender()
     m_scene->paint();
 
     m_glView->clearLinePoints();
+    m_glView->clearLinesPoints();
+
+    //m_scene->getDrawData()->clear();
 
     {
         auto pairLinesData = m_scene->getDrawData()->getLineData();
@@ -83,7 +86,6 @@ void ViewWrapper::updateRender()
         }
     }
 
-    m_glView->clearLinesPoints();
 
     {
         auto pairLinesData = m_scene->getDrawData()->getLinesData();
@@ -97,15 +99,31 @@ void ViewWrapper::updateRender()
         }
     }
 
-    auto pairPreviewData = m_scene->getDrawData()->getPreviewData();
-    float* ptPreview = pairPreviewData.first;
-    size_t szPreview = pairPreviewData.second;
-
-    for (size_t i = 0; i < szPreview; i += 2)
     {
-        MRender::ColorPoint pt{ *(ptPreview + i), *(ptPreview + i + 1), 0.0f, 1.0f, 0.0f, 0.0f };
-        m_glView->addLinePoint(pt);
+
+        auto pairPreviewData = m_scene->getDrawData()->getPreviewData();
+        float* ptPreview = pairPreviewData.first;
+        size_t szPreview = pairPreviewData.second;
+
+        for (size_t i = 0; i < szPreview; i += 2)
+        {
+            MRender::ColorPoint pt{ *(ptPreview + i), *(ptPreview + i + 1), 0.0f, 1.0f, 0.0f, 0.0f };
+            m_glView->addLinePoint(pt);
+        }
     }
+
+    {
+        auto pairPreviewiata = m_scene->getDrawData()->getPreviewsData();
+        float* ptPreview = pairPreviewiata.first;
+        size_t szPreview = pairPreviewiata.second;
+
+        for (size_t i = 0; i < szPreview; i += 2)
+        {
+            MRender::ColorPoint pt{ *(ptPreview + i), *(ptPreview + i + 1), 0.0f, 1.0f, 0.0f, 0.0f };
+            m_glView->addLinesPoint(pt);
+        }
+    }
+
 
     m_glView->update();
 }
@@ -171,6 +189,7 @@ bool ViewWrapper::eventFilter(QObject* obj, QEvent* event)
         else if (event->type() == QEvent::MouseMove)
         {
             m_optManager->mouseMoveEvent(static_cast<QMouseEvent*>(event));
+            this->mouseMoveEvent(static_cast<QMouseEvent*>(event));
             return false;
         }
         else if (event->type() == QEvent::KeyPress)
@@ -247,12 +266,12 @@ void ViewWrapper::wheelEvent(QWheelEvent* event)
 
 void ViewWrapper::mouseMoveEvent(QMouseEvent* event)
 {
-    //QPoint curPos = event->pos();
-    //auto world = m_scene->screenToWorld({ curPos.x(), curPos.y() });
+    QPoint curPos = event->pos();
+    auto world = m_scene->screenToWorld({ curPos.x(), curPos.y() });
 
-    //m_optManager->mouseMoveEvent(event);
+    m_optManager->mouseMoveEvent(event);
 
-    //sigCoordChanged(world.x(), world.y());
+    sigCoordChanged(world.x(), world.y());
 
     QWidget::mouseMoveEvent(event);
 }

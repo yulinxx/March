@@ -2,7 +2,7 @@
 #define MARCHVIEW_H
 
 #include <QOpenGLWidget>
-#include <QOpenGLFunctions_4_0_Core>
+#include <QOpenGLFunctions_4_5_Core>
 #include <QOpenGLShaderProgram>
 #include <QVector2D>
 #include <vector>
@@ -19,7 +19,7 @@ namespace MRender
         float r, g, b;
     };
 
-    class MRENDER_API MarchView : public QOpenGLWidget, protected QOpenGLFunctions_4_0_Core
+    class MRENDER_API MarchView : public QOpenGLWidget, protected QOpenGLFunctions_4_5_Core
     {
         Q_OBJECT
 

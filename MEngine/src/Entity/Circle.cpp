@@ -144,7 +144,7 @@ namespace MEngine
         return { m_impl->vertices.data(), m_impl->vertices.size() };
     }
 
-    Ut::Rect2d& Circle::getRect() const
+    Ut::Rect2d& Circle::getRect()
     {
         //auto ptMin = Ut::Vec2d(m_impl->center - m_impl->radius);
         //auto ptMax = Ut::Vec2d(m_impl->center + m_impl->radius);

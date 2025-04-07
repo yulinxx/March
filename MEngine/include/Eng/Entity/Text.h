@@ -18,7 +18,7 @@ namespace MEngine
             return std::pair<Ut::Vec2*, size_t>(nullptr, 0);
         }
 
-        virtual Ut::Rect2d& getRect() const
+        virtual Ut::Rect2d& getRect()
         {
             return Entity::getRect();
         }

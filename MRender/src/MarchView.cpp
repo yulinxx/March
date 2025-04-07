@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <cmath>
 #include <random>
+
 #include "Logger.h"
 
 namespace MRender
@@ -14,7 +15,7 @@ namespace MRender
         : QOpenGLWidget(parent)
     {
         QSurfaceFormat format;
-        format.setVersion(4, 0);
+        format.setVersion(4, 6);
         format.setProfile(QSurfaceFormat::CoreProfile);
         setFormat(format);
 
@@ -54,12 +55,12 @@ namespace MRender
     {
         if (!initializeOpenGLFunctions())
         {
-            qFatal("Could not initialize OpenGL 4.0 functions");
+            qFatal("Could not initialize OpenGL 4.6 functions");
         }
 
         // Line
         const char* lineVS = R"(
-            #version 400
+            #version 460
             layout(location = 0) in vec3 position;
             layout(location = 1) in vec3 color;
             uniform mat4 projection;
@@ -75,7 +76,7 @@ namespace MRender
         )";
 
         const char* lineFS = R"(
-            #version 400
+            #version 460
             in vec3 fragColor;
             out vec4 outColor;
             void main()
@@ -132,7 +133,7 @@ namespace MRender
         // Cross
         {
             const char* crossVS = R"(
-            #version 400
+            #version 460
             layout(location = 0) in vec3 position;
             layout(location = 1) in vec3 color;
             out vec3 fragColor;
@@ -144,7 +145,7 @@ namespace MRender
         )";
 
             const char* crossFS = R"(
-            #version 400
+            #version 460
             in vec3 fragColor;
             out vec4 outColor;
             void main()
@@ -178,7 +179,7 @@ namespace MRender
         // Ruler
         {
             const char* rulerVS = R"(
-            #version 400
+            #version 460
             layout(location = 0) in vec2 position;
             void main()
             {
@@ -186,7 +187,7 @@ namespace MRender
             }
         )";
             const char* rulerFS = R"(
-            #version 400
+            #version 460
             out vec4 fragColor;
             void main()
             {
@@ -232,9 +233,9 @@ namespace MRender
             m_lineProgram->setUniformValue("projection", m_viewMatrix);
             m_lineProgram->setUniformValue("translation", m_translation);
             glBindVertexArray(m_lineVao);
-            glEnable(GL_PRIMITIVE_RESTART);
+            //glEnable(GL_PRIMITIVE_RESTART);
             glDrawArrays(GL_LINES, 0, GLsizei(m_linePoints.size()));
-            glDisable(GL_PRIMITIVE_RESTART);
+            //glDisable(GL_PRIMITIVE_RESTART);
             glBindVertexArray(0);
             m_lineProgram->release();
         }
@@ -244,7 +245,9 @@ namespace MRender
             m_linesProgram->setUniformValue("projection", m_viewMatrix);
             m_linesProgram->setUniformValue("translation", m_translation);
             glBindVertexArray(m_linesVao);
+            glEnable(GL_PRIMITIVE_RESTART);
             glDrawArrays(GL_LINE_STRIP, 0, GLsizei(m_linesPoints.size()));
+            glDisable(GL_PRIMITIVE_RESTART);
             glBindVertexArray(0);
             m_linesProgram->release();
         }
@@ -356,6 +359,7 @@ namespace MRender
             GLsizei nBufferSz = static_cast<GLsizei>(bufferSize);
             glBufferData(GL_ARRAY_BUFFER, nBufferSz, m_linePoints.data(), GL_STATIC_DRAW);
         }
+
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ColorPoint), nullptr);
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ColorPoint), (void*)(3 * sizeof(float)));
