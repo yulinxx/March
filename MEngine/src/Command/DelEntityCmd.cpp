@@ -2,9 +2,16 @@
 
 namespace MEngine
 {
+
     DelEntityCmd::DelEntityCmd(Scene* scene, Entity* entity)
         : m_scene(scene ? scene : throw std::invalid_argument("Group pointer cannot be null")),
         m_entity(entity ? entity : throw std::invalid_argument("Entity pointer cannot be null"))
+    {
+    }
+
+    DelEntityCmd::DelEntityCmd(Scene* scene, std::shared_ptr<Entity> entity)
+        : m_scene(scene ? scene : throw std::invalid_argument("Group pointer cannot be null")),
+        m_entity(entity ? entity.get() : throw std::invalid_argument("Entity pointer cannot be null"))
     {
     }
 

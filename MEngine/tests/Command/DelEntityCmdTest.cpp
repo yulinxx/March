@@ -7,7 +7,7 @@ TEST(DelEntityCmdTest, ExecuteTest)
     // auto entity = std::make_shared<Entity>(...);
     // DelEntityCmd cmd(entity);
     // EXPECT_TRUE(cmd.execute());
-    // EXPECT_FALSE(cmd.targetExists()); // 验证实体已被删除
+    // EXPECT_FALSE(cmd.targetExists()); // 验证图元已被删除
 }
 
 TEST(DelEntityCmdTest, UndoTest)
@@ -17,5 +17,5 @@ TEST(DelEntityCmdTest, UndoTest)
     // DelEntityCmd cmd(entity);
     // cmd.execute();
     // EXPECT_TRUE(cmd.undo());
-    // EXPECT_TRUE(cmd.targetExists()); // 验证实体已恢复
+    // EXPECT_TRUE(cmd.targetExists()); // 验证图元已恢复
 }

@@ -30,10 +30,10 @@ namespace  MEngine
     public:
         void insert(std::shared_ptr<Entity> entity, const Ut::Rect2d& box);
         void insert(Entity* entity, const Ut::Rect2d& box);
-        void insertBatch(const std::vector<std::pair<std::shared_ptr<Entity>, Ut::Rect2d>>& entities);
+        void addEntity(const std::vector<std::pair<std::shared_ptr<Entity>, Ut::Rect2d>>& entities);
         bool remove(const std::shared_ptr<Entity>& entity, const Ut::Rect2d& box);
         bool remove(Entity* entity, const Ut::Rect2d& box);
-        size_t removeBatch(const std::vector<std::pair<std::shared_ptr<Entity>, Ut::Rect2d>>& entities);
+        size_t removeEntity(const std::vector<std::pair<std::shared_ptr<Entity>, Ut::Rect2d>>& entities);
 
     public:
         Group* m_rootGroup{ nullptr };
@@ -48,10 +48,6 @@ namespace  MEngine
         float m_dZoomFactor{ 1.0f };
         Ut::Matrix3d m_matOrtho;
         Ut::Vec2i m_vViewSize{ 800, 600 };
-        //Ut::Matrix4d m_matOrtho;
-        // Ut::Matrix3d m_projectionMatrix; // 投影矩阵，用于将3D场景转换为2D屏幕坐标
-        // Ut::Matrix3d m_viewMatrix; // 视图矩阵，用于将3D场景转换为2D屏幕坐标
-        // Ut::Matrix3d m_modelMatrix; // 模型矩阵，用于将3D场景转换为2D屏幕坐标
     };
 }
 

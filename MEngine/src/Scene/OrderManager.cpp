@@ -44,7 +44,7 @@ namespace MEngine
 
     std::vector<Entity*>& OrderManager::getOrderedEntities()
     {
-        // 返回按 m_nId 排序的实体列表
+        // 返回按 m_nId 排序的图元列表
         return m_vOrderedEntities;
     }
 

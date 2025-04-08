@@ -7,63 +7,100 @@ namespace MEngine
     {
     }
 
-    void EntityIndex::insert(std::shared_ptr<Entity> entity, const Ut::Rect2d& box)
+    void EntityIndex::addEntity(Entity* entity)
     {
         if (entity)
         {
-            m_entTree.insert(std::make_pair(box, entity));
+            m_entTree.insert(std::make_pair(entity->getRect(),
+                std::shared_ptr<Entity>(entity, [](Entity*) {})));
         }
     }
 
-    void EntityIndex::insert(Entity* entity, const Ut::Rect2d& box)
+    void EntityIndex::addEntity(std::shared_ptr<Entity> entity)
     {
         if (entity)
         {
-            m_entTree.insert(std::make_pair(box, std::shared_ptr<Entity>(entity, [](Entity*) {}))); // 不释放原始指针
+            m_entTree.insert(std::make_pair(entity->getRect(), entity));
         }
     }
 
-    void EntityIndex::insertBatch(const std::vector<std::pair<std::shared_ptr<Entity>, Ut::Rect2d>>& entities)
+    void EntityIndex::addEntity(Entity* entity, const Ut::Rect2d& box)
     {
-        for (const auto& [entity, box] : entities)
+        if (entity)
+        {
+            m_entTree.insert(std::make_pair(box,
+                std::shared_ptr<Entity>(entity, [](Entity*) {})));
+        }
+    }
+
+    void EntityIndex::addEntity(const std::vector<Entity*>& entities)
+    {
+
+        for (const auto& entity : entities)
+        {
+            addEntity(entity);
+        }
+    }
+
+    void EntityIndex::addEntity(const std::vector<std::shared_ptr<Entity>>& entities)
+    {
+        for (const auto& entity : entities)
         {
             if (entity)
             {
-                m_entTree.insert(std::make_pair(box, entity));
+                addEntity(entity);
             }
         }
     }
 
-    bool EntityIndex::remove(const std::shared_ptr<Entity>& entity, const Ut::Rect2d& box)
+
+
+    void EntityIndex::removeEntity(Entity* entity)
     {
         if (entity)
         {
-            return m_entTree.remove(std::make_pair(box, entity)) > 0;
+            m_entTree.remove(std::make_pair(entity->getRect(),
+                std::shared_ptr<Entity>(entity, [](Entity*) {})));
         }
-        return false;
     }
 
-    bool EntityIndex::remove(Entity* entity, const Ut::Rect2d& box)
+    void EntityIndex::removeEntity(std::shared_ptr<Entity> entity)
     {
         if (entity)
         {
-            return m_entTree.remove(std::make_pair(box, std::shared_ptr<Entity>(entity, [](Entity*) {}))) > 0;
+            m_entTree.remove(std::make_pair(entity->getRect(), entity));
         }
-        return false;
     }
 
-    size_t EntityIndex::removeBatch(const std::vector<std::pair<std::shared_ptr<Entity>, Ut::Rect2d>>& entities)
+    void EntityIndex::removeEntity(Entity* entity, const Ut::Rect2d& box)
     {
-        size_t count = 0;
-        for (const auto& [entity, box] : entities)
+        if (entity)
         {
-            if (entity && m_entTree.remove(std::make_pair(box, entity)) > 0)
+            m_entTree.remove(std::make_pair(box,
+                std::shared_ptr<Entity>(entity, [](Entity*) {})));
+        }
+    }
+
+    void EntityIndex::removeEntity(const std::vector<Entity*>& entities)
+    {
+
+        for (const auto& entity : entities)
+        {
+            removeEntity(entity);
+        }
+    }
+
+    void EntityIndex::removeEntity(const std::vector<std::shared_ptr<Entity>>& entities)
+    {
+        for (const auto& entity : entities)
+        {
+            if (entity)
             {
-                ++count;
+                removeEntity(entity);
             }
         }
-        return count;
     }
+
 
     std::vector<std::shared_ptr<Entity>> EntityIndex::queryIntersects(const Ut::Rect2d& queryBox) const
     {

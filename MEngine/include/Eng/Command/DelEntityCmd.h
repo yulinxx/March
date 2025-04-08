@@ -12,6 +12,7 @@ namespace MEngine
     {
     public:
         DelEntityCmd(Scene* scene, Entity* entity);
+        DelEntityCmd(Scene* scene, std::shared_ptr<Entity> entity);
         ~DelEntityCmd();
 
     public:

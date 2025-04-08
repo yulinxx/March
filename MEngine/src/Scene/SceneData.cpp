@@ -50,7 +50,7 @@ namespace MEngine
         //}
     }
 
-    void SceneData::insertBatch(const std::vector<std::pair<std::shared_ptr<Entity>, Ut::Rect2d>>& entities)
+    void SceneData::addEntity(const std::vector<std::pair<std::shared_ptr<Entity>, Ut::Rect2d>>& entities)
     {
         //for (const auto& [entity, box] : entities)
         //{
@@ -79,7 +79,7 @@ namespace MEngine
         return false;
     }
 
-    size_t SceneData::removeBatch(const std::vector<std::pair<std::shared_ptr<Entity>, Ut::Rect2d>>& entities)
+    size_t SceneData::removeEntity(const std::vector<std::pair<std::shared_ptr<Entity>, Ut::Rect2d>>& entities)
     {
         //size_t count = 0;
         //for (const auto& [entity, box] : entities)

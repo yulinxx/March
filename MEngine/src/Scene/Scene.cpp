@@ -20,13 +20,19 @@ namespace MEngine
     void Scene::addEntity(Entity* entity)
     {
         if (m_sceneData->m_rootGroup)
+        {
             m_sceneData->m_rootGroup->addEntity(entity);
+            m_sceneData->m_entTree->addEntity(entity);
+        }
     }
 
     bool Scene::removeEntity(Entity* entity)
     {
         if (m_sceneData->m_rootGroup)
+        {
             m_sceneData->m_rootGroup->removeEntity(entity);
+            m_sceneData->m_entTree->removeEntity(entity);
+        }
         return false;
     }
 

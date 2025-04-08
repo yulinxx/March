@@ -22,7 +22,7 @@ namespace XC
         {
             // 先清理现有数据
             m_vEntities.clear();
-            // 深拷贝实体
+            // 深拷贝图元
             m_vEntities.reserve(other.m_vEntities.size());
             for (const auto& entity : other.m_vEntities)
             {
@@ -70,7 +70,7 @@ namespace XC
     {
         if (m_vEntities.empty())
         {
-            return basePoint; // 如果没有实体，返回基点
+            return basePoint; // 如果没有图元，返回基点
         }
 
         double segmentLength = 1.0 / m_vEntities.size();
@@ -88,10 +88,10 @@ namespace XC
     {
         if (m_vEntities.empty())
         {
-            return 0.0; // 如果没有实体，返回默认值
+            return 0.0; // 如果没有图元，返回默认值
         }
 
-        // 遍历所有实体，找到最近的点并计算参数 t
+        // 遍历所有图元，找到最近的点并计算参数 t
         double minDist = std::numeric_limits<double>::max();
         double resultT = 0.0;
         double segmentLength = 1.0 / m_vEntities.size();

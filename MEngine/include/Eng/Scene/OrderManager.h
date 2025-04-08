@@ -17,19 +17,19 @@ namespace MEngine
         ~OrderManager() = default;
 
     public:
-        // 添加实体到顺序列表
+        // 添加图元到顺序列表
         void addEntity(Entity* entity);
 
         // 移除指定元素
         bool removeEntity(Entity* entity);
 
-        // 获取按顺序排列的实体列表
+        // 获取按顺序排列的图元列表
         std::vector<Entity*>& getOrderedEntities();
 
-        // 交换两个实体的顺序
+        // 交换两个图元的顺序
         void swapEntities(Entity* entity1, Entity* entity2);
 
-        // 移动实体到指定位置
+        // 移动图元到指定位置
         void moveEntityToPos(Entity* entity, size_t position);
 
     private:

@@ -12,6 +12,7 @@ namespace MEngine
     {
     public:
         AddEntityCmd(Scene* scene, Entity* entity);
+        AddEntityCmd(Scene* scene, std::shared_ptr<Entity> entity);
         ~AddEntityCmd();
 
     public:

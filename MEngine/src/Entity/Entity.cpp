@@ -5,8 +5,8 @@ namespace MEngine
 {
     struct Entity::Impl
     {
-        EntType type = EntType::UNKNOWN;  // 实体类型
-        size_t id = 0;                    // 实体 ID
+        EntType type = EntType::UNKNOWN;  // 图元类型
+        size_t id = 0;                    // 图元 ID
         Ut::Vec2d basePt;                 // 基准点
         bool reverse = false;             // 是否反向
         bool closed = false;              // 是否闭合

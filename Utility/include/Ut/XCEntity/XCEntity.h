@@ -16,7 +16,7 @@
 namespace XC
 {
     /**
-     * @brief 定义实体类型的枚举
+     * @brief 定义图元类型的枚举
      */
     enum ETYPE
     {
@@ -184,13 +184,13 @@ namespace XC
     };
 
     /**
-     * @brief 实体基类
+     * @brief 图元基类
      */
     struct UTILITY_API XCEntity
     {
-        /** 实体类型 */
+        /** 图元类型 */
         ETYPE eType;
-        /** 实体ID */
+        /** 图元ID */
         int id;
 
     public:
@@ -207,9 +207,9 @@ namespace XC
         char* m_LayerName = nullptr;
 
         /**
-         * @brief 根据参数t获取实体上的点
+         * @brief 根据参数t获取图元上的点
          * @param t 参数值，范围[0, 1]
-         * @return 实体上的点坐标
+         * @return 图元上的点坐标
          */
         virtual Ut::Vec2d value(double t)
         {
@@ -227,7 +227,7 @@ namespace XC
     };
 
     /**
-     * @brief 点实体类
+     * @brief 点图元类
      */
      // 移除原来的结构体定义
      // struct XCPoint : public XCEntity
@@ -253,7 +253,7 @@ namespace XC
      // #include "XCText.h"
 
      // /**
-     //  * @brief 圆弧实体类
+     //  * @brief 圆弧图元类
      //  */
      // struct UTILITY_API XCArc : public XCEntity
      // {
@@ -295,7 +295,7 @@ namespace XC
      // };
 
      // /**
-     //  * @brief 多段线实体类
+     //  * @brief 多段线图元类
      //  */
      // struct UTILITY_API XCPolyLine : public XCEntity
      // {
@@ -339,7 +339,7 @@ namespace XC
      // };
 
      // /**
-     //  * @brief 样条曲线实体类
+     //  * @brief 样条曲线图元类
      //  */
      // struct UTILITY_API XCPolyBspline : public XCEntity
      // {
@@ -349,7 +349,7 @@ namespace XC
      //     std::vector<Ut::Vec2d> controlPts;
      // };
      // /**
-     //  * @brief 文本实体类
+     //  * @brief 文本图元类
      //  */
      // struct UTILITY_API XCText : public XCEntity
      // {

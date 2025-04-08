@@ -8,6 +8,8 @@
 #define UT_PI (3.14159265358979323846)
 #define UT_2PI (3.14159265358979323846 * 2.0)
 
+constexpr double UT_EPSILON = 1e-6;
+
 // 通用容器清理宏（线程不安全）
 #define CLEAR_CONTAINER(container) \
 do { \
