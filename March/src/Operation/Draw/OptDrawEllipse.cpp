@@ -122,7 +122,7 @@ void OptDrawEllipse::drawEllipse()
     ellipse->setSides(64);
     setEllipseData(ellipse);
 
-    auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene->getRootGroup(), ellipse);
+    auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene, ellipse);
     m_scene->execute(std::move(addCmd));
 
     m_viewWrap->updateRender();

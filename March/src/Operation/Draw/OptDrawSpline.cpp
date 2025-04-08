@@ -44,7 +44,6 @@ void OptDrawSpline::mousePressEvent(QMouseEvent* event)
 
     if (event->button() == Qt::LeftButton && m_isDrawing)
     {
-        // 检查是否靠近已有控制点，若是则准备拖动
         for (int i = 0; i < m_controlPoints.size(); ++i)
         {
             //if ((posW - m_controlPoints[i]).length() < DRAG_THRESHOLD / m_scene->getZoom())
@@ -57,7 +56,6 @@ void OptDrawSpline::mousePressEvent(QMouseEvent* event)
             }
         }
 
-        // 未选中控制点，则添加新控制点
         m_controlPoints.push_back(posW);
         m_currentMousePos = posW;
         updatePreview();
@@ -69,7 +67,7 @@ void OptDrawSpline::mousePressEvent(QMouseEvent* event)
         {
             drawSpline();
         }
-        m_isDrawing = false; // 结束当前绘制，但允许重新进入绘制模式
+        m_isDrawing = false; 
         m_controlPoints.clear();
         m_splinePreview->clear();
         m_viewWrap->updateRender();
@@ -137,7 +135,6 @@ void OptDrawSpline::keyPressEvent(QKeyEvent* event)
 
 void OptDrawSpline::setSplineData(MEngine::CubicBSpline* spline)
 {
-    // 可选：设置样条属性，例如颜色、层等
     // spline->setColor(Qt::blue);
 }
 
@@ -151,7 +148,7 @@ void OptDrawSpline::drawSpline()
     spline->setSegmentsPerSpan(32);
     setSplineData(spline);
 
-    auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene->getRootGroup(), spline);
+    auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene, spline);
     m_scene->execute(std::move(addCmd));
 }
 
@@ -166,7 +163,6 @@ void OptDrawSpline::updatePreview()
     std::vector<Ut::Vec2d> previewPoints = m_controlPoints;
     if (previewPoints.size() < 4)
     {
-        // 控制点少于 4 个时，平滑填充至 4 个点
         size_t n = previewPoints.size();
         Ut::Vec2d lastPoint = n > 0 ? previewPoints.back() : m_currentMousePos;
         for (size_t i = n; i < 4; ++i)
