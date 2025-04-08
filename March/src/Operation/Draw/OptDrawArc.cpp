@@ -128,7 +128,7 @@ void OptDrawArc::drawArc()
     arc->setByThreePoints(m_startPoint, m_midPoint, m_endPoint);
     arc->setSides(32);  // 32 段，控制平滑度
 
-    auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene->getRootGroup(), arc);
+    auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene, arc);
     m_scene->execute(std::move(addCmd));
 
     m_viewWrap->updateRender();

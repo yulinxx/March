@@ -7,7 +7,7 @@
 
 namespace MEngine
 {
-    class LineData;
+    struct LineData;
     class Group;
     class Previews;
 

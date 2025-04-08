@@ -3,7 +3,7 @@
 
 #include "Command.h"
 #include "MEngineAPI.h"
-#include "Scene/Group.h"
+#include "Scene/Scene.h"
 #include "Entity/Entity.h"
 
 namespace MEngine
@@ -11,7 +11,7 @@ namespace MEngine
     class MENGINE_API DelEntityCmd final : public Command
     {
     public:
-        DelEntityCmd(Group* group, Entity* entity);
+        DelEntityCmd(Scene* scene, Entity* entity);
         ~DelEntityCmd();
 
     public:
@@ -20,7 +20,7 @@ namespace MEngine
         void redo() override;
 
     private:
-        Group* m_group{ nullptr };
+        Scene* m_scene{ nullptr };
         Entity* m_entity{ nullptr };
     };
 }

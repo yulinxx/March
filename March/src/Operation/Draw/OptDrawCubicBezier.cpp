@@ -121,7 +121,7 @@ void OptDrawCubicBezier::drawBezier()
     bezier->setSegments(32);  // 默认 32 个采样点
     setBezierData(bezier);
 
-    auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene->getRootGroup(), bezier);
+    auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene, bezier);
     m_scene->execute(std::move(addCmd));
 
     m_viewWrap->updateRender();

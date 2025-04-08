@@ -118,7 +118,7 @@ void OptDrawPolyLine::drawPolyLine()
     MEngine::PolyLine* polyline = new MEngine::PolyLine();
     polyline->setPoints(m_points, m_bClosed);
 
-    auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene->getRootGroup(), polyline);
+    auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene, polyline);
     m_scene->execute(std::move(addCmd));
 
     m_viewWrap->updateRender();

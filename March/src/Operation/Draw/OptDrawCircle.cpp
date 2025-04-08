@@ -112,7 +112,7 @@ void OptDrawCircle::drawCircle()
     //setCircleData(circle);
     circle->setByCenterPt(m_startPoint, m_endPoint);
 
-    auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene->getRootGroup(), circle);
+    auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene, circle);
     m_scene->execute(std::move(addCmd));
 
     m_viewWrap->updateRender();

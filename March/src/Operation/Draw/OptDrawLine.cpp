@@ -105,7 +105,7 @@ void OptDrawLine::drawLine()
     MEngine::Line* line = new MEngine::Line();
     line->setPoints(m_startPoint, m_endPoint);
 
-    auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene->getRootGroup(), line);
+    auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene, line);
     m_scene->execute(std::move(addCmd));
 
     m_bFirst = true;  // 重置状态

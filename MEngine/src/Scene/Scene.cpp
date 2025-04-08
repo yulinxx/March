@@ -17,16 +17,18 @@ namespace MEngine
         MLog::Logger::LogInfo("Scene destroyed");
     }
 
-    // void Scene::addEntity(Entity* entity, Group* parent)
-    // {
-    //     m_rootGroup->addEntity(entity);
-    // }
+    void Scene::addEntity(Entity* entity)
+    {
+        if (m_sceneData->m_rootGroup)
+            m_sceneData->m_rootGroup->addEntity(entity);
+    }
 
-    // bool Scene::removeEntity(Entity* entity)
-    // {
-    //     m_rootGroup->removeEntity(entity);
-    //     return false;
-    // }
+    bool Scene::removeEntity(Entity* entity)
+    {
+        if (m_sceneData->m_rootGroup)
+            m_sceneData->m_rootGroup->removeEntity(entity);
+        return false;
+    }
 
     // void Scene::setRenderInterface(IRender::IRenderInterface* i)
     // {

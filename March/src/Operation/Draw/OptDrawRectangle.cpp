@@ -106,7 +106,7 @@ void OptDrawRectangle::drawRectange()
     MEngine::Rectangle* rectangle = new MEngine::Rectangle();
     setRectangleData(rectangle);
 
-    auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene->getRootGroup(), rectangle);
+    auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene, rectangle);
     m_scene->execute(std::move(addCmd));
 
     m_viewWrap->updateRender();

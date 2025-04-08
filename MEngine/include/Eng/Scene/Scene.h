@@ -18,8 +18,8 @@ namespace MEngine
         void addPreview(Entity* entity);
         void removePreview(Entity* entity);
 
-        // void addEntity(Entity* entity, Group* parent = nullptr);
-        // bool removeEntity(Entity* entity);
+         void addEntity(Entity* entity);
+         bool removeEntity(Entity* entity);
 
          //void setRenderInterface(IRender::IRenderInterface* i);
 

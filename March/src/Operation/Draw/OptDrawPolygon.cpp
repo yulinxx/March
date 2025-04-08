@@ -103,7 +103,7 @@ void OptDrawPolygon::drawPolygon()
     //setPolygonData(polygon);
     polygon->setPts(m_startPoint, m_endPoint);
 
-    auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene->getRootGroup(), polygon);
+    auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene, polygon);
     m_scene->execute(std::move(addCmd));
 
     m_viewWrap->updateRender();
