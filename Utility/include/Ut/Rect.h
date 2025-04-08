@@ -19,8 +19,11 @@ namespace Ut
         }
 
         Rect(const Vec<T, DIM>& min, const Vec<T, DIM>& max)
-            : minPt(min), maxPt(max)
         {
+            for (int i = 0; i < DIM; ++i) {
+                minPt[i] = std::min(min[i], max[i]);
+                maxPt[i] = std::max(min[i], max[i]);
+            }
         }
 
         const Vec<T, DIM>& min() const
@@ -31,13 +34,21 @@ namespace Ut
         {
             return maxPt;
         }
+
         void setMin(const Vec<T, DIM>& min)
         {
-            minPt = min;
+            for (int i = 0; i < DIM; ++i) {
+                minPt[i] = std::min(min[i], maxPt[i]);
+                maxPt[i] = std::max(min[i], maxPt[i]);
+            }
         }
+
         void setMax(const Vec<T, DIM>& max)
         {
-            maxPt = max;
+            for (int i = 0; i < DIM; ++i) {
+                minPt[i] = std::min(minPt[i], max[i]);
+                maxPt[i] = std::max(minPt[i], max[i]);
+            }
         }
 
         bool operator==(const Rect& other) const
@@ -92,7 +103,8 @@ namespace Ut
         {
             for (int i = 0; i < DIM; ++i)
             {
-                if (maxPt[i] < other.minPt[i] || minPt[i] > other.maxPt[i]) return false;
+                if (maxPt[i] < other.minPt[i] || minPt[i] > other.maxPt[i]) 
+                    return false;
             }
             return true;
         }
