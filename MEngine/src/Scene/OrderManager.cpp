@@ -74,8 +74,13 @@ namespace MEngine
             {
                 // 移除当前位置的元素
                 m_vOrderedEntities.erase(m_vOrderedEntities.begin() + currentIndex);
+
+                // 限制 position 到有效范围 [0, size()]
+                size_t validPosition = std::min(position, m_vOrderedEntities.size());
+
                 // 在指定位置插入元素
-                m_vOrderedEntities.insert(m_vOrderedEntities.begin() + position, entity);
+                m_vOrderedEntities.insert(m_vOrderedEntities.begin() + validPosition, entity);
+
                 // 更新所有元素的索引
                 for (size_t i = 0; i < m_vOrderedEntities.size(); ++i)
                 {
