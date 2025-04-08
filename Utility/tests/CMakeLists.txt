@@ -45,4 +45,4 @@ function(create_test_executable test_name test_sources)
 endfunction()
 
 # 创建单一的测试可执行文件
-create_test_executable(Utility_AllTests_test "${ALL_TEST_SOURCES}")
+create_test_executable(UtilityTests "${ALL_TEST_SOURCES}")

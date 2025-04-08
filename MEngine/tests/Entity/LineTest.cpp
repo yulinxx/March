@@ -31,12 +31,16 @@ namespace MEngineTest
 
     TEST_F(LineTest, LineConstructor)
     {
-        Ut::Vec2d  ptS, ptE;
+        Ut::Vec2d ptS, ptE;
         testLine->getPoints(ptS, ptE);
         EXPECT_DOUBLE_EQ(ptS.x(), 0.0);
         EXPECT_DOUBLE_EQ(ptS.y(), 0.0);
         EXPECT_DOUBLE_EQ(ptE.x(), 3.0);
         EXPECT_DOUBLE_EQ(ptE.y(), 4.0);
+
+        auto& rect = testLine->getRect();
+        EXPECT_DOUBLE_EQ(rect.width(), 3.0);
+        EXPECT_DOUBLE_EQ(rect.height(), 4.0);
     }
 
     TEST_F(LineTest, LineLength)
@@ -45,8 +49,18 @@ namespace MEngineTest
         Ut::Vec2d  ptS, ptE;
         testLine->getPoints(ptS, ptE);
         double len = std::sqrt(std::pow(ptE.x() - ptS.x(), 2) + std::pow(ptE.y() - ptS.y(), 2));
-        // EXPECT_DOUBLE_EQ(len, 5.0);
+        double len2 = testLine->getLength();
+
         EXPECT_NEAR(len, 5.0, 1e-3);
+        EXPECT_NEAR(len2, 5.0, 1e-3);
+
+        testLine->setPoints(Ut::Vec2d(7, 8), Ut::Vec2d(10, 15));
+        auto& rect = testLine->getRect();
+        EXPECT_DOUBLE_EQ(rect.width(), 3.0);
+        EXPECT_DOUBLE_EQ(rect.height(), 7.0);
+
+        double dLen = testLine->getLength();
+        EXPECT_NEAR(dLen, 7.6157, 1e-3);
     }
 
     // TEST_F(LineTest, LineDirection) {
