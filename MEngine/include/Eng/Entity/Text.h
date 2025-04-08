@@ -13,6 +13,11 @@ namespace MEngine
         ~Text() override;
 
     public:
+        virtual void clear() override
+        {
+
+        }
+
         virtual std::pair<Ut::Vec2*, size_t> getData() const
         {
             return std::pair<Ut::Vec2*, size_t>(nullptr, 0);

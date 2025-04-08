@@ -13,8 +13,10 @@ namespace MEngine
         ~Ellipse() override;
 
     public:
-        void clear();
+        virtual void clear() override;
+        virtual std::pair<Ut::Vec2*, size_t> getData() const override; // 获取顶点数据，用于绘制
 
+    public:
         // 设置椭圆：通过中心、长轴半径、短轴半径和旋转角度
         void setByCenterAxes(const Ut::Vec2& center, double majorRadius, double minorRadius,
             double rotation = 0.0, bool ccw = true);
@@ -22,11 +24,6 @@ namespace MEngine
         void setByBoundingBox(const Ut::Vec2& bottomLeft, const Ut::Vec2& topRight);
         // 设置边数
         void setSides(size_t nSides);
-
-        // 获取顶点数据，用于绘制
-        virtual std::pair<Ut::Vec2*, size_t> getData() const;
-        //std::pair<Ut::Vec2*, size_t> getData() const;
-        //virtual Ut::Rect2d& getRect();
 
         // 获取椭圆属性
         void getCenter(Ut::Vec2& center) const;

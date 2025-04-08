@@ -13,8 +13,10 @@ namespace MEngine
         ~Point() override;
 
     public:
-        void clear();
+        virtual void clear() override;
+        virtual std::pair<Ut::Vec2*, size_t> getData() const override; // 获取顶点数据，用于绘制
 
+    public:
         // 设置点的位置
         void setPosition(const Ut::Vec2& position);
 
@@ -24,7 +26,6 @@ namespace MEngine
         // 获取点的位置
         Ut::Vec2 getPosition() const;
 
-        virtual std::pair<Ut::Vec2*, size_t> getData() const;
         virtual Ut::Rect2d& getRect();
 
     private:

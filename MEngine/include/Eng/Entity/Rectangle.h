@@ -12,15 +12,13 @@ namespace MEngine
         ~Rectangle() override;
 
     public:
-        void clear();
+        virtual void clear() override;
+        virtual std::pair<Ut::Vec2*, size_t> getData() const override; // 获取顶点数据，用于绘制
 
+    public:
         void setStartPoint(const Ut::Vec2& start);
         void setEndPoint(const Ut::Vec2& end);
         void setPts(const Ut::Vec2& start, const Ut::Vec2& end);
-
-        //std::pair<Ut::Vec2*, size_t> getData() const;
-        virtual std::pair<Ut::Vec2*, size_t> getData() const;
-        //virtual Ut::Rect2d& getRect();
 
     private:
         void updateRect();

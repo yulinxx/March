@@ -14,16 +14,16 @@ namespace MEngine
         ~Line() override;
 
     public:
-        void clear();
+        virtual void clear() override;
+        virtual std::pair<Ut::Vec2*, size_t> getData() const override; // 获取顶点数据，用于绘制
 
+    public:
         // 设置线段的两个端点
         void setPoints(const Ut::Vec2& start, const Ut::Vec2& end);
 
         // 设置终点
         void setEndPoint(const Ut::Vec2& end);
 
-        // 获取顶点数据，用于绘制
-        virtual std::pair<Ut::Vec2*, size_t> getData() const;
         virtual Ut::Rect2d& getRect();
 
         //std::pair<Ut::Vec2*, size_t> getData() const;
@@ -36,6 +36,7 @@ namespace MEngine
         double getLength() const;
 
     private:
+        void init();
         void updateVertices();
 
     private:

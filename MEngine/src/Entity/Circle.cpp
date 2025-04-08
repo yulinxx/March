@@ -29,17 +29,16 @@ namespace MEngine
     void Circle::clear()
     {
         m_impl->vertices.clear();
-        m_impl->vertices.shrink_to_fit();
+        //m_impl->vertices.shrink_to_fit();
     }
 
     void Circle::setByCenterPt(const Ut::Vec2& center, const Ut::Vec2& end, bool ccw /*=true*/)
     {
+        clear();
         double radius = (end - center).length();
         if (radius < 1e-3)
-        {
             return;
-        }
-        clear();
+
         m_impl->center = center;
         m_impl->radius = radius;
         m_impl->ccw = ccw;
@@ -48,12 +47,10 @@ namespace MEngine
 
     void Circle::setByCenterRadius(const Ut::Vec2& center, double radius, bool ccw)
     {
-        if (radius < 1e-3)
-        {
-            return;
-        }
-
         clear();
+        if (radius < 1e-3)
+            return;
+
         m_impl->center = center;
         m_impl->radius = radius;
         m_impl->ccw = ccw;
@@ -63,9 +60,7 @@ namespace MEngine
     void Circle::setByDiameter(const Ut::Vec2& start, const Ut::Vec2& end)
     {
         clear();
-        double dx = end.x() - start.x();
-        double dy = end.y() - start.y();
-        m_impl->radius = sqrt(dx * dx + dy * dy) / 2.0;
+        m_impl->radius = (start - end).length();
         if (m_impl->radius < 1e-3)
         {
             return;
@@ -86,9 +81,7 @@ namespace MEngine
 
         double d = 2.0 * ((x1 - x3) * (y2 - y3) - (y1 - y3) * (x2 - x3));
         if (fabs(d) < 1e-3)
-        {
             return;
-        }
 
         double cx = ((y2 - y3) * (x1 * x1 + y1 * y1 - x3 * x3 - y3 * y3) -
             (y1 - y3) * (x2 * x2 + y2 * y2 - x3 * x3 - y3 * y3)) / d;
@@ -103,9 +96,8 @@ namespace MEngine
     void Circle::setSides(size_t nSides)
     {
         if (nSides < 3)
-        {
-            throw std::runtime_error("Number of sides must be at least 3");
-        }
+            nSides = 3;
+
         m_impl->nSides = nSides;
         updateVertices();
     }
@@ -115,9 +107,7 @@ namespace MEngine
         clear();
 
         if (m_impl->radius < 1e-3 || m_impl->nSides < 3)
-        {
             return;
-        }
 
         // 生成圆的顶点
         size_t numSegments = m_impl->nSides;
@@ -151,7 +141,7 @@ namespace MEngine
         Ut::Rect2d rect{ ptMin, ptMax };
         setRect(rect);
 
-        return getRect();
+        return Entity::getRect();
     }
 
     void Circle::getRadius(double& radius) const
@@ -162,6 +152,11 @@ namespace MEngine
     void Circle::getCenter(Ut::Vec2& center) const
     {
         center = m_impl->center;
+    }
+
+    double Circle::getLength() const
+    {
+        return 2.0 * Ut::PI * m_impl->radius;
     }
 
     bool Circle::isCCW() const

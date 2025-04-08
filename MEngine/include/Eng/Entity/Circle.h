@@ -13,8 +13,11 @@ namespace MEngine
         ~Circle() override;
 
     public:
-        void clear();
+        virtual void clear() override;
+        virtual std::pair<Ut::Vec2*, size_t> getData() const; // 获取顶点数据，用于绘制
+        virtual Ut::Rect2d& getRect();
 
+    public:
         // 设置圆：通过圆心和圆上一点
         void setByCenterPt(const Ut::Vec2& center, const Ut::Vec2& end, bool ccw = true);
         // 设置圆：通过圆心和半径
@@ -26,14 +29,10 @@ namespace MEngine
         // 设置边数
         void setSides(size_t nSides);
 
-        // 获取顶点数据，用于绘制
-        //std::pair<Ut::Vec2*, size_t> getData() const;
-        virtual std::pair<Ut::Vec2*, size_t> getData() const;
-        virtual Ut::Rect2d& getRect();
-
         // 获取圆属性
         void getRadius(double& radius) const;
         void getCenter(Ut::Vec2& center) const;
+        double getLength() const;
         bool isCCW() const;
 
     private:

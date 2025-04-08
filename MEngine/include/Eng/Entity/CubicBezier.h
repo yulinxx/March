@@ -12,7 +12,10 @@ namespace MEngine
         ~CubicBezier() override;
 
     public:
-        void clear();
+        virtual void clear() override;
+
+        virtual std::pair<Ut::Vec2*, size_t> getData() const override; // 获取顶点数据，用于绘制
+    public:
 
         // 设置贝塞尔曲线：通过四个控制点
         void setByControlPoints(const Ut::Vec2& p0, const Ut::Vec2& p1,
@@ -20,15 +23,14 @@ namespace MEngine
         // 设置采样点数（控制平滑度）
         void setSegments(size_t nSegments);
 
-        // 获取顶点数据，用于绘制
-        virtual std::pair<Ut::Vec2*, size_t> getData() const;
+
         // virtual Ut::Rect2d& getRect();
+        // 获取曲线上的点（参数 t 从 0 到 1）
+        Ut::Vec2 evaluate(double t) const;
 
         // 获取控制点
         void getControlPoints(Ut::Vec2& p0, Ut::Vec2& p1, Ut::Vec2& p2, Ut::Vec2& p3) const;
 
-        // 获取曲线上的点（参数 t 从 0 到 1）
-        Ut::Vec2 evaluate(double t) const;
 
     private:
         void updateVertices();

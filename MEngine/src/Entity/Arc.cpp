@@ -17,30 +17,42 @@ namespace MEngine
 
     Arc::Arc()
     {
+        init();
+    }
+
+    Arc::~Arc()
+    {
+        clear();
+        delete m_impl;
+        m_impl = nullptr;
+    }
+
+    void Arc::init()
+    {
         m_impl = new Impl();
         setType(EntType::ARC);
         setClosed(false); // 圆弧不闭合
     }
 
-    Arc::~Arc()
-    {
-        delete m_impl;
-        m_impl = nullptr;
-    }
-
     void Arc::clear()
     {
         m_impl->vertices.clear();
-        m_impl->vertices.shrink_to_fit();
+        //m_impl->vertices.shrink_to_fit();
     }
 
     void Arc::setByCenterRadius(const Ut::Vec2& center, double radius,
         double startAngle, double endAngle, bool ccw)
     {
-        if (radius < 1e-3)
+        clear();
+
+        if(fabs(startAngle - endAngle) < 1e-3)
             return;
 
-        clear();
+        if (radius < 1e-6)
+        {
+            m_impl->radius = 0.0;
+            return;
+        }
 
         m_impl->center = center;
         m_impl->radius = radius;
@@ -54,6 +66,11 @@ namespace MEngine
     void Arc::setByThreePoints(const Ut::Vec2& start, const Ut::Vec2& mid, const Ut::Vec2& end)
     {
         clear();
+
+        Ut::Vec2 vA = start - mid;
+        Ut::Vec2 vB = end - mid;
+        if(vA.cross(vB) < 1e-3) // 三点共线，无法确定圆弧
+            return;
 
         // 计算圆心和半径
         double x1 = start.x(), y1 = start.y();
@@ -114,7 +131,7 @@ namespace MEngine
 
     void Arc::setSides(size_t nSides)
     {
-        if (nSides < 3)
+        if (m_impl->radius < 1e-3 || m_impl->nSides < 3)
             return;
 
         m_impl->nSides = nSides;
@@ -155,7 +172,7 @@ namespace MEngine
                 m_impl->center.x() + m_impl->radius * cos(angle),
                 m_impl->center.y() + m_impl->radius * sin(angle)
             );
-            m_impl->vertices.push_back(vertex);
+            m_impl->vertices.emplace_back(vertex);
         }
 
         //setRect(Ut::Rect2d();
@@ -163,52 +180,154 @@ namespace MEngine
 
     std::pair<Ut::Vec2*, size_t> Arc::getData() const
     {
+        if (m_impl->vertices.empty() && m_impl->radius > 1e-3)
+        {
+            return { nullptr, 0 };
+        }
+
         return { m_impl->vertices.data(), m_impl->vertices.size() };
     }
 
     Ut::Rect2d& Arc::getRect()
     {
+        Ut::Rect2d rect;
+        if (m_impl->vertices.empty())
+        {
+            rect.setMin({ 0, 0 });
+            rect.setMax({ 0, 0 });
+            setRect(rect);
+            return Entity::getRect();
+        }
 
-        // 计算起始点和终止点坐标
-        Ut::Vec2 startPoint = {
-            m_impl->center.x() + m_impl->radius * cos(m_impl->startAngle),
-            m_impl->center.y() + m_impl->radius * sin(m_impl->startAngle)
-        };
+        double minX = m_impl->vertices[0].x();
+        double minY = m_impl->vertices[0].y();
+        double maxX = minX;
+        double maxY = minY;
 
-        Ut::Vec2 endPoint = {
-            m_impl->center.x() + m_impl->radius * cos(m_impl->endAngle),
-            m_impl->center.y() + m_impl->radius * sin(m_impl->endAngle)
-        };
+        for (const auto& vertex : m_impl->vertices)
+        {
+            minX = std::min(minX, vertex.x());
+            minY = std::min(minY, vertex.y());
+            maxX = std::max(maxX, vertex.x());
+            maxY = std::max(maxY, vertex.y());
+        }
 
-        // 角度归一化处理
-        double normalizedStart = fmod(m_impl->startAngle, 2 * Ut::PI);
-        double normalizedEnd = fmod(m_impl->endAngle, 2 * Ut::PI);
-
-        if (normalizedEnd < normalizedStart)
-            normalizedEnd += 2 * Ut::PI;
-
-        // 判断是否跨越关键角度
-        bool crosses0 = (normalizedStart <= 0 && normalizedEnd >= 0) ||
-            (normalizedStart <= 2 * Ut::PI && normalizedEnd >= 2 * Ut::PI);
-
-        bool crosses90 = normalizedStart <= Ut::PI / 2 && normalizedEnd >= Ut::PI / 2;
-        bool crosses180 = normalizedStart <= Ut::PI && normalizedEnd >= Ut::PI;
-        bool crosses270 = normalizedStart <= 3 * Ut::PI / 2 && normalizedEnd >= 3 * Ut::PI / 2;
-
-        // 计算边界值
-        double right = crosses0 ? (m_impl->center.x() + m_impl->radius) : std::max(startPoint.x(), endPoint.x());
-        double left = crosses180 ? (m_impl->center.x() - m_impl->radius) : std::min(startPoint.x(), endPoint.x());
-        double top = crosses90 ? (m_impl->center.y() + m_impl->radius) : std::max(startPoint.y(), endPoint.y());
-        double bottom = crosses270 ? (m_impl->center.y() - m_impl->radius) : std::min(startPoint.y(), endPoint.y());
-
-        // 包围框结果
-        Ut::Rect2d rect = { {left, top}, {right - left, top - bottom } };
-
-        //auto rect = Ut::Rect2d(Ut::Vec2d(minX, minY), Ut::Vec2d(maxX, maxY));
+        rect.setMin({ minX, minY });
+        rect.setMax({ maxX, maxY });
         setRect(rect);
-
-        return getRect();
+        return Entity::getRect();
     }
+
+
+    //Ut::Vec2d Arc::getValue(double t)
+    //{
+    //    if (m_impl->radius < ARC_EPSILON)
+    //    {
+    //        return m_impl->center; // Arc is a point
+    //    }
+
+    //    // Clamp t to the range [0, 1] for standard behavior
+    //    // Replace with std::clamp(t, 0.0, 1.0) if using C++17 or later
+    //    if (t < 0.0) t = 0.0;
+    //    if (t > 1.0) t = 1.0;
+
+    //    double effStartAngle, effEndAngle;
+    //    getEffectiveAngles(effStartAngle, effEndAngle);
+
+    //    double angleSpan = effEndAngle - effStartAngle; // Can be positive (CCW) or negative (CW)
+
+    //    // Handle zero span case (arc is effectively a point)
+    //    if (fabs(angleSpan) < ARC_EPSILON)
+    //    {
+    //        return Ut::Vec2d(
+    //            m_impl->center.x() + m_impl->radius * cos(effStartAngle),
+    //            m_impl->center.y() + m_impl->radius * sin(effStartAngle)
+    //        );
+    //    }
+
+
+    //    double currentAngle = effStartAngle + t * angleSpan;
+
+    //    return Ut::Vec2d(
+    //        m_impl->center.x() + m_impl->radius * cos(currentAngle),
+    //        m_impl->center.y() + m_impl->radius * sin(currentAngle)
+    //    );
+    //}
+
+    //double Arc::EvalParam(const Ut::Vec2& p)
+    //{
+    //    if (m_impl->radius < ARC_EPSILON)
+    //    {
+    //        return 0.0; // Closest point to a point arc is always at t=0 (or any t)
+    //    }
+
+    //    Ut::Vec2d vec = p - m_impl->center;
+    //    // If p is the center, atan2 is undefined/0. Any point is equidistant. Return t=0.
+    //    if (vec.length() < ARC_EPSILON * ARC_EPSILON)
+    //    {
+    //        return 0.0;
+    //    }
+
+    //    double pointAngle = atan2(vec.y(), vec.x());
+
+    //    double effStartAngle, effEndAngle;
+    //    getEffectiveAngles(effStartAngle, effEndAngle);
+    //    double angleSpan = effEndAngle - effStartAngle; // Can be positive or negative
+
+    //    // Handle full circle case (span is approx 2*PI)
+    //    bool isFullCircle = (fabs(fabs(angleSpan) - 2.0 * M_PI) < ARC_EPSILON);
+    //    if (isFullCircle)
+    //    {
+    //        // Normalize pointAngle relative to startAngle
+    //        double normalizedAngle = pointAngle;
+    //        while (normalizedAngle < effStartAngle - ARC_EPSILON) normalizedAngle += 2.0 * M_PI;
+    //        while (normalizedAngle >= effStartAngle + 2.0 * M_PI - ARC_EPSILON) normalizedAngle -= 2.0 * M_PI;
+    //        // Calculate t based on normalized angle
+    //        double t = (normalizedAngle - effStartAngle) / angleSpan;
+    //        // Clamp t due to potential floating point inaccuracies near boundaries
+    //        if (t < 0.0) t = 0.0;
+    //        if (t > 1.0) t = 1.0;
+    //        // For CW full circle, need to adjust t? No, span is negative, should work.
+    //        return t;
+    //    }
+
+
+    //    // Normalize pointAngle to be near the arc's span for easier comparison
+    //    // Bring pointAngle into the range [effStartAngle - PI, effStartAngle + PI) approx
+    //    double twoPi = 2.0 * M_PI;
+    //    while (pointAngle < effStartAngle - M_PI) pointAngle += twoPi;
+    //    while (pointAngle >= effStartAngle + M_PI) pointAngle -= twoPi;
+
+
+    //    // Check if the angle corresponding to the closest point on the *circle*
+    //    // falls within the *arc's* angular span.
+    //    if (isAngleWithinSpan(pointAngle, effStartAngle, effEndAngle, m_impl->ccw))
+    //    {
+    //        // Angle is within the span, calculate t directly
+    //        // Avoid division by zero if span is tiny
+    //        if (fabs(angleSpan) < ARC_EPSILON) return 0.0; // Effectively a point arc
+
+    //        double t = (pointAngle - effStartAngle) / angleSpan;
+
+    //        // Clamp t due to potential floating point inaccuracies near boundaries
+    //        if (t < 0.0) t = 0.0;
+    //        if (t > 1.0) t = 1.0;
+    //        return t;
+    //    }
+    //    else
+    //    {
+    //        // Angle is outside the span. Closest point is one of the endpoints.
+    //        // Calculate squared distances to endpoints to avoid sqrt
+    //        Ut::Vec2d startPoint = getValue(0.0);
+    //        Ut::Vec2d endPoint = getValue(1.0);
+
+    //        double distSqStart = (p - startPoint).length();
+    //        double distSqEnd = (p - endPoint).length();
+
+    //        return (distSqStart <= distSqEnd) ? 0.0 : 1.0;
+    //    }
+    //}
+
 
     void Arc::getRadius(double& radius) const
     {
@@ -220,10 +339,22 @@ namespace MEngine
         center = m_impl->center;
     }
 
-    void Arc::getAngles(double& startAngle, double& endAngle, bool& ccw) const
+    void Arc::getAngles(double& startAngle, double& endAngle) const
     {
         startAngle = m_impl->startAngle;
         endAngle = m_impl->endAngle;
-        ccw = m_impl->ccw;
+    }
+
+    double Arc::getStartAngle() const {
+        return m_impl->startAngle;
+    }
+
+    double Arc::getEndAngle() const {
+        return m_impl->endAngle;
+    }
+
+    bool Arc::isCCW() const 
+    {
+        return m_impl->ccw;
     }
 }

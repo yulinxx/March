@@ -32,15 +32,17 @@ namespace MEngine
         virtual ~Entity();
 
     public:
+        virtual Ut::Vec2d getValue(double t);
         virtual double EvalParam(const Ut::Vec2& p);
 
         virtual std::pair<Ut::Vec2*, size_t> getData() const = 0;
 
         virtual Ut::Rect2d& getRect();
-        void setRect(Ut::Rect2d& rect);
+        virtual void clear() = 0;
 
     public:
-        Ut::Vec2d getValue(double t);
+
+        void setRect(Ut::Rect2d& rect);
 
         // 获取和设置属性
         EntType getType() const;
@@ -54,8 +56,6 @@ namespace MEngine
         void setBasePoint(const Ut::Vec2d& basePt);
         void setReversed(bool reverse);
         void setClosed(bool closed);
-
-
 
     private:
         struct Impl;

@@ -13,14 +13,12 @@ namespace MEngine
 
     Line::Line()
     {
-        m_impl = new Impl();
-
-        setType(EntType::LINE);
-        setClosed(false);
+        init();
     }
 
     Line::Line(const Ut::Vec2& start, const Ut::Vec2& end)
     {
+        init();
         setPoints(start, end);
     }
 
@@ -28,6 +26,14 @@ namespace MEngine
     {
         delete m_impl;
         m_impl = nullptr;
+   }
+
+    void Line::init()
+    {
+        m_impl = new Impl();
+
+        setType(EntType::LINE);
+        setClosed(false);
     }
 
     void Line::clear()
@@ -70,7 +76,7 @@ namespace MEngine
         Ut::Rect2d rect{ ptMin, ptMax };
         setRect(rect);
 
-        return getRect();
+        return Entity::getRect();
     }
 
     void Line::getPoints(Ut::Vec2& start, Ut::Vec2& end) const
@@ -87,8 +93,9 @@ namespace MEngine
     double Line::getLength() const
     {
         auto& start = getBasePoint();
-        double dx = m_impl->end.x() - start.x();
-        double dy = m_impl->end.y() - start.y();
-        return sqrt(dx * dx + dy * dy);
+        return (m_impl->end - start).length();
+        //double dx = m_impl->end.x() - start.x();
+        //double dy = m_impl->end.y() - start.y();
+        //return sqrt(dx * dx + dy * dy);
     }
 }

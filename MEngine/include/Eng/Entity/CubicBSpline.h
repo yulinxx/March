@@ -13,20 +13,16 @@ namespace MEngine
         ~CubicBSpline() override;
 
     public:
-        void clear();
+        virtual void clear() override;
+        virtual std::pair<Ut::Vec2*, size_t> getData() const override; // 获取顶点数据，用于绘制
 
+    public:
         // 设置控制点
         void setControlPoints(const std::vector<Ut::Vec2>& points, bool closed = false);
         // 设置采样点数（每段曲线的采样点）
         void setSegmentsPerSpan(size_t nSegments);
         // 设置是否闭合曲线
         void setClosed(bool closed);
-
-        // 获取顶点数据，用于绘制
-
-        virtual std::pair<Ut::Vec2*, size_t> getData() const;
-        //std::pair<Ut::Vec2*, size_t> getData() const;
-        //virtual Ut::Rect2d& getRect();
 
         // 获取控制点
         std::vector<Ut::Vec2> getControlPoints() const;
