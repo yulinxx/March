@@ -105,49 +105,49 @@ namespace MEngine
                 case EntType::POLYGON:
                 {
                     auto pg = static_cast<Polygon*>(entity);
-                    pImpl->m_linesData->collectLinesData(pg);
+                    pImpl->m_linesData->collectEntLinesData(pg);
                 }
                 break;
                 case EntType::RECTANGLE:
                 {
                     auto rect = static_cast<Rectangle*>(entity);
-                    pImpl->m_linesData->collectLinesData(rect);
+                    pImpl->m_linesData->collectEntLinesData(rect);
                 }
                 break;
                 case EntType::ARC:
                 {
                     auto arc = static_cast<Arc*>(entity);
-                    pImpl->m_linesData->collectLinesData(arc);
+                    pImpl->m_linesData->collectEntLinesData(arc);
                 }
                 break;
                 case EntType::CIRCLE:
                 {
                     auto cc = static_cast<Circle*>(entity);
-                    pImpl->m_linesData->collectLinesData(cc);
+                    pImpl->m_linesData->collectEntLinesData(cc);
                 }
                 break;
                 case EntType::ELLIPSE:
                 {
                     auto ellipse = static_cast<Ellipse*>(entity);
-                    pImpl->m_linesData->collectLinesData(ellipse);
+                    pImpl->m_linesData->collectEntLinesData(ellipse);
                 }
                 break;
                 case EntType::LWPOLYLINE:
                 {
                     auto pl = static_cast<PolyLine*>(entity);
-                    pImpl->m_linesData->collectLinesData(pl);
+                    pImpl->m_linesData->collectEntLinesData(pl);
                 }
                 break;
                 case EntType::BSPLINE:
                 {
                     auto sp = static_cast<CubicBSpline*>(entity);
-                    pImpl->m_linesData->collectLinesData(sp);
+                    pImpl->m_linesData->collectEntLinesData(sp);
                 }
                 break;
                 case EntType::BEZIER:
                 {
                     auto bz = static_cast<CubicBezier*>(entity);
-                    pImpl->m_linesData->collectLinesData(bz);
+                    pImpl->m_linesData->collectEntLinesData(bz);
                 }
                 break;
                 case EntType::TEXT:
@@ -196,49 +196,49 @@ namespace MEngine
                 case EntType::POLYGON:
                 {
                     auto pg = static_cast<Polygon*>(entity);
-                    pImpl->m_previewsData->collectLinesData(pg);
+                    pImpl->m_previewsData->collectEntLinesData(pg);
                 }
                 break;
                 case EntType::RECTANGLE:
                 {
                     auto rect = static_cast<Rectangle*>(entity);
-                    pImpl->m_previewsData->collectLinesData(rect);
+                    pImpl->m_previewsData->collectEntLinesData(rect);
                     break;
                 }
                 case EntType::ARC:
                 {
                     auto arc = static_cast<Arc*>(entity);
-                    pImpl->m_previewsData->collectLinesData(arc);
+                    pImpl->m_previewsData->collectEntLinesData(arc);
                 }
                 break;
                 case EntType::CIRCLE:
                 {
                     auto cc = static_cast<Circle*>(entity);
-                    pImpl->m_previewsData->collectLinesData(cc);
+                    pImpl->m_previewsData->collectEntLinesData(cc);
                 }
                 break;
                 case EntType::ELLIPSE:
                 {
                     auto ellipse = static_cast<Ellipse*>(entity);
-                    pImpl->m_previewsData->collectLinesData(ellipse);
+                    pImpl->m_previewsData->collectEntLinesData(ellipse);
                 }
                 break;
                 case EntType::LWPOLYLINE:
                 {
                     auto pl = static_cast<PolyLine*>(entity);
-                    pImpl->m_previewsData->collectLinesData(pl);
+                    pImpl->m_previewsData->collectEntLinesData(pl);
                 }
                 break;
                 case EntType::BSPLINE:
                 {
                     auto sp = static_cast<CubicBSpline*>(entity);
-                    pImpl->m_previewsData->collectLinesData(sp);
+                    pImpl->m_previewsData->collectEntLinesData(sp);
                 }
                 break;
                 case EntType::BEZIER:
                 {
                     auto bz = static_cast<CubicBezier*>(entity);
-                    pImpl->m_previewsData->collectLinesData(bz);
+                    pImpl->m_previewsData->collectEntLinesData(bz);
                 }
                 break;
                 case EntType::TEXT:
@@ -258,11 +258,6 @@ namespace MEngine
             pImpl->m_lineData->m_vLinePts.size() };
     }
 
-    std::pair<float*, size_t> DrawData::getLinesData() const
-    {
-        return { pImpl->m_linesData->m_vLinesPts.data(),
-            pImpl->m_linesData->m_vLinesPts.size() };
-    }
 
     std::pair<float*, size_t> DrawData::getPreviewData() const
     {
@@ -270,9 +265,28 @@ namespace MEngine
             pImpl->m_previewData->m_vLinePts.size() };
     }
 
+
+    std::pair<float*, size_t> DrawData::getLinesData() const
+    {
+        return { pImpl->m_linesData->m_vLinesPts.data(),
+            pImpl->m_linesData->m_vLinesPts.size() };
+    }
+
+    std::pair<unsigned int*, size_t> DrawData::getLinesIndex() const
+    {
+        return { pImpl->m_linesData->m_vIndex.data(),
+            pImpl->m_linesData->m_vIndex.size() };
+    }
+
     std::pair<float*, size_t> DrawData::getPreviewsData() const
     {
         return { pImpl->m_previewsData->m_vLinesPts.data(),
             pImpl->m_previewsData->m_vLinesPts.size() };
+    }
+
+    std::pair<unsigned int*, size_t> DrawData::getPreviewsIndex() const
+    {
+        return { pImpl->m_previewsData->m_vIndex.data(),
+            pImpl->m_previewsData->m_vIndex.size() };
     }
 }

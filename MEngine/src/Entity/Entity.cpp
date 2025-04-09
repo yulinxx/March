@@ -1,8 +1,10 @@
 #include "Entity/Entity.h"
-#include <string>
+#include <bitset>
 
 namespace MEngine
 {
+
+
     struct Entity::Impl
     {
         EntType type = EntType::UNKNOWN;  // 图元类型
@@ -11,11 +13,14 @@ namespace MEngine
         bool reverse = false;             // 是否反向
         bool closed = false;              // 是否闭合
         Ut::Rect2d rect;
+        
+        std::bitset<8> flags;
     };
 
     Entity::Entity()
     {
         m_impl = new Impl();
+        m_impl->flags.reset();
     }
 
     Entity::~Entity()
@@ -93,5 +98,15 @@ namespace MEngine
     void Entity::setClosed(bool closed)
     {
         m_impl->closed = closed;
+    }
+
+    void Entity::setFlag(EntFlag flag, bool b /*=true*/)
+    {
+        m_impl->flags.set(static_cast<size_t>(flag), b);
+    }
+
+    bool MEngine::Entity::getFlag(EntFlag flag) const
+    {
+        return m_impl->flags.test(static_cast<size_t>(flag));
     }
 }

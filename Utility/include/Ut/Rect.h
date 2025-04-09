@@ -2,6 +2,7 @@
 #define RECT_H
 
 #include "Vec.h"
+#include "tools.h"
 #include "UtilityAPI.h"
 #include <vector>
 #include <algorithm>
@@ -20,7 +21,8 @@ namespace Ut
 
         Rect(const Vec<T, DIM>& min, const Vec<T, DIM>& max)
         {
-            for (int i = 0; i < DIM; ++i) {
+            for (int i = 0; i < DIM; ++i)
+            {
                 minPt[i] = std::min(min[i], max[i]);
                 maxPt[i] = std::max(min[i], max[i]);
             }
@@ -37,15 +39,22 @@ namespace Ut
 
         void setMin(const Vec<T, DIM>& min)
         {
-            for (int i = 0; i < DIM; ++i) {
-                minPt[i] = std::min(min[i], maxPt[i]);
-                maxPt[i] = std::max(min[i], maxPt[i]);
+            minPt = min;
+
+            if (maxPt.length() > Ut::UT_EPSILON)
+            {
+                for (int i = 0; i < DIM; ++i)
+                {
+                    minPt[i] = std::min(min[i], maxPt[i]);
+                    maxPt[i] = std::max(min[i], maxPt[i]);
+                }
             }
         }
 
         void setMax(const Vec<T, DIM>& max)
         {
-            for (int i = 0; i < DIM; ++i) {
+            for (int i = 0; i < DIM; ++i)
+            {
                 minPt[i] = std::min(minPt[i], max[i]);
                 maxPt[i] = std::max(minPt[i], max[i]);
             }
@@ -103,7 +112,7 @@ namespace Ut
         {
             for (int i = 0; i < DIM; ++i)
             {
-                if (maxPt[i] < other.minPt[i] || minPt[i] > other.maxPt[i]) 
+                if (maxPt[i] < other.minPt[i] || minPt[i] > other.maxPt[i])
                     return false;
             }
             return true;
@@ -155,66 +164,45 @@ namespace Ut
             return maxPt.y() - minPt.y();
         }
 
+    public:
+        // 获取右上角点（仅适用于二维矩形）
+        Vec<T, DIM> getRT() const
+        {
+            static_assert(DIM == 2, "getRT is only defined for 2D rectangles");
+            return Vec<T, DIM>(maxPt.x(), minPt.y());
+        }
+
+        // 获取左上角点（仅适用于二维矩形）
+        Vec<T, DIM> getLT() const
+        {
+            static_assert(DIM == 2, "getLT is only defined for 2D rectangles");
+            return Vec<T, DIM>(minPt.x(), minPt.y());
+        }
+
+        // 获取右下角点（仅适用于二维矩形）
+        Vec<T, DIM> getRB() const
+        {
+            static_assert(DIM == 2, "getRB is only defined for 2D rectangles");
+            return Vec<T, DIM>(maxPt.x(), maxPt.y());
+        }
+
+        // 获取左下角点（仅适用于二维矩形）
+        Vec<T, DIM> getLB() const
+        {
+            static_assert(DIM == 2, "getLB is only defined for 2D rectangles");
+            return Vec<T, DIM>(minPt.x(), maxPt.y());
+        }
+
     private:
         Vec<T, DIM> minPt;
         Vec<T, DIM> maxPt;
     };
-
-    // class UTILITY_API AxisAlignedBoundingBox
-    // {
-    // public:
-    //     AxisAlignedBoundingBox();
-    //     AxisAlignedBoundingBox(const Vec2d& min, const Vec2d& max);
-
-    //     void setBounds(const Vec2d& min, const Vec2d& max);
-    //     Vec2d getCenter() const;
-    //     Vec2d getExtent() const;
-    //     Vec2d getMinPt() const
-    //     {
-    //         return minPt;
-    //     }
-    //     Vec2d getMaxPt() const
-    //     {
-    //         return maxPt;
-    //     }
-    //     Vec2d getSize() const;
-    //     double getWidth() const;
-    //     double getHeight() const;
-
-    //     void expand(double delta);
-    //     void expand(const Vec2d& delta);
-    //     void expand(const AxisAlignedBoundingBox& aabb);
-
-    //     bool contains(const Vec2d& point) const;
-
-    // private:
-    //     Vec2d minPt;
-    //     Vec2d maxPt;
-    // };
-
-    // class UTILITY_API TightBoundingBox
-    // {
-    // public:
-    //     TightBoundingBox();
-
-    //     void computeFromPoints(const std::vector<Vec2d>& points);
-    //     Vec2d getCenter() const;
-    //     Vec2d getExtent() const;
-    //     bool contains(const Vec2d& point) const;
-
-    // public:
-    //     Vec2d minPt;
-    //     Vec2d maxPt;
-    // };
 
     using Box = Ut::Rect<double, 2>;
     using Rect2d = Rect<double, 2>;
     using Rect2f = Rect<float, 2>;
     using Rect3d = Rect<double, 3>;
     using Rect3f = Rect<float, 3>;
-
-    //using AABB = AxisAlignedBoundingBox;
-    //using TBB = TightBoundingBox;
 } // namespace Ut
 
 #endif // RECT_H

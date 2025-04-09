@@ -4,11 +4,13 @@
 #include <type_traits>
 #include <utility>
 
-#define UT_HPI (3.14159265358979323846 * 0.5) // Half 1/2π
-#define UT_PI (3.14159265358979323846)
-#define UT_2PI (3.14159265358979323846 * 2.0)
-
-constexpr double UT_EPSILON = 1e-6;
+namespace Ut
+{
+    constexpr double PI = 3.14159265358979323846;
+    constexpr double PIx2 = 2.0 * PI;
+    constexpr double PIHalf = 0.5 * PI;
+    constexpr double UT_EPSILON = 1e-6;
+}
 
 // 通用容器清理宏（线程不安全）
 #define CLEAR_CONTAINER(container) \

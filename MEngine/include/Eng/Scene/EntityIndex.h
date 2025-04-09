@@ -3,12 +3,11 @@
 
 #include "IndexDef.h"
 
-
 using namespace Ut;
 namespace MEngine
 {
-    using RTreeValue = std::pair<Ut::Rect2d, std::shared_ptr<Entity>>;
-    using RTree = bgi::rtree<RTreeValue, bgi::quadratic<16>>;
+    using RTreeRectEnt = std::pair<Ut::Rect2d, std::shared_ptr<Entity>>;
+    using EntRTree = bgi::rtree<RTreeRectEnt, bgi::quadratic<16>>;
 
     class MENGINE_API EntityIndex
     {
@@ -33,14 +32,11 @@ namespace MEngine
         void removeEntity(const std::vector<std::shared_ptr<Entity>>& entities);
 
 
-        // 查询与给定矩形相交的图元
-        std::vector<std::shared_ptr<Entity>> queryIntersects(const Ut::Rect2d& queryBox) const;
-
-        // 查询包含给定点的图元
-        std::vector<std::shared_ptr<Entity>> queryContains(const Ut::Point& point) const;
-
-        // 查询距离点最近的k个图元
-        std::vector<std::shared_ptr<Entity>> queryNearest(const Ut::Point& point, size_t k) const;
+        // 查询函数
+        std::vector<std::shared_ptr<Entity>> query(const Ut::Rect2d& region) const;
+        std::vector<std::shared_ptr<Entity>> queryPoint(const Ut::Vec2d& point) const;
+        std::vector<std::shared_ptr<Entity>> queryNearest(const Ut::Vec2d& point, size_t k = 1) const;
+        std::vector<std::shared_ptr<Entity>> queryIntersects(const Ut::Rect2d& region) const;
 
         // 获取所有图元
         std::vector<std::shared_ptr<Entity>> getAllEntities() const;
@@ -52,7 +48,7 @@ namespace MEngine
         bool empty() const;
 
     private:
-        RTree m_entTree;
+        EntRTree m_entTree;
     };
 } // namespace MEngine
 

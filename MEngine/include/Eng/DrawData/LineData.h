@@ -13,9 +13,6 @@ namespace MEngine
         // 收集Line数据的函数
         void collectLineData(Line* line);
 
-        // 将Line数据转换为适合渲染的浮点数组
-        std::vector<float>& getLineData();
-
         // 批量渲染相关方法，用于将多个LineData合并为一个大的渲染数据
         // static std::vector<float> batchRender(const std::vector<LineData>& lineDataList);
 

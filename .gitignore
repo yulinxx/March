@@ -37,3 +37,10 @@ build
 *.out
 *.app
 .gita/COMMIT_EDITMSG
+
+*.7z
+*.zip
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.rar

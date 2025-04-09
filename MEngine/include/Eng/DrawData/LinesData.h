@@ -29,12 +29,13 @@ namespace MEngine
         void collectLinesData(CubicBezier* bezier);
         void collectLinesData(CubicBSpline* bsPline);
 
-        std::vector<float>& getLinesData();
+        void collectEntLinesData(Entity* ent);
 
         // 批量渲染相关方法，用于将多个LineData合并为一个大的渲染数据
         // static std::vector<float> batchRender(const std::vector<LineData>& lineDataList);
 
-        std::vector<float> m_vLinesPts;
+        std::vector<float> m_vLinesPts; // xyzrgb
+        std::vector<unsigned int> m_vIndex; // xyzrgb
     };
 }
 #endif // LINESDATA_H

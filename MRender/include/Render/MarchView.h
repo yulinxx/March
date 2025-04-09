@@ -39,6 +39,12 @@ namespace MRender
         void addLinePoint(const ColorPoint& point);
         void addLinesPoint(const ColorPoint& point);
 
+        void addLinesData(const float* points, size_t sz);
+        void addLinesIndex(const unsigned int* index, size_t sz);
+
+        void addPreviewData(const float* points, size_t sz);
+        void addPreviewIndex(const unsigned int* index, size_t sz);
+
         void clearLinePoints();
         void clearLinesPoints();
 
@@ -56,31 +62,49 @@ namespace MRender
 
     private:
         void updateLineBuffer();
-        void updateLinesBuffer();
+
+        void updateLinesDataBuffer();
+        void updateLinesIndexBuffer();
+
+        void updatePreviewDataBuffer();
+        void updatePreviewIndexBuffer();
+
         void updateCrossBuffer();
         void updateRuler();
 
     private:
-        // 原有线条资源
-        QOpenGLShaderProgram* m_lineProgram{ nullptr };
+        // 单线段资源
         GLuint m_lineVao;
         GLuint m_lineVbo;
-
-        // 新增线条带资源
-        GLuint m_linesVao;  // 新增VAO
-        GLuint m_linesVbo;  // 新增VBO
-        QOpenGLShaderProgram* m_linesProgram{ nullptr }; // 新增shader program
-
-        //float m_scale = 1.0f;
-        QVector2D m_translation;
-        QPoint m_lastPos;
+        QOpenGLShaderProgram* m_lineProgram{ nullptr };
 
         std::vector<ColorPoint> m_linePoints;
-        std::vector<ColorPoint> m_linesPoints;
-        std::vector<ColorPoint> m_crossPoints;
-        GLuint m_crossVao, m_crossVbo;
-        QOpenGLShaderProgram* m_crossProgram;
 
+        // 多段线资源
+        GLuint m_linesVao;
+        GLuint m_linesVbo;
+        GLuint m_linesEbo;
+        QOpenGLShaderProgram* m_linesProgram{ nullptr };
+        std::vector<float> m_vLinesPoints;
+        std::vector<unsigned int> m_vLinesIndex;
+
+        GLuint m_previewVao;
+        GLuint m_previewVbo;
+        GLuint m_previewEbo;
+        QOpenGLShaderProgram* m_previewProgram{ nullptr };
+
+        std::vector<float> m_vPreviewPoints;
+        std::vector<unsigned int> m_vPreviewIndex;
+
+
+        // Cross
+        GLuint m_crossVao;
+        GLuint m_crossVbo;
+        QOpenGLShaderProgram* m_crossProgram{ nullptr };
+
+        std::vector<ColorPoint> m_crossPoints;
+
+        // Ruler
         struct RulerLine
         {
             ColorPoint start;      // 标尺起点
@@ -92,8 +116,12 @@ namespace MRender
         GLuint m_rulerVao, m_rulerVbo;
         QOpenGLShaderProgram* m_rulerProgram{ nullptr };
 
+        // Mat
         Ut::Mat3 m_matView;
         QMatrix4x4 m_viewMatrix;
+
+        QVector2D m_translation;
+        QPoint m_lastPos;
     };
 }
 

@@ -30,10 +30,16 @@ namespace MEngine
 
 
     public:
+        // 直线段
         std::pair<float*, size_t> getLineData() const;
-        std::pair<float*, size_t> getLinesData() const;
         std::pair<float*, size_t> getPreviewData() const;
+
+        // 多线段
+        std::pair<float*, size_t> getLinesData() const;
+        std::pair<unsigned int*, size_t> getLinesIndex() const;
+
         std::pair<float*, size_t> getPreviewsData() const;
+        std::pair<unsigned int*, size_t> getPreviewsIndex() const;
 
     private:
         class Impl;

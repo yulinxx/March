@@ -3,11 +3,18 @@
 
 #include "Scene/Previews.h"
 
+// #include "Entity/Rectangle.h"
+
 namespace MEngine
 {
     Scene::Scene()
     {
         m_sceneData = new SceneData();
+
+        // Rectangle* rec = new Rectangle();
+        // rec->setPts({ 8, 8 }, { 18, 18 });
+        // addEntity(rec);
+
     }
 
     Scene::~Scene()
@@ -36,6 +43,20 @@ namespace MEngine
         return false;
     }
 
+    void Scene::selectByRect(Ut::Vec2d& ptA, Ut::Vec2d& ptB)
+    {
+        for (auto& ent : m_sceneData->m_setSels)
+        {
+            ent->setFlag(EntFlag::Select, false);
+        }
+
+        auto ents = m_sceneData->m_entTree->queryIntersects(Ut::Rect2d(ptA, ptB));
+        for (auto& ent : ents)
+        {
+            ent->setFlag(EntFlag::Select, true);
+            m_sceneData->m_setSels.insert(ent);
+        }
+    }
     // void Scene::setRenderInterface(IRender::IRenderInterface* i)
     // {
     //     //m_iRender = i;

@@ -25,6 +25,14 @@ namespace MEngine
         UNKNOWN
     };
 
+    // 定义标志位的枚举
+    enum EntFlag{
+        Select = 0, // 选择标志位
+        Show = 1,   // 显示标志位
+        Lock = 2,     // 锁定标志位
+        Dirty = 3,    // 脏标记标志位
+    };
+
     class MENGINE_API Entity
     {
     public:
@@ -41,7 +49,6 @@ namespace MEngine
         virtual void clear() = 0;
 
     public:
-
         void setRect(Ut::Rect2d& rect);
 
         // 获取和设置属性
@@ -57,9 +64,12 @@ namespace MEngine
         void setReversed(bool reverse);
         void setClosed(bool closed);
 
+        void setFlag(EntFlag flag, bool b = true);
+        bool getFlag(EntFlag flag) const;
+
     private:
         struct Impl;
-        Impl* m_impl;
+        Impl* m_impl = nullptr;
     };
 }
 

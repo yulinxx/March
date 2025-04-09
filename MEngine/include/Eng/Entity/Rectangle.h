@@ -13,7 +13,8 @@ namespace MEngine
 
     public:
         virtual void clear() override;
-        virtual std::pair<Ut::Vec2*, size_t> getData() const override; // 获取顶点数据，用于绘制
+        virtual std::pair<Ut::Vec2*, size_t> getData() const override;
+        virtual Ut::Rect2d& getRect() override;
 
     public:
         void setStartPoint(const Ut::Vec2& start);

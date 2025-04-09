@@ -21,6 +21,8 @@ namespace MEngine
          void addEntity(Entity* entity);
          bool removeEntity(Entity* entity);
 
+         void selectByRect(Ut::Vec2d& ptA, Ut::Vec2d& ptB);
+
          //void setRenderInterface(IRender::IRenderInterface* i);
 
         Group* getRootGroup();

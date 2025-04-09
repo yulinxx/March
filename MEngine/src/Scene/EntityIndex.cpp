@@ -101,57 +101,98 @@ namespace MEngine
         }
     }
 
-
-    std::vector<std::shared_ptr<Entity>> EntityIndex::queryIntersects(const Ut::Rect2d& queryBox) const
+    // 查询给定矩形区域内的所有实体
+    std::vector<std::shared_ptr<Entity>> EntityIndex::query(const Ut::Rect2d& region) const
     {
-        std::vector<RTreeValue> results;
-        m_entTree.query(bgi::intersects(queryBox), std::back_inserter(results));
+        std::vector<RTreeRectEnt> results;
+        m_entTree.query(bgi::intersects(region), std::back_inserter(results));
+
         std::vector<std::shared_ptr<Entity>> entities;
         entities.reserve(results.size());
+
         for (const auto& result : results)
         {
             entities.push_back(result.second);
         }
+
         return entities;
     }
 
-    std::vector<std::shared_ptr<Entity>> EntityIndex::queryContains(const Ut::Point& point) const
+    // 查询包含某一点的所有实体
+    std::vector<std::shared_ptr<Entity>> EntityIndex::queryPoint(const Ut::Vec2d& point) const
     {
-        std::vector<RTreeValue> results;
+        std::vector<RTreeRectEnt> results;
         m_entTree.query(bgi::contains(point), std::back_inserter(results));
+
         std::vector<std::shared_ptr<Entity>> entities;
         entities.reserve(results.size());
+
         for (const auto& result : results)
         {
             entities.push_back(result.second);
         }
+
         return entities;
     }
 
-    std::vector<std::shared_ptr<Entity>> EntityIndex::queryNearest(const Ut::Point& point, size_t k) const
+    // 查询距离某点最近的 k 个实体
+    std::vector<std::shared_ptr<Entity>> EntityIndex::queryNearest(const Ut::Vec2d& point, size_t k) const
     {
-        std::vector<RTreeValue> results;
+        std::vector<RTreeRectEnt> results;
         m_entTree.query(bgi::nearest(point, k), std::back_inserter(results));
+
         std::vector<std::shared_ptr<Entity>> entities;
         entities.reserve(results.size());
+
         for (const auto& result : results)
         {
             entities.push_back(result.second);
         }
+
+        return entities;
+    }
+
+    // 查询与给定矩形区域相交的所有实体
+    std::vector<std::shared_ptr<Entity>> EntityIndex::queryIntersects(const Ut::Rect2d& region) const
+    {
+        std::vector<RTreeRectEnt> results;
+        m_entTree.query(bgi::intersects(region), std::back_inserter(results));
+
+        std::vector<std::shared_ptr<Entity>> entities;
+        entities.reserve(results.size());
+
+        for (const auto& result : results)
+        {
+            entities.push_back(result.second);
+        }
+
         return entities;
     }
 
     std::vector<std::shared_ptr<Entity>> EntityIndex::getAllEntities() const
     {
-        std::vector<RTreeValue> results;
-        m_entTree.query(bgi::intersects(Ut::Rect2d(Ut::Point(-DBL_MAX, -DBL_MAX), Ut::Point(DBL_MAX, DBL_MAX))),
-            std::back_inserter(results));
+        //std::vector<RTreeRectEnt> results;
+        //m_entTree.query(bgi::intersects(Ut::Rect2d(Ut::Point(-DBL_MAX, -DBL_MAX), Ut::Point(DBL_MAX, DBL_MAX))),
+        //    std::back_inserter(results));
+        //std::vector<std::shared_ptr<Entity>> entities;
+        //entities.reserve(results.size());
+        //for (const auto& result : results)
+        //{
+        //    entities.push_back(result.second);
+        //}
+        //return entities;
+
+        std::vector<RTreeRectEnt> results;
+        m_entTree.query(bgi::intersects(m_entTree.bounds()), std::back_inserter(results));
+
         std::vector<std::shared_ptr<Entity>> entities;
         entities.reserve(results.size());
+
         for (const auto& result : results)
         {
             entities.push_back(result.second);
         }
+
         return entities;
     }
 

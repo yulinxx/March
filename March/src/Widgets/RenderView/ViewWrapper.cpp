@@ -74,6 +74,7 @@ void ViewWrapper::updateRender()
 
     //m_scene->getDrawData()->clear();
 
+    if (0)
     {
         auto pairLinesData = m_scene->getDrawData()->getLineData();
         float* ptLines = pairLinesData.first;
@@ -87,18 +88,29 @@ void ViewWrapper::updateRender()
     }
 
 
+    if(1)
     {
         auto pairLinesData = m_scene->getDrawData()->getLinesData();
         float* ptLines = pairLinesData.first;
         size_t szLines = pairLinesData.second;
 
-        for (size_t i = 0; i < szLines; i += 2)
-        {
-            MRender::ColorPoint pt{ *(ptLines + i), *(ptLines + i + 1), 0.0f, 1.0f, 0.0f, 0.0f };
-            m_glView->addLinesPoint(pt);
-        }
+        auto pairLinesIndex = m_scene->getDrawData()->getLinesIndex();
+        const unsigned int* ptIndex = pairLinesIndex.first;
+        size_t szIndex = pairLinesIndex.second;
+
+        m_glView->addLinesData(ptLines, szLines);
+        m_glView->addLinesIndex(ptIndex, szIndex);
+
+        //for (size_t i = 0; i < szLines; i += 6)
+        //{
+        //    MRender::ColorPoint pt{ *(ptLines + i), *(ptLines + i + 1),  *(ptLines + i + 2),
+        //        *(ptLines + i + 3),*(ptLines + i + 4),*(ptLines + i + 5) };
+
+        //    m_glView->addLinesPoint(pt);
+        //}
     }
 
+    if (1)
     {
 
         auto pairPreviewData = m_scene->getDrawData()->getPreviewData();
@@ -112,16 +124,42 @@ void ViewWrapper::updateRender()
         }
     }
 
+    if (0)
     {
-        auto pairPreviewiata = m_scene->getDrawData()->getPreviewsData();
-        float* ptPreview = pairPreviewiata.first;
-        size_t szPreview = pairPreviewiata.second;
+        auto pairPreviewData = m_scene->getDrawData()->getPreviewsData();
+        float* ptPreview = pairPreviewData.first;
+        size_t szPreview = pairPreviewData.second;
 
-        for (size_t i = 0; i < szPreview; i += 2)
+        for (size_t i = 0; i < szPreview; i += 6)
         {
-            MRender::ColorPoint pt{ *(ptPreview + i), *(ptPreview + i + 1), 0.0f, 1.0f, 0.0f, 0.0f };
+
+            MRender::ColorPoint pt{ *(ptPreview + i), *(ptPreview + i + 1),  *(ptPreview + i + 2),
+                *(ptPreview + i + 3),*(ptPreview + i + 4),*(ptPreview + i + 5) };
+
             m_glView->addLinesPoint(pt);
         }
+    }
+
+    if (1)
+    {
+        auto pairPreviewData = m_scene->getDrawData()->getPreviewsData();
+        float* ptLines = pairPreviewData.first;
+        size_t szLines = pairPreviewData.second;
+
+        auto pairPreviewIndex = m_scene->getDrawData()->getPreviewsIndex();
+        const unsigned int* ptIndex = pairPreviewIndex.first;
+        size_t szIndex = pairPreviewIndex.second;
+
+        m_glView->addPreviewData(ptLines, szLines);
+        m_glView->addPreviewIndex(ptIndex, szIndex);
+
+        //for (size_t i = 0; i < szLines; i += 6)
+        //{
+        //    MRender::ColorPoint pt{ *(ptLines + i), *(ptLines + i + 1),  *(ptLines + i + 2),
+        //        *(ptLines + i + 3),*(ptLines + i + 4),*(ptLines + i + 5) };
+
+        //    m_glView->addLinesPoint(pt);
+        //}
     }
 
 
@@ -235,6 +273,7 @@ bool ViewWrapper::eventFilter(QObject* obj, QEvent* event)
 void ViewWrapper::resizeEvent(QResizeEvent* event)
 {
     //m_optManager->resizeEvent(event);
+    //updateRender();
 
     auto sz = m_glView->size();
     m_scene->setView(sz.width(), sz.height());
@@ -279,6 +318,11 @@ void ViewWrapper::mouseMoveEvent(QMouseEvent* event)
 void ViewWrapper::keyPressEvent(QKeyEvent* event)
 {
     m_optManager->keyPressEvent(event);
+
+    if (event->key() == Qt::Key_F5)
+    {
+        updateRender();
+    }
 
     QWidget::keyPressEvent(event);
 }

@@ -48,6 +48,8 @@ namespace  MEngine
         float m_dZoomFactor{ 1.0f };
         Ut::Matrix3d m_matOrtho;
         Ut::Vec2i m_vViewSize{ 800, 600 };
+
+        std::set<std::shared_ptr<Entity>> m_setSels;
     };
 }
 

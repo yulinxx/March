@@ -67,4 +67,12 @@ namespace MEngine
     {
         return { m_impl->vVertices.data(), m_impl->vVertices.size() };
     }
+
+    Ut::Rect2d& Rectangle::getRect()
+    {
+        Ut::Rect2d rect(m_impl->start, m_impl->end);
+        setRect(rect);
+        return Entity::getRect();
+    }
+
 }

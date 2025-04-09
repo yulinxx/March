@@ -31,12 +31,6 @@ namespace MEngine
         }
     }
 
-    // 将Line数据转换为适合渲染的浮点数组实现
-    std::vector<float>& LineData::getLineData()
-    {
-        return m_vLinePts;
-    }
-
     // 批量渲染相关方法实现
     // std::vector<float> LineData::batchRender(const std::vector<LineData>& lineDataList) {
     //     std::vector<float> allLineData;

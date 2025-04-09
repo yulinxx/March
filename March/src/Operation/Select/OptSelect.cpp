@@ -94,13 +94,13 @@ void OptSelect::mouseReleaseEvent(QMouseEvent* event)
         if (bCrossSel)
         {
             qDebug() << "Cross selection";
-            //m_scene->selectByCross(minPt, maxPt); // 交选
+            m_scene->selectByRect(minPt, maxPt); // 交选
         }
         else
         {
             //m_rectPreview->set
             qDebug() << "Window selection";
-            //m_scene->selectByWindow(minPt, maxPt); // 窗选
+            m_scene->selectByRect(minPt, maxPt); // 窗选
         }
 
         m_rectPreview->setPts(m_selectStart, m_selectEnd);
