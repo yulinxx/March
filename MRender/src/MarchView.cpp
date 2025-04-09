@@ -143,10 +143,10 @@ namespace MRender
         }
         {
 
-            m_linesProgram = new QOpenGLShaderProgram(this);
-            m_linesProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, linesVS);
-            m_linesProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, linesFS);
-            m_linesProgram->link();
+            m_previewProgram = new QOpenGLShaderProgram(this);
+            m_previewProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, linesVS);
+            m_previewProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, linesFS);
+            m_previewProgram->link();
 
             glGenVertexArrays(1, &m_previewVao);
             glGenBuffers(1, &m_previewVbo);
