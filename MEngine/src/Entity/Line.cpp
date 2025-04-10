@@ -26,7 +26,7 @@ namespace MEngine
     {
         delete m_impl;
         m_impl = nullptr;
-   }
+    }
 
     void Line::init()
     {
@@ -72,7 +72,7 @@ namespace MEngine
     {
         auto ptMin = m_impl->end;
         auto& ptMax = getBasePoint();
-        
+
         Ut::Rect2d rect{ ptMin, ptMax };
         setRect(rect);
 
@@ -97,5 +97,15 @@ namespace MEngine
         //double dx = m_impl->end.x() - start.x();
         //double dy = m_impl->end.y() - start.y();
         //return sqrt(dx * dx + dy * dy);
+    }
+
+    Ut::Vec2d Line::getValue(double t)
+    {
+        return getBasePoint();
+    }
+
+    double Line::EvalParam(const Ut::Vec2& p)
+    {
+        return 0.0;
     }
 }

@@ -6,7 +6,6 @@ namespace MEngine
 {
     struct PolyLine::Impl
     {
-        std::vector<Ut::Vec2> points;
         std::vector<Ut::Vec2> vertices;
     };
 
@@ -33,9 +32,7 @@ namespace MEngine
 
     void PolyLine::clear()
     {
-        m_impl->points.clear();
         m_impl->vertices.clear();
-        m_impl->points.shrink_to_fit();
         m_impl->vertices.shrink_to_fit();
     }
 
@@ -46,14 +43,14 @@ namespace MEngine
             return;
         }
         clear();
-        m_impl->points = points;
+        m_impl->vertices = points;
         setClosed(closed);
         updateVertices();
     }
 
     void PolyLine::addPoint(const Ut::Vec2& point)
     {
-        m_impl->points.push_back(point);
+        m_impl->vertices.push_back(point);
         updateVertices();
     }
 
@@ -66,18 +63,14 @@ namespace MEngine
     void PolyLine::updateVertices()
     {
         m_impl->vertices.clear();
-        if (m_impl->points.size() < 2)
+        if (m_impl->vertices.size() < 2)
         {
             return;
         }
 
-        // 添加所有顶点
-        m_impl->vertices = m_impl->points;
-
-        // 如果闭合，添加第一个点以闭合折线
-        if (isClosed() && !m_impl->points.empty())
+        if (isClosed())
         {
-            m_impl->vertices.push_back(m_impl->points.front());
+            m_impl->vertices.push_back(m_impl->vertices.front());
         }
     }
 
@@ -86,34 +79,43 @@ namespace MEngine
         return { m_impl->vertices.data(), m_impl->vertices.size() };
     }
 
-    std::vector<Ut::Vec2> PolyLine::getPoints() const
-    {
-        return m_impl->points;
-    }
-
     double PolyLine::getLength() const
     {
-        if (m_impl->points.size() < 2)
+        if (m_impl->vertices.size() < 2)
         {
             return 0.0;
         }
 
         double totalLength = 0.0;
-        for (size_t i = 1; i < m_impl->points.size(); ++i)
+        for (size_t i = 1; i < m_impl->vertices.size(); ++i)
         {
-            double dx = m_impl->points[i].x() - m_impl->points[i - 1].x();
-            double dy = m_impl->points[i].y() - m_impl->points[i - 1].y();
-            totalLength += sqrt(dx * dx + dy * dy);
-        }
-
-        // 如果闭合，计算首尾之间的长度
-        if (isClosed() && m_impl->points.size() >= 2)
-        {
-            double dx = m_impl->points.front().x() - m_impl->points.back().x();
-            double dy = m_impl->points.front().y() - m_impl->points.back().y();
-            totalLength += sqrt(dx * dx + dy * dy);
+            auto ptA = m_impl->vertices[i - 1];
+            auto ptB = m_impl->vertices[i];
+            totalLength += (ptB - ptA).length();
         }
 
         return totalLength;
+    }
+
+    Ut::Rect2d& PolyLine::getRect()
+    {
+        Ut::Rect2d rect;
+        for (auto pt : m_impl->vertices)
+        {
+            rect.expand(pt);
+        }
+
+        setRect(rect);
+        return Entity::getRect();
+    }
+
+    Ut::Vec2d PolyLine::getValue(double t)
+    {
+        return getBasePoint();
+    }
+
+    double PolyLine::EvalParam(const Ut::Vec2& p)
+    {
+        return 0.0;
     }
 }

@@ -1,10 +1,9 @@
 #include "Entity/Entity.h"
+#include "Scene/Layer/Layer.h"
 #include <bitset>
 
 namespace MEngine
 {
-
-
     struct Entity::Impl
     {
         EntType type = EntType::UNKNOWN;  // 图元类型
@@ -12,8 +11,10 @@ namespace MEngine
         Ut::Vec2d basePt;                 // 基准点
         bool reverse = false;             // 是否反向
         bool closed = false;              // 是否闭合
+        double length = 0;                // 长度
+        Layer* layer = nullptr;           // 图层
         Ut::Rect2d rect;
-        
+
         std::bitset<8> flags;
     };
 
@@ -29,23 +30,17 @@ namespace MEngine
         m_impl = nullptr;
     }
 
-    Ut::Vec2d Entity::getValue(double t)
-    {
-        return m_impl->basePt;
-    }
-
-    double Entity::EvalParam(const Ut::Vec2& p)
-    {
-        return 0;  
-    }
-
-
     Ut::Rect2d& Entity::getRect()
     {
         return m_impl->rect;
     }
 
-    void Entity::setRect(Ut::Rect2d& rect) 
+    void Entity::setLength(double dLen)
+    {
+        m_impl->length = dLen;
+    }
+
+    void Entity::setRect(Ut::Rect2d& rect)
     {
         m_impl->rect = rect;
     }
@@ -105,8 +100,23 @@ namespace MEngine
         m_impl->flags.set(static_cast<size_t>(flag), b);
     }
 
-    bool MEngine::Entity::getFlag(EntFlag flag) const
+    bool Entity::getFlag(EntFlag flag) const
     {
         return m_impl->flags.test(static_cast<size_t>(flag));
+    }
+
+    double Entity::getLength() const
+    {
+        return 0.0;
+    }
+
+    Ut::Vec2d Entity::getValue(double t)
+    {
+        return m_impl->basePt;
+    }
+
+    double Entity::EvalParam(const Ut::Vec2& p)
+    {
+        return 0.0;
     }
 }

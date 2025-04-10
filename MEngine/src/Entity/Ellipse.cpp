@@ -6,12 +6,12 @@ namespace MEngine
 {
     struct Ellipse::Impl
     {
-        Ut::Vec2 center;          // 中心点
-        double majorRadius = 0.0; // 长轴半径 (a)
-        double minorRadius = 0.0; // 短轴半径 (b)
-        double rotation = 0.0;    // 旋转角度（弧度）
-        size_t nSides = 32;       // 默认边数
-        bool ccw = true;          // 逆时针方向
+        Ut::Vec2 center;                // 中心点
+        double majorRadius = 0.0;       // 长轴半径 (a)
+        double minorRadius = 0.0;       // 短轴半径 (b)
+        double rotation = 0.0;          // 旋转角度（弧度）
+        size_t nSides = 32;             // 默认边数
+        bool ccw = true;                // 逆时针方向
         std::vector<Ut::Vec2> vertices; // 顶点数据
     };
 
@@ -39,7 +39,7 @@ namespace MEngine
     {
         if (majorRadius < 1e-6 || minorRadius < 1e-6)
         {
-            //throw std::runtime_error("Radii must be positive");
+            // throw std::runtime_error("Radii must be positive");
             return;
         }
         if (majorRadius < minorRadius)
@@ -64,14 +64,13 @@ namespace MEngine
         double height = topRight.y() - bottomLeft.y();
         if (width < 1e-6 || height < 1e-6)
         {
-            //throw std::runtime_error("Bounding box dimensions must be positive");
+            // throw std::runtime_error("Bounding box dimensions must be positive");
             return;
         }
 
         m_impl->center = Ut::Vec2(
             (bottomLeft.x() + topRight.x()) / 2.0,
-            (bottomLeft.y() + topRight.y()) / 2.0
-        );
+            (bottomLeft.y() + topRight.y()) / 2.0);
         m_impl->majorRadius = width / 2.0;
         m_impl->minorRadius = height / 2.0;
         m_impl->rotation = 0.0; // 默认无旋转
@@ -89,7 +88,7 @@ namespace MEngine
     {
         if (nSides < 3)
         {
-            //throw std::runtime_error("Number of sides must be at least 3");
+            // throw std::runtime_error("Number of sides must be at least 3");
             return;
         }
         m_impl->nSides = nSides;
@@ -126,8 +125,7 @@ namespace MEngine
             // 平移到中心
             Ut::Vec2 vertex(
                 m_impl->center.x() + rotX,
-                m_impl->center.y() + rotY
-            );
+                m_impl->center.y() + rotY);
             m_impl->vertices.push_back(vertex);
         }
     }
@@ -156,5 +154,32 @@ namespace MEngine
     bool Ellipse::isCounterClockwise() const
     {
         return m_impl->ccw;
+    }
+
+    double Ellipse::getLength() const
+    {
+        return 0.0;
+    }
+
+    Ut::Rect2d& Ellipse::getRect()
+    {
+        Ut::Rect2d rect;
+        for (auto pt : m_impl->vertices)
+        {
+            rect.expand(pt);
+        }
+
+        setRect(rect);
+        return Entity::getRect();
+    }
+
+    Ut::Vec2d Ellipse::getValue(double t)
+    {
+        return getBasePoint();
+    }
+
+    double Ellipse::EvalParam(const Ut::Vec2& p)
+    {
+        return 0.0;
     }
 }

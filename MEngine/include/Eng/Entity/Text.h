@@ -13,10 +13,8 @@ namespace MEngine
         ~Text() override;
 
     public:
-        virtual void clear() override
-        {
-
-        }
+        virtual void clear() override;
+        virtual double getLength() const override;
 
         virtual std::pair<Ut::Vec2*, size_t> getData() const
         {
@@ -27,6 +25,9 @@ namespace MEngine
         {
             return Entity::getRect();
         }
+
+        virtual Ut::Vec2d getValue(double t) override;
+        virtual double EvalParam(const Ut::Vec2& p) override;
 
     public:
         // double BaseHeight;

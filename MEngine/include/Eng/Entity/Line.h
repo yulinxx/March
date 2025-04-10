@@ -15,7 +15,11 @@ namespace MEngine
 
     public:
         virtual void clear() override;
-        virtual std::pair<Ut::Vec2*, size_t> getData() const override; // 获取顶点数据，用于绘制
+        virtual double getLength() const override;
+        virtual Ut::Rect2d& getRect() override;
+        virtual std::pair<Ut::Vec2*, size_t> getData() const override;
+        virtual Ut::Vec2d getValue(double t) override;
+        virtual double EvalParam(const Ut::Vec2& p) override;
 
     public:
         // 设置线段的两个端点
@@ -24,16 +28,11 @@ namespace MEngine
         // 设置终点
         void setEndPoint(const Ut::Vec2& end);
 
-        virtual Ut::Rect2d& getRect();
-
         //std::pair<Ut::Vec2*, size_t> getData() const;
 
         // 获取端点
         void getPoints(Ut::Vec2& start, Ut::Vec2& end) const;
         void getEndPoint(Ut::Vec2& end) const;
-
-        // 获取长度
-        double getLength() const;
 
     private:
         void init();

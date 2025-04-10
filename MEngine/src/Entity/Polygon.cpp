@@ -8,7 +8,7 @@ namespace MEngine
         Ut::Vec2 start;    // 起点
         Ut::Vec2 end;      // 终点
         size_t nSides = 5; // 边数，默认为 5
-        std::vector<Ut::Vec2> vVertices;
+        std::vector<Ut::Vec2> vertices;
     };
 
     Polygon::Polygon()
@@ -25,8 +25,8 @@ namespace MEngine
 
     void Polygon::clear()
     {
-        m_impl->vVertices.clear();
-        m_impl->vVertices.shrink_to_fit();
+        m_impl->vertices.clear();
+        m_impl->vertices.shrink_to_fit();
     }
 
     void Polygon::setStartPoint(const Ut::Vec2& start)
@@ -80,7 +80,7 @@ namespace MEngine
                 center.y() + radius * sin(angle)
             );
 
-            m_impl->vVertices.push_back(vertex);
+            m_impl->vertices.push_back(vertex);
         }
 
         closePolygon();
@@ -88,14 +88,41 @@ namespace MEngine
 
     void Polygon::closePolygon()
     {
-        if (m_impl->vVertices.size() > 2)
+        if (m_impl->vertices.size() > 2)
         {
-            m_impl->vVertices.push_back(m_impl->vVertices.front());
+            m_impl->vertices.push_back(m_impl->vertices.front());
         }
     }
 
     std::pair<Ut::Vec2*, size_t> Polygon::getData() const
     {
-        return { m_impl->vVertices.data(), m_impl->vVertices.size() };
+        return { m_impl->vertices.data(), m_impl->vertices.size() };
+    }
+
+    double Polygon::getLength() const
+    {
+        return 0.0;
+    }
+
+    Ut::Rect2d& Polygon::getRect()
+    {
+        Ut::Rect2d rect;
+        for (auto pt : m_impl->vertices)
+        {
+            rect.expand(pt);
+        }
+
+        setRect(rect);
+        return Entity::getRect();
+    }
+
+    Ut::Vec2d Polygon::getValue(double t)
+    {
+        return getBasePoint();
+    }
+
+    double Polygon::EvalParam(const Ut::Vec2& p)
+    {
+        return 0.0;
     }
 }

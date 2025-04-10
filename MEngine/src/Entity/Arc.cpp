@@ -45,7 +45,7 @@ namespace MEngine
     {
         clear();
 
-        if(fabs(startAngle - endAngle) < 1e-3)
+        if (fabs(startAngle - endAngle) < 1e-3)
             return;
 
         if (radius < 1e-6)
@@ -69,7 +69,7 @@ namespace MEngine
 
         Ut::Vec2 vA = start - mid;
         Ut::Vec2 vB = end - mid;
-        if(vA.cross(vB) < 1e-3) // 三点共线，无法确定圆弧
+        if (vA.cross(vB) < 1e-3) // 三点共线，无法确定圆弧
             return;
 
         // 计算圆心和半径
@@ -188,146 +188,63 @@ namespace MEngine
         return { m_impl->vertices.data(), m_impl->vertices.size() };
     }
 
+    double Arc::getLength() const
+    {
+        return 0.0;
+    }
+
     Ut::Rect2d& Arc::getRect()
     {
-        Ut::Rect2d rect;
-        if (m_impl->vertices.empty())
+        //Ut::Rect2d rect;
+        //for (auto pt : m_impl->vertices)
+        //{
+        //    rect.expand(pt);
+        //}
+
+        //setRect(rect);
+        //return Entity::getRect();
+
         {
-            rect.setMin({ 0, 0 });
-            rect.setMax({ 0, 0 });
+
+            Ut::Rect2d rect;
+            if (m_impl->vertices.empty())
+            {
+                rect.setMin({ 0, 0 });
+                rect.setMax({ 0, 0 });
+                setRect(rect);
+                return Entity::getRect();
+            }
+
+            double minX = m_impl->vertices[0].x();
+            double minY = m_impl->vertices[0].y();
+            double maxX = minX;
+            double maxY = minY;
+
+            for (const auto& vertex : m_impl->vertices)
+            {
+                minX = std::min(minX, vertex.x());
+                minY = std::min(minY, vertex.y());
+                maxX = std::max(maxX, vertex.x());
+                maxY = std::max(maxY, vertex.y());
+            }
+
+            rect.setMin({ minX, minY });
+            rect.setMax({ maxX, maxY });
             setRect(rect);
             return Entity::getRect();
         }
 
-        double minX = m_impl->vertices[0].x();
-        double minY = m_impl->vertices[0].y();
-        double maxX = minX;
-        double maxY = minY;
-
-        for (const auto& vertex : m_impl->vertices)
-        {
-            minX = std::min(minX, vertex.x());
-            minY = std::min(minY, vertex.y());
-            maxX = std::max(maxX, vertex.x());
-            maxY = std::max(maxY, vertex.y());
-        }
-
-        rect.setMin({ minX, minY });
-        rect.setMax({ maxX, maxY });
-        setRect(rect);
-        return Entity::getRect();
     }
 
+    Ut::Vec2d Arc::getValue(double t)
+    {
+        return getBasePoint();
+    }
 
-    //Ut::Vec2d Arc::getValue(double t)
-    //{
-    //    if (m_impl->radius < ARC_EPSILON)
-    //    {
-    //        return m_impl->center; // Arc is a point
-    //    }
-
-    //    // Clamp t to the range [0, 1] for standard behavior
-    //    // Replace with std::clamp(t, 0.0, 1.0) if using C++17 or later
-    //    if (t < 0.0) t = 0.0;
-    //    if (t > 1.0) t = 1.0;
-
-    //    double effStartAngle, effEndAngle;
-    //    getEffectiveAngles(effStartAngle, effEndAngle);
-
-    //    double angleSpan = effEndAngle - effStartAngle; // Can be positive (CCW) or negative (CW)
-
-    //    // Handle zero span case (arc is effectively a point)
-    //    if (fabs(angleSpan) < ARC_EPSILON)
-    //    {
-    //        return Ut::Vec2d(
-    //            m_impl->center.x() + m_impl->radius * cos(effStartAngle),
-    //            m_impl->center.y() + m_impl->radius * sin(effStartAngle)
-    //        );
-    //    }
-
-
-    //    double currentAngle = effStartAngle + t * angleSpan;
-
-    //    return Ut::Vec2d(
-    //        m_impl->center.x() + m_impl->radius * cos(currentAngle),
-    //        m_impl->center.y() + m_impl->radius * sin(currentAngle)
-    //    );
-    //}
-
-    //double Arc::EvalParam(const Ut::Vec2& p)
-    //{
-    //    if (m_impl->radius < ARC_EPSILON)
-    //    {
-    //        return 0.0; // Closest point to a point arc is always at t=0 (or any t)
-    //    }
-
-    //    Ut::Vec2d vec = p - m_impl->center;
-    //    // If p is the center, atan2 is undefined/0. Any point is equidistant. Return t=0.
-    //    if (vec.length() < ARC_EPSILON * ARC_EPSILON)
-    //    {
-    //        return 0.0;
-    //    }
-
-    //    double pointAngle = atan2(vec.y(), vec.x());
-
-    //    double effStartAngle, effEndAngle;
-    //    getEffectiveAngles(effStartAngle, effEndAngle);
-    //    double angleSpan = effEndAngle - effStartAngle; // Can be positive or negative
-
-    //    // Handle full circle case (span is approx 2*PI)
-    //    bool isFullCircle = (fabs(fabs(angleSpan) - 2.0 * M_PI) < ARC_EPSILON);
-    //    if (isFullCircle)
-    //    {
-    //        // Normalize pointAngle relative to startAngle
-    //        double normalizedAngle = pointAngle;
-    //        while (normalizedAngle < effStartAngle - ARC_EPSILON) normalizedAngle += 2.0 * M_PI;
-    //        while (normalizedAngle >= effStartAngle + 2.0 * M_PI - ARC_EPSILON) normalizedAngle -= 2.0 * M_PI;
-    //        // Calculate t based on normalized angle
-    //        double t = (normalizedAngle - effStartAngle) / angleSpan;
-    //        // Clamp t due to potential floating point inaccuracies near boundaries
-    //        if (t < 0.0) t = 0.0;
-    //        if (t > 1.0) t = 1.0;
-    //        // For CW full circle, need to adjust t? No, span is negative, should work.
-    //        return t;
-    //    }
-
-
-    //    // Normalize pointAngle to be near the arc's span for easier comparison
-    //    // Bring pointAngle into the range [effStartAngle - PI, effStartAngle + PI) approx
-    //    double twoPi = 2.0 * M_PI;
-    //    while (pointAngle < effStartAngle - M_PI) pointAngle += twoPi;
-    //    while (pointAngle >= effStartAngle + M_PI) pointAngle -= twoPi;
-
-
-    //    // Check if the angle corresponding to the closest point on the *circle*
-    //    // falls within the *arc's* angular span.
-    //    if (isAngleWithinSpan(pointAngle, effStartAngle, effEndAngle, m_impl->ccw))
-    //    {
-    //        // Angle is within the span, calculate t directly
-    //        // Avoid division by zero if span is tiny
-    //        if (fabs(angleSpan) < ARC_EPSILON) return 0.0; // Effectively a point arc
-
-    //        double t = (pointAngle - effStartAngle) / angleSpan;
-
-    //        // Clamp t due to potential floating point inaccuracies near boundaries
-    //        if (t < 0.0) t = 0.0;
-    //        if (t > 1.0) t = 1.0;
-    //        return t;
-    //    }
-    //    else
-    //    {
-    //        // Angle is outside the span. Closest point is one of the endpoints.
-    //        // Calculate squared distances to endpoints to avoid sqrt
-    //        Ut::Vec2d startPoint = getValue(0.0);
-    //        Ut::Vec2d endPoint = getValue(1.0);
-
-    //        double distSqStart = (p - startPoint).length();
-    //        double distSqEnd = (p - endPoint).length();
-
-    //        return (distSqStart <= distSqEnd) ? 0.0 : 1.0;
-    //    }
-    //}
-
+    double Arc::EvalParam(const Ut::Vec2& p)
+    {
+        return 0.0;
+    }
 
     void Arc::getRadius(double& radius) const
     {
@@ -345,15 +262,17 @@ namespace MEngine
         endAngle = m_impl->endAngle;
     }
 
-    double Arc::getStartAngle() const {
+    double Arc::getStartAngle() const
+    {
         return m_impl->startAngle;
     }
 
-    double Arc::getEndAngle() const {
+    double Arc::getEndAngle() const
+    {
         return m_impl->endAngle;
     }
 
-    bool Arc::isCCW() const 
+    bool Arc::isCCW() const
     {
         return m_impl->ccw;
     }

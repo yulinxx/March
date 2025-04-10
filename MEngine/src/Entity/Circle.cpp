@@ -136,11 +136,10 @@ namespace MEngine
 
     Ut::Rect2d& Circle::getRect()
     {
-        auto ptMin = Ut::Vec2d(m_impl->center - m_impl->radius);
-        auto ptMax = Ut::Vec2d(m_impl->center + m_impl->radius);
-        Ut::Rect2d rect{ ptMin, ptMax };
+        auto ptMin = Ut::Vec2d(m_impl->center.x() - m_impl->radius, m_impl->center.y() - m_impl->radius);
+        auto ptMax = Ut::Vec2d(m_impl->center.x() + m_impl->radius, m_impl->center.y() + m_impl->radius);
+        Ut::Rect2d rect{ptMin, ptMax};
         setRect(rect);
-
         return Entity::getRect();
     }
 
@@ -162,5 +161,15 @@ namespace MEngine
     bool Circle::isCCW() const
     {
         return m_impl->ccw;
+    }
+
+    Ut::Vec2d Circle::getValue(double t)
+    {
+        return getBasePoint();
+    }
+
+    double Circle::EvalParam(const Ut::Vec2& p)
+    {
+        return 0.0;
     }
 }

@@ -15,7 +15,11 @@ namespace MEngine
 
     public:
         virtual void clear() override;
-        virtual std::pair<Ut::Vec2*, size_t> getData() const override; // 获取顶点数据，用于绘制
+        virtual double getLength() const override;
+        virtual Ut::Rect2d& getRect() override;
+        virtual std::pair<Ut::Vec2*, size_t> getData() const override;
+        virtual Ut::Vec2d getValue(double t) override;
+        virtual double EvalParam(const Ut::Vec2& p) override;
 
     public:
         // 设置所有顶点
@@ -24,12 +28,6 @@ namespace MEngine
         void addPoint(const Ut::Vec2& point);
         // 设置是否闭合
         void setClosed(bool closed);
-
-        // 获取所有顶点
-        std::vector<Ut::Vec2> getPoints() const;
-
-        // 获取总长度
-        double getLength() const;
 
     private:
         void updateVertices();

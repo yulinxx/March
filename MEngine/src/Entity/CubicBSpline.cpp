@@ -73,7 +73,7 @@ namespace MEngine
     void CubicBSpline::computeKnots()
     {
         m_impl->knots.clear();
-        if (m_impl->controlPoints.size() < 4) 
+        if (m_impl->controlPoints.size() < 4)
             return; // 至少需要4个控制点
 
         int n = m_impl->controlPoints.size() - 1; // 控制点数 - 1
@@ -169,7 +169,6 @@ namespace MEngine
         //clear();
         m_impl->vertices.clear();
 
-
         if (m_impl->controlPoints.size() < 4 || m_impl->nSegmentsPerSpan < 2)
         {
             return;
@@ -194,5 +193,32 @@ namespace MEngine
     std::vector<Ut::Vec2> CubicBSpline::getControlPoints() const
     {
         return m_impl->controlPoints;
+    }
+
+    double CubicBSpline::getLength() const
+    {
+        return 0.0;
+    }
+
+    Ut::Rect2d& CubicBSpline::getRect()
+    {
+        Ut::Rect2d rect;
+        for (auto pt : m_impl->vertices)
+        {
+            rect.expand(pt);
+        }
+
+        setRect(rect);
+        return Entity::getRect();
+    }
+
+    Ut::Vec2d CubicBSpline::getValue(double t)
+    {
+        return getBasePoint();
+    }
+
+    double CubicBSpline::EvalParam(const Ut::Vec2& p)
+    {
+        return 0.0;
     }
 }

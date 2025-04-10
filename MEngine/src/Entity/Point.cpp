@@ -47,10 +47,9 @@ namespace MEngine
     //     return { m_impl->vertices.data(), m_impl->vertices.size() };
     // }
 
-
     std::pair<Ut::Vec2*, size_t> Point::getData() const
     {
-        return { &getBasePoint(), 1};
+        return { &getBasePoint(), 1 };
     }
 
     Ut::Rect2d& Point::getRect()
@@ -64,7 +63,21 @@ namespace MEngine
 
     Ut::Vec2 Point::getPosition() const
     {
-        //return m_impl->position;
         return getBasePoint();
+    }
+
+    double Point::getLength() const
+    {
+        return 0.0;
+    }
+
+    Ut::Vec2d Point::getValue(double t)
+    {
+        return getBasePoint();
+    }
+
+    double Point::EvalParam(const Ut::Vec2& p)
+    {
+        return 0.0;
     }
 }

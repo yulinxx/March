@@ -7,7 +7,7 @@ namespace MEngine
     {
         Ut::Vec2 start;    // 起点
         Ut::Vec2 end;      // 终点
-        std::array<Ut::Vec2, 5> vVertices; // 矩形四个顶点
+        std::array<Ut::Vec2, 5> vertices; // 矩形四个顶点
     };
 
     Rectangle::Rectangle()
@@ -24,8 +24,7 @@ namespace MEngine
 
     void Rectangle::clear()
     {
-        // m_impl->vVertices.clear();
-        // m_impl->vVertices.shrink_to_fit();
+         m_impl->vertices.fill(Ut::Vec2(0, 0));
     }
 
     void Rectangle::setStartPoint(const Ut::Vec2& start)
@@ -50,22 +49,22 @@ namespace MEngine
     void Rectangle::updateRect()
     {
         // 计算四个顶点坐标
-        m_impl->vVertices[0] = m_impl->start;
-        m_impl->vVertices[1] = { m_impl->end.x(), m_impl->start.y() };
-        m_impl->vVertices[2] = m_impl->end;
-        m_impl->vVertices[3] = { m_impl->start.x(), m_impl->end.y() };
+        m_impl->vertices[0] = m_impl->start;
+        m_impl->vertices[1] = { m_impl->end.x(), m_impl->start.y() };
+        m_impl->vertices[2] = m_impl->end;
+        m_impl->vertices[3] = { m_impl->start.x(), m_impl->end.y() };
 
         closeRectangle();
     }
 
     void Rectangle::closeRectangle()
     {
-        m_impl->vVertices[4] = m_impl->start;
+        m_impl->vertices[4] = m_impl->start;
     }
 
     std::pair<Ut::Vec2*, size_t> Rectangle::getData() const
     {
-        return { m_impl->vVertices.data(), m_impl->vVertices.size() };
+        return { m_impl->vertices.data(), m_impl->vertices.size() };
     }
 
     Ut::Rect2d& Rectangle::getRect()
@@ -75,4 +74,18 @@ namespace MEngine
         return Entity::getRect();
     }
 
+    double Rectangle::getLength() const
+    {
+        return 0.0;
+    }
+
+    Ut::Vec2d Rectangle::getValue(double t)
+    {
+        return getBasePoint();
+    }
+
+    double Rectangle::EvalParam(const Ut::Vec2& p)
+    {
+        return 0.0;
+    }
 }

@@ -1,4 +1,5 @@
 #include "Entity/CubicBezier.h"
+#include "3rd/bezier.h"
 #include <stdexcept>
 #include <cmath>
 
@@ -47,9 +48,8 @@ namespace MEngine
     void CubicBezier::setSegments(size_t nSegments)
     {
         if (nSegments < 2)
-        {
-            throw std::runtime_error("Number of segments must be at least 2");
-        }
+            nSegments = 2;
+
         m_impl->nSegments = nSegments;
         updateVertices();
     }
@@ -59,9 +59,7 @@ namespace MEngine
         clear();
 
         if (m_impl->nSegments < 2)
-        {
-            return;
-        }
+            m_impl->nSegments = 2;
 
         // 生成贝塞尔曲线顶点
         for (size_t i = 0; i <= m_impl->nSegments; ++i)
@@ -74,10 +72,10 @@ namespace MEngine
 
     Ut::Vec2 CubicBezier::evaluate(double t) const
     {
-        if (t < 0.0 || t > 1.0)
-        {
-            throw std::runtime_error("Parameter t must be between 0 and 1");
-        }
+        if (t < 0.0)
+            t = 0.0;
+        if (t > 1.0)
+            t = 1.0;
 
         // 三阶贝塞尔曲线公式：
         // B(t) = (1-t)^3 * P0 + 3(1-t)^2 * t * P1 + 3(1-t) * t^2 * P2 + t^3 * P3
@@ -100,10 +98,25 @@ namespace MEngine
         return { m_impl->vertices.data(), m_impl->vertices.size() };
     }
 
-    // Ut::Rect2d& CubicBezier::getRect()
-    // {
+    Ut::Rect2d& CubicBezier::getRect()
+    {
+        std::vector<bezier::Point> vPts;
+        vPts.emplace_back(bezier::Vec2(m_impl->p0.x(), m_impl->p0.y()));
+        vPts.emplace_back(bezier::Vec2(m_impl->p1.x(), m_impl->p1.y()));
+        vPts.emplace_back(bezier::Vec2(m_impl->p2.x(), m_impl->p2.y()));
+        vPts.emplace_back(bezier::Vec2(m_impl->p3.x(), m_impl->p3.y()));
 
-    // }
+        bezier::Bezier<3> bezier(vPts);
+        double dLen = bezier.length();
+        auto aabb = bezier.aabb();
+        double dMinX = aabb.minX();
+        double dMinY = aabb.minY();
+        double dMaxX = aabb.maxX();
+        double dMaxY = aabb.maxY();
+        Ut::Rect2d rect({ dMinX, dMinY }, { dMaxX, dMaxY });
+        Entity::setRect(rect);
+        return Entity::getRect();
+    }
 
     void CubicBezier::getControlPoints(Ut::Vec2& p0, Ut::Vec2& p1,
         Ut::Vec2& p2, Ut::Vec2& p3) const
@@ -112,5 +125,28 @@ namespace MEngine
         p1 = m_impl->p1;
         p2 = m_impl->p2;
         p3 = m_impl->p3;
+    }
+
+    double CubicBezier::getLength() const
+    {
+        std::vector<bezier::Point> vPts;
+        vPts.emplace_back(bezier::Vec2(m_impl->p0.x(), m_impl->p0.y()));
+        vPts.emplace_back(bezier::Vec2(m_impl->p1.x(), m_impl->p1.y()));
+        vPts.emplace_back(bezier::Vec2(m_impl->p2.x(), m_impl->p2.y()));
+        vPts.emplace_back(bezier::Vec2(m_impl->p3.x(), m_impl->p3.y()));
+
+        bezier::Bezier<3> bezier(vPts);
+        double dLen = bezier.length();
+        return dLen;
+    }
+
+    Ut::Vec2d CubicBezier::getValue(double t)
+    {
+        return getBasePoint();
+    }
+
+    double CubicBezier::EvalParam(const Ut::Vec2& p)
+    {
+        return 0.0;
     }
 }

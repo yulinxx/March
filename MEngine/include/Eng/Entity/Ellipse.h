@@ -14,7 +14,11 @@ namespace MEngine
 
     public:
         virtual void clear() override;
-        virtual std::pair<Ut::Vec2*, size_t> getData() const override; // 获取顶点数据，用于绘制
+        virtual double getLength() const override;
+        virtual Ut::Rect2d& getRect() override;
+        virtual std::pair<Ut::Vec2*, size_t> getData() const override;
+        virtual Ut::Vec2d getValue(double t);
+        virtual double EvalParam(const Ut::Vec2& p);
 
     public:
         // 设置椭圆：通过中心、长轴半径、短轴半径和旋转角度
