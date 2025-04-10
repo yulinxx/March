@@ -34,6 +34,9 @@ endif()
 
 # 去除警告
 if(MSVC)
+    add_compile_options("/wd4244")
+    add_compile_options("/wd4251")
+    add_compile_options("/wd4267")
     add_compile_options("/wd4819")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_SILENCE_CXX23_DENORM_DEPRECATION_WARNING")
 endif()
