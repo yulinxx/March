@@ -14,8 +14,12 @@ namespace MEngine
 
     public:
         virtual void clear() override;
-        virtual std::pair<Ut::Vec2*, size_t> getData() const; // 获取顶点数据，用于绘制
-        virtual Ut::Rect2d& getRect();
+        virtual double getLength() const override;
+        virtual Ut::Rect2d& getRect() override;
+        virtual std::pair<Ut::Vec2*, size_t> getData() const override;
+
+        virtual Ut::Vec2d getValue(double t) override;
+        virtual double EvalParam(const Ut::Vec2& p) override;
 
     public:
         // 设置圆：通过圆心和圆上一点
@@ -32,7 +36,6 @@ namespace MEngine
         // 获取圆属性
         void getRadius(double& radius) const;
         void getCenter(Ut::Vec2& center) const;
-        double getLength() const;
         bool isCCW() const;
 
     private:
