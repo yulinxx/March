@@ -3,34 +3,46 @@
 
 #include <vector>
 #include <memory>
-#include "Layer.h"
 
-class LayerManager {
-public:
-    // 添加图层
-    Layer* addLayer(int order, int color) {
-        layers_.push_back(std::make_unique<Layer>(order, color));
-        return layers_.back().get();
-    }
+#include "Scene/SceneComponent.h"
+#include "Scene/Layer/Layer.h"
 
-    // 删除不活跃的图层
-    void cleanupInactiveLayers() {
-        for (auto it = layers_.begin(); it != layers_.end(); ) {
-            if (!(*it)->isActive()) {
-                it = layers_.erase(it);
-            } else {
-                ++it;
-            }
-        }
-    }
+namespace MEngine
+{
+    class MENGINE_API LayerManager : public SceneComponent
+    {
+    public:
+        LayerManager();
+        ~LayerManager();
 
-    // 获取所有图层
-    const std::vector<std::unique_ptr<Layer>>& getLayers() const {
-        return layers_;
-    }
+    public:
+        virtual void addEntity(std::shared_ptr<Entity> entity) override;
+        virtual void removeEntity(std::shared_ptr<Entity> entity) override;
 
-private:
-    std::vector<std::unique_ptr<Layer>> layers_;
-};
+
+    public:
+        // 添加图层
+        Layer* setCurrentLayer(int nColor = 0xFF000000); // 默认黑色
+
+        Layer* addLayer();
+        Layer* addLayer(Layer* layer);
+
+        Layer* getCurrentLayer();
+        Layer* getIndexLayer(size_t n);
+        Layer* getIndexLayer(char* name);
+
+        // 获取所有图层
+        const void getLayers(std::vector<std::shared_ptr<Layer>>& vLayers) const;
+
+    private:
+        // 删除不活跃的图层
+        void cleanupInactiveLayers();
+        
+    private:
+        struct Impl;
+        std::shared_ptr<Impl> pImpl;
+    };
+
+}
 
 #endif // LAYERMANAGER_H
