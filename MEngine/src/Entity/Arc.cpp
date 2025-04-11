@@ -178,6 +178,11 @@ namespace MEngine
         //setRect(Ut::Rect2d();
     }
 
+    void Arc::transform(const Ut::Mat3& matrix)
+    {
+        
+    }
+    
     std::pair<Ut::Vec2*, size_t> Arc::getData() const
     {
         if (m_impl->vertices.empty() && m_impl->radius > 1e-3)

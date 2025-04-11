@@ -7,9 +7,9 @@ namespace MEngine
     struct Layer::Impl
     {
         std::string m_name = "";
-        std::vector<std::shared_ptr<Entity>> m_entities;
+        std::unordered_map<size_t, std::shared_ptr<Entity>> m_entities;
         int m_order = 0;
-        int m_color = 0xFF000000;
+        unsigned int m_color = 0xFF0000FF;
         float m_depth = 0.0f;
         bool m_active = true;
         bool m_locked = false;
@@ -47,97 +47,106 @@ namespace MEngine
     void Layer::addEntity(std::shared_ptr<Entity> entity)
     {
         std::lock_guard<std::mutex> lock(m_impl->m_mutex);
-        m_impl->m_entities.push_back(entity);
-    }
-
-    // 添加批量图元（使用 std::shared_ptr）
-    void Layer::addEntities(const std::vector<std::shared_ptr<Entity>>& entities)
-    {
-        std::lock_guard<std::mutex> lock(m_impl->m_mutex);
-        m_impl->m_entities.insert(m_impl->m_entities.end(), entities.begin(), entities.end());
-    }
-
-    // 添加普通指针图元
-    void Layer::addEntity(Entity* entity)
-    {
-        std::lock_guard<std::mutex> lock(m_impl->m_mutex);
-        m_impl->m_entities.push_back(std::shared_ptr<Entity>(entity));
-    }
-
-    // 添加普通指针批量图元
-    void Layer::addEntities(const std::vector<Entity*>& entities)
-    {
-        std::lock_guard<std::mutex> lock(m_impl->m_mutex);
-        for (auto entity : entities)
-        {
-            m_impl->m_entities.push_back(std::shared_ptr<Entity>(entity));
-        }
+        size_t id = entity->getId();
+        m_impl->m_entities[id] = entity;
+        entity->setLayer(this);
     }
 
     void Layer::removeEntity(std::shared_ptr<Entity> entity)
     {
         std::lock_guard<std::mutex> lock(m_impl->m_mutex);
-        auto& entities = m_impl->m_entities;
-        for (auto it = entities.begin(); it != entities.end(); ++it)
-        {
-            if (*it == entity)
-            {
-                entities.erase(it);
-                break;
-            }
-        }
+        size_t id = entity->getId();
+        m_impl->m_entities.erase(id);
     }
 
-    // 删除批量图元（使用 std::shared_ptr）
-    void Layer::removeEntities(const std::vector<std::shared_ptr<Entity>>& entities)
-    {
-        std::lock_guard<std::mutex> lock(m_impl->m_mutex);
-        for (auto entity : entities)
-        {
-            auto& vecEntities = m_impl->m_entities;
-            for (auto it = vecEntities.begin(); it != vecEntities.end(); ++it)
-            {
-                if (*it == entity)
-                {
-                    vecEntities.erase(it);
-                    break;
-                }
-            }
-        }
-    }
+    //// 添加批量图元（使用 std::shared_ptr）
+    //void Layer::addEntities(const std::vector<std::shared_ptr<Entity>>& entities)
+    //{
+    //    std::lock_guard<std::mutex> lock(m_impl->m_mutex);
+    //    m_impl->m_entities.insert(m_impl->m_entities.end(), entities.begin(), entities.end());
+    //}
 
-    // 删除普通指针图元
-    void Layer::removeEntity(Entity* entity)
-    {
-        std::lock_guard<std::mutex> lock(m_impl->m_mutex);
-        auto& entities = m_impl->m_entities;
-        for (auto it = entities.begin(); it != entities.end(); ++it)
-        {
-            if (it->get() == entity)
-            {
-                entities.erase(it);
-                break;
-            }
-        }
-    }
+    //// 添加普通指针图元
+    //void Layer::addEntity(Entity* entity)
+    //{
+    //    std::lock_guard<std::mutex> lock(m_impl->m_mutex);
+    //    m_impl->m_entities.push_back(std::shared_ptr<Entity>(entity));
+    //}
 
-    // 删除普通指针批量图元
-    void Layer::removeEntities(const std::vector<Entity*>& entities)
-    {
-        std::lock_guard<std::mutex> lock(m_impl->m_mutex);
-        for (auto entity : entities)
-        {
-            auto& vecEntities = m_impl->m_entities;
-            for (auto it = vecEntities.begin(); it != vecEntities.end(); ++it)
-            {
-                if (it->get() == entity)
-                {
-                    vecEntities.erase(it);
-                    break;
-                }
-            }
-        }
-    }
+    //// 添加普通指针批量图元
+    //void Layer::addEntities(const std::vector<Entity*>& entities)
+    //{
+    //    std::lock_guard<std::mutex> lock(m_impl->m_mutex);
+    //    for (auto entity : entities)
+    //    {
+    //        m_impl->m_entities.push_back(std::shared_ptr<Entity>(entity));
+    //    }
+    //}
+
+    //void Layer::removeEntity(std::shared_ptr<Entity> entity)
+    //{
+    //    std::lock_guard<std::mutex> lock(m_impl->m_mutex);
+    //    auto& entities = m_impl->m_entities;
+    //    for (auto it = entities.begin(); it != entities.end(); ++it)
+    //    {
+    //        if (*it == entity)
+    //        {
+    //            entities.erase(it);
+    //            break;
+    //        }
+    //    }
+    //}
+
+    //// 删除批量图元（使用 std::shared_ptr）
+    //void Layer::removeEntities(const std::vector<std::shared_ptr<Entity>>& entities)
+    //{
+    //    std::lock_guard<std::mutex> lock(m_impl->m_mutex);
+    //    for (auto entity : entities)
+    //    {
+    //        auto& vecEntities = m_impl->m_entities;
+    //        for (auto it = vecEntities.begin(); it != vecEntities.end(); ++it)
+    //        {
+    //            if (*it == entity)
+    //            {
+    //                vecEntities.erase(it);
+    //                break;
+    //            }
+    //        }
+    //    }
+    //}
+
+    //// 删除普通指针图元
+    //void Layer::removeEntity(Entity* entity)
+    //{
+    //    std::lock_guard<std::mutex> lock(m_impl->m_mutex);
+    //    auto& entities = m_impl->m_entities;
+    //    for (auto it = entities.begin(); it != entities.end(); ++it)
+    //    {
+    //        if (it->get() == entity)
+    //        {
+    //            entities.erase(it);
+    //            break;
+    //        }
+    //    }
+    //}
+
+    //// 删除普通指针批量图元
+    //void Layer::removeEntities(const std::vector<Entity*>& entities)
+    //{
+    //    std::lock_guard<std::mutex> lock(m_impl->m_mutex);
+    //    for (auto entity : entities)
+    //    {
+    //        auto& vecEntities = m_impl->m_entities;
+    //        for (auto it = vecEntities.begin(); it != vecEntities.end(); ++it)
+    //        {
+    //            if (it->get() == entity)
+    //            {
+    //                vecEntities.erase(it);
+    //                break;
+    //            }
+    //        }
+    //    }
+    //}
 
     void Layer::setLocked(bool locked)
     {
@@ -186,7 +195,7 @@ namespace MEngine
     //}
 
     // 设置颜色（整数形式）
-    int Layer::setColor(int color)
+    int Layer::setColor(unsigned  int color)
     {
         m_impl->m_color = color; // 直接赋值，假设调用者提供正确格式 (0xAARRGGBB)
         return 0; // 返回 0 表示成功
@@ -200,7 +209,7 @@ namespace MEngine
     }
 
     // 获取颜色（整数形式）
-    int Layer::getColor() const
+    unsigned int Layer::getColor() const
     {
         return m_impl->m_color;
     }
@@ -208,10 +217,14 @@ namespace MEngine
     // 获取颜色（RGBA 字节形式）
     void Layer::getColor(unsigned char* r, unsigned char* g, unsigned char* b, unsigned char* a) const
     {
-        if (r) *r = (m_impl->m_color >> 16) & 0xFF; // 红
-        if (g) *g = (m_impl->m_color >> 8) & 0xFF;  // 绿
-        if (b) *b = m_impl->m_color & 0xFF;         // 蓝
-        if (a) *a = (m_impl->m_color >> 24) & 0xFF; // 透明度
+        if (r)
+            *r = (m_impl->m_color >> 16) & 0xFF; // 红
+        if (g)
+            *g = (m_impl->m_color >> 8) & 0xFF;  // 绿
+        if (b)
+            *b = m_impl->m_color & 0xFF;         // 蓝
+        if (a)
+            *a = (m_impl->m_color >> 24) & 0xFF; // 透明度
     }
 
     bool Layer::isActive() const
@@ -232,5 +245,14 @@ namespace MEngine
     bool Layer::isProcessing() const
     {
         return m_impl->m_processing;
+    }
+
+    void Layer::forEachEntity(std::function<void(std::shared_ptr<Entity>)> callback)
+    {
+        std::lock_guard<std::mutex> lock(m_impl->m_mutex);
+        for (auto& pair : m_impl->m_entities)
+        {
+            callback(pair.second);
+        }
     }
 }

@@ -96,7 +96,6 @@ namespace MRender
         std::vector<float> m_vPreviewPoints;
         std::vector<unsigned int> m_vPreviewIndex;
 
-
         // Cross
         GLuint m_crossVao;
         GLuint m_crossVbo;

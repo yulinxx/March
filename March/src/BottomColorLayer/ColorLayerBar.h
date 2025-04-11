@@ -13,7 +13,7 @@ public:
 
 signals:
     void sigColorLayerSelected(const QString& color);
-    void sigSelColorLayer(const int color);
+    void sigSelColorLayer(const unsigned int color);
 
 private slots:
     void slotDockPosChanged(Qt::DockWidgetArea area);

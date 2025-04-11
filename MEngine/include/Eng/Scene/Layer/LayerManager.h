@@ -22,17 +22,17 @@ namespace MEngine
 
     public:
         // 添加图层
-        Layer* setCurrentLayer(int nColor = 0xFF000000); // 默认黑色
+        Layer* setCurrentLayer(unsigned int nColor = 0xFF000000); // 默认黑色
 
         Layer* addLayer();
         Layer* addLayer(Layer* layer);
 
         Layer* getCurrentLayer();
-        Layer* getIndexLayer(size_t n);
-        Layer* getIndexLayer(char* name);
+        //Layer* getIndexLayer(size_t n);
+        //Layer* getIndexLayer(char* name);
 
         // 获取所有图层
-        const void getLayers(std::vector<std::shared_ptr<Layer>>& vLayers) const;
+        //const void getLayers(std::vector<std::shared_ptr<Layer>>& vLayers) const;
 
     private:
         // 删除不活跃的图层

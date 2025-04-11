@@ -79,6 +79,15 @@ namespace Ut
             return *this;
         }
 
+        void expand(const Rect<T, DIM>& other)
+        {
+            for (int i = 0; i < DIM; ++i)
+            {
+                minPt[i] = std::min(minPt[i], other.minPt[i]);
+                maxPt[i] = std::max(maxPt[i], other.maxPt[i]);
+            }
+        }
+
         void expand(const Vec<T, DIM>& point)
         {
             for (int i = 0; i < DIM; ++i)
@@ -93,8 +102,6 @@ namespace Ut
             minPt -= Vec2d(delta, delta);
             maxPt += Vec2d(delta, delta);
         }
-
-
 
         T area() const
         {

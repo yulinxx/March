@@ -1,23 +1,21 @@
 #ifndef GROUP_H
 #define GROUP_H
 
-#include "MEngineAPI.h"
-#include <memory>
+#include "Scene/SceneComponent.h"
 
 namespace MEngine
 {
-    class Entity;
-
-    class MENGINE_API Group
+    class MENGINE_API Group : public SceneComponent
     {
     public:
         Group();
         ~Group();
 
     public:
-        void addEntity(Entity* entity);
-        bool removeEntity(Entity* entity);
+        virtual void addEntity(std::shared_ptr<Entity> entity) override;
+        virtual void removeEntity(std::shared_ptr<Entity> entity) override;
 
+    public:
         size_t getChildrenCount() const;
         Entity* getChild(size_t index) const;
 

@@ -129,6 +129,11 @@ namespace MEngine
         }
     }
 
+    void Circle::transform(const Ut::Mat3& matrix)
+    {
+        
+    }
+
     std::pair<Ut::Vec2*, size_t> Circle::getData() const
     {
         return { m_impl->vertices.data(), m_impl->vertices.size() };

@@ -100,6 +100,7 @@ void OptDrawPolyLine::keyPressEvent(QKeyEvent* event)
     else if (event->key() == Qt::Key_C && m_bDrawing)  // 'C' 键切换闭合状态
     {
         m_bClosed = !m_bClosed;
+        m_polyLinePreview->setLayer(m_scene->getLayerManager()->getCurrentLayer());
         m_polyLinePreview->setPoints(m_points, m_bClosed);
         if (!m_points.empty())
         {

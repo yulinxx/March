@@ -1,3 +1,54 @@
+# March 图形框架文档
+## 1. 核心架构概述
+采用分层架构设计，主要分为：
+
+- UI层 ：基于Qt的主窗口和控件
+- 视图层 ：OpenGL渲染组件
+- 数据层 ：场景和实体管理
+- 适配层 ：连接不同层级的桥梁
+
+### MainWindow (主窗口)
+```cpp
+class MainWindow : public QMainWindow
+ ```
+
+职责：
+
+- 应用程序主窗口
+- 管理多文档界面(MDI)
+- 协调各工具栏功能
+
+###  Scene (场景管理)
+```cpp
+class Scene 
+ ```
+
+职责：
+
+- 存储和管理所有图形实体
+- 维护场景状态
+- 处理业务逻辑
+
+### MarchView (渲染视图)
+```cpp
+class MarchView : public QOpenGLWidget, protected QOpenGLFunctions_4_0_Core 
+```
+
+职责：
+
+- 基于OpenGL 4.0的图形渲染
+- 接收场景数据并可视化
+- 不直接修改数据
+
+
+
+MainWindow工具条点击 
+→ ViewWrapper接收指令 
+→ Scene创建对应实体 
+→ MarchView渲染更新
+
+
+
 - 以 MainWindow 作为主窗口类：class MainWindow : public QMainWindow
 
 里面嵌套了一个  m_tabView ：
@@ -91,3 +142,5 @@ ViewWrapper是控制器（Controller）
 
 
 Scene类。它需要包含一个3x3的矩阵m_matOrtho，用于存储视图的变换信息
+
+

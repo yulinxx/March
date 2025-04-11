@@ -36,6 +36,8 @@ void OptDrawLine::mousePressEvent(QMouseEvent* event)
         if (m_bFirst)
         {
             m_startPoint = posW;
+
+            m_linePreview->setLayer(m_scene->getLayerManager()->getCurrentLayer());
             m_linePreview->setPoints(posW, posW);  // 初始化预览线
             m_bFirst = false;
         }

@@ -11,8 +11,8 @@ namespace MEngine
     class MENGINE_API DelEntityCmd final : public Command
     {
     public:
-        DelEntityCmd(Scene* scene, Entity* entity);
         DelEntityCmd(Scene* scene, std::shared_ptr<Entity> entity);
+        DelEntityCmd(Scene* scene, std::vector<std::shared_ptr<Entity>> entities);
         ~DelEntityCmd();
 
     public:
@@ -22,7 +22,7 @@ namespace MEngine
 
     private:
         Scene* m_scene{ nullptr };
-        Entity* m_entity{ nullptr };
+        std::vector<std::shared_ptr<Entity>> m_vEntities;
     };
 }
 

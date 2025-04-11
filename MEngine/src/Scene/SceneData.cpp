@@ -5,6 +5,7 @@
 #include "Scene/Previews.h"
 
 #include "Command/CommandManager.h"
+#include "Scene/Layer/LayerManager.h"
 
 namespace MEngine
 {
@@ -15,80 +16,35 @@ namespace MEngine
 
     SceneData::~SceneData()
     {
-        SAFE_DEL(m_rootGroup);
-        SAFE_DEL(m_entTree);
-        SAFE_DEL(m_cmdManager);
-        SAFE_DEL(m_drawData);
-        SAFE_DEL(m_previews);
+        m_rootGroup.reset ();
+        m_entTree.reset();
+        m_cmdManager.reset();
+        m_drawData.reset();
+        m_previews.reset();
+
+        m_layerManager.reset();
     }
 
     void SceneData::init()
     {
-        m_rootGroup = new Group();
-        MLog::Logger::LogInfo("Scene created");
+        m_layerManager = std::make_shared<LayerManager>();
+        m_rootGroup = std::make_shared<Group>();
+        //m_rootGroup->setLayerManager(m_layerManager.get());
+        
+        m_entTree = std::make_shared<EntityIndex>();
 
-        m_cmdManager = new CommandManager(20);
-        m_entTree = new EntityIndex();
-        m_drawData = new DrawData();
-        m_previews = new Previews();
+        m_vecComponents.push_back(m_layerManager);
+        m_vecComponents.push_back(m_rootGroup);
+        m_vecComponents.push_back(m_entTree);
+
+        m_cmdManager = std::make_shared<CommandManager>(20);
+
+        m_drawData = std::make_shared<DrawData>();
+        m_previews = std::make_shared<Previews>();
+
         m_matOrtho.identity();
+
+        MLog::Logger::LogInfo("Scene created");
     }
 
-    void SceneData::insert(std::shared_ptr<Entity> entity, const Ut::Rect2d& box)
-    {
-        //if (entity)
-        //{
-        //    m_entTree->insert(std::make_pair(box, entity));
-        //}
-    }
-
-    void SceneData::insert(Entity* entity, const Ut::Rect2d& box)
-    {
-        //if (entity)
-        //{
-        //    m_entTree->insert(std::make_pair(box, std::shared_ptr<Entity>(entity, [](Entity*) {}))); // 不释放原始指针
-        //}
-    }
-
-    void SceneData::addEntity(const std::vector<std::pair<std::shared_ptr<Entity>, Ut::Rect2d>>& entities)
-    {
-        //for (const auto& [entity, box] : entities)
-        //{
-        //    if (entity)
-        //    {
-        //        m_entTree->insert(std::make_pair(box, entity));
-        //    }
-        //}
-    }
-
-    bool SceneData::remove(const std::shared_ptr<Entity>& entity, const Ut::Rect2d& box)
-    {
-        //if (entity)
-        //{
-        //    return m_entTree->remove(std::make_pair(box, entity)) > 0;
-        //}
-        return false;
-    }
-
-    bool SceneData::remove(Entity* entity, const Ut::Rect2d& box)
-    {
-        //if (entity)
-        //{
-        //    return m_entTree->remove(std::make_pair(box, std::shared_ptr<Entity>(entity, [](Entity*) {}))) > 0;
-        //}
-        return false;
-    }
-
-    size_t SceneData::removeEntity(const std::vector<std::pair<std::shared_ptr<Entity>, Ut::Rect2d>>& entities)
-    {
-        //size_t count = 0;
-        //for (const auto& [entity, box] : entities)
-        //{
-        //    if (entity)
-        //    {
-        //        count += m_entTree->remove(std::make_pair(box, entity));
-        //    }
-        //}
-        return 0;
-    }
 }

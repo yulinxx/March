@@ -75,6 +75,39 @@ namespace MEngine
         m_impl->type = type;
     }
 
+    void Entity::setLayer(Layer* layer)
+    {
+        m_impl->layer = layer;
+    }
+
+    Layer* Entity::getLayer()
+    {
+        return m_impl->layer;
+    }
+
+    int Entity::getLayerColor()
+    {
+        if (m_impl->layer)
+            return m_impl->layer->getColor();
+
+        return 0;
+    }
+
+    void Entity::getLayerColor(unsigned char* r, unsigned char* g, unsigned char* b, unsigned char* a)
+    {
+        if (m_impl->layer)
+        {
+            m_impl->layer->getColor(r, g, b, a);
+        }
+        else
+        {
+            if (r) *r = 255;
+            if (g) *g = 0;
+            if (b) *b = 0;
+            if (a) *a = 255;
+        }
+    }
+
     void Entity::setId(size_t id)
     {
         m_impl->id = id;

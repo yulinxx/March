@@ -98,7 +98,10 @@ namespace MEngine
         //double dy = m_impl->end.y() - start.y();
         //return sqrt(dx * dx + dy * dy);
     }
-
+    void Line::transform(const Ut::Mat3& matrix)
+    {
+        
+    }
     Ut::Vec2d Line::getValue(double t)
     {
         return getBasePoint();

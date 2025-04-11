@@ -4,7 +4,6 @@
 
 namespace MEngineTest
 {
-
     class CircleTest : public ::testing::Test
     {
     protected:
@@ -150,10 +149,7 @@ namespace MEngineTest
         circle->setByCenterPt(center, end, false);
         EXPECT_FALSE(circle->isCCW());
     }
-
 } // namespace MEngineTest
-
-
 
 //#include "gtest/gtest.h"
 //#include "Eng/Entity/Circle.h"

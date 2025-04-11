@@ -2,33 +2,35 @@
 
 namespace MEngine
 {
-
-    DelEntityCmd::DelEntityCmd(Scene* scene, Entity* entity)
-        : m_scene(scene ? scene : throw std::invalid_argument("Group pointer cannot be null")),
-        m_entity(entity ? entity : throw std::invalid_argument("Entity pointer cannot be null"))
+    DelEntityCmd::DelEntityCmd(Scene* scene, std::shared_ptr<Entity> entity)
+        : m_scene(scene)
     {
+        m_vEntities.push_back(entity);
     }
 
-    DelEntityCmd::DelEntityCmd(Scene* scene, std::shared_ptr<Entity> entity)
-        : m_scene(scene ? scene : throw std::invalid_argument("Group pointer cannot be null")),
-        m_entity(entity ? entity.get() : throw std::invalid_argument("Entity pointer cannot be null"))
+    DelEntityCmd::DelEntityCmd(Scene* scene, std::vector<std::shared_ptr<Entity>> entities)
+        : m_scene(scene), m_vEntities(std::move(entities))
     {
     }
 
     DelEntityCmd::~DelEntityCmd()
     {
-        // m_group->removeEntity(m_entity);
-        // SAFE_DEL(m_entity);
+        for (auto& entity : m_vEntities)
+            entity.reset();
     }
 
     void DelEntityCmd::execute()
     {
-        m_scene->removeEntity(m_entity);
+        for (auto& entity : m_vEntities) {
+            m_scene->removeEntity(entity.get());
+        }
     }
 
     void DelEntityCmd::undo()
     {
-        m_scene->addEntity(m_entity);
+        for (auto& entity : m_vEntities) {
+            m_scene->addEntity(entity.get());
+        }
     }
 
     void DelEntityCmd::redo()

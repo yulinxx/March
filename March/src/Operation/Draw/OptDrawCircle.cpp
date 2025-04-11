@@ -35,6 +35,7 @@ void OptDrawCircle::mousePressEvent(QMouseEvent* event)
         Ut::Vec2d posW = m_scene->screenToWorld({ pos.x(), pos.y() });
 
         m_startPoint = posW;
+        m_circlePreview->setLayer(m_scene->getLayerManager()->getCurrentLayer());
         m_circlePreview->setBasePoint(posW);
         m_bFirst = false;
     }

@@ -66,7 +66,7 @@ void ColorLayerBar::slotColorBtnClicked(const QString& color)
     //emit sigSelColorLayer(color);
 
     QColor selectedColor(color);
-    int nRGBA= selectedColor.rgba(); // 转换为 0xAARRGGBB
+    unsigned int nRGBA= selectedColor.rgba(); // 转换为 0xAARRGGBB
     emit sigSelColorLayer(nRGBA);
 
     TipWidget::instance()->showMessage(QString("颜色: %1").arg(color));

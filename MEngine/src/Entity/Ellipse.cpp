@@ -172,7 +172,11 @@ namespace MEngine
         setRect(rect);
         return Entity::getRect();
     }
-
+    
+    void Ellipse::transform(const Ut::Mat3& matrix)
+    {
+        
+    }
     Ut::Vec2d Ellipse::getValue(double t)
     {
         return getBasePoint();

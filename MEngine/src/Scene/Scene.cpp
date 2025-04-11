@@ -14,7 +14,6 @@ namespace MEngine
         // Rectangle* rec = new Rectangle();
         // rec->setPts({ 8, 8 }, { 18, 18 });
         // addEntity(rec);
-
     }
 
     Scene::~Scene()
@@ -24,54 +23,22 @@ namespace MEngine
         MLog::Logger::LogInfo("Scene destroyed");
     }
 
+    void Scene::setLayer(unsigned int nColor)
+    {
+        m_sceneData->m_layerManager->setCurrentLayer(nColor);
+    }
+
     void Scene::addEntity(Entity* entity)
     {
-        if (m_sceneData->m_rootGroup)
-        {
-            m_sceneData->m_rootGroup->addEntity(entity);
-            m_sceneData->m_entTree->addEntity(entity);
-        }
+        for (auto& comp : m_sceneData->m_vecComponents)
+            comp->addEntity(entity);
     }
 
-    bool Scene::removeEntity(Entity* entity)
+    void Scene::removeEntity(Entity* entity)
     {
-        if (m_sceneData->m_rootGroup)
-        {
-            m_sceneData->m_rootGroup->removeEntity(entity);
-            m_sceneData->m_entTree->removeEntity(entity);
-        }
-        return false;
+        for (auto& comp : m_sceneData->m_vecComponents)
+            comp->removeEntity(entity);
     }
-
-    void Scene::selectByRect(Ut::Vec2d& ptA, Ut::Vec2d& ptB)
-    {
-        for (auto& ent : m_sceneData->m_setSels)
-        {
-            ent->setFlag(EntFlag::Select, false);
-        }
-
-        auto ents = m_sceneData->m_entTree->queryIntersects(Ut::Rect2d(ptA, ptB));
-        for (auto& ent : ents)
-        {
-            ent->setFlag(EntFlag::Select, true);
-            m_sceneData->m_setSels.insert(ent);
-        }
-    }
-    // void Scene::setRenderInterface(IRender::IRenderInterface* i)
-    // {
-    //     //m_iRender = i;
-    // }
-
-    Group* Scene::getRootGroup()
-    {
-        return m_sceneData->m_rootGroup;
-    }
-
-    CommandManager* Scene::getCmdManager()
-    {
-        return m_sceneData->m_cmdManager;
-    }
-
     void Scene::addPreview(Entity* entity)
     {
         m_sceneData->m_previews->addEntity(entity);
@@ -82,16 +49,77 @@ namespace MEngine
         m_sceneData->m_previews->removeEntity(entity);
     }
 
+    void Scene::selectByRect(Ut::Vec2d& ptA, Ut::Vec2d& ptB)
+    {
+        for (auto& ent : m_sceneData->m_setSels)
+            ent->setFlag(EntFlag::Select, false);
+
+        std::vector<std::shared_ptr<Entity>> ents;
+        if (ptA.x() < ptB.x())
+            ents = m_sceneData->m_entTree->getCrossEntities(Ut::Rect2d(ptA, ptB));
+        else
+            ents = m_sceneData->m_entTree->getEntities(Ut::Rect2d(ptA, ptB));
+
+        for (auto& ent : ents)
+        {
+            ent->setFlag(EntFlag::Select, true);
+            m_sceneData->m_setSels.insert(ent);
+        }
+    }
+
+    void Scene::getSelectedEntities(std::vector<std::shared_ptr<Entity>>& entities)
+    {
+        entities.clear();
+        for (auto& ent : m_sceneData->m_setSels)
+        {
+            entities.push_back(ent);
+        }
+    }
+
+    void Scene::clearSelection()
+    {
+        for (auto& ent : m_sceneData->m_setSels)
+        {
+            ent->setFlag(EntFlag::Select, false);
+        }
+        m_sceneData->m_setSels.clear();
+    }
+
+    void Scene::setRefreshCallback(RefreshCallback callback)
+    {
+        m_sceneData->m_refreshCallback = callback;
+    }
+
+    // void Scene::setRenderInterface(IRender::IRenderInterface* i)
+    // {
+    //     //m_iRender = i;
+    // }
+
+    Group* Scene::getRootGroup()
+    {
+        return m_sceneData->m_rootGroup.get();
+    }
+
+    CommandManager* Scene::getCmdManager()
+    {
+        return m_sceneData->m_cmdManager.get();
+    }
+
+    LayerManager* Scene::getLayerManager()
+    {
+        return m_sceneData->m_layerManager.get();
+    }
+
     void Scene::paint()
     {
         getDrawData()->clear();
-        m_sceneData->m_drawData->processEntities(m_sceneData->m_rootGroup);
-        m_sceneData->m_drawData->processPreviews(m_sceneData->m_previews);
+        m_sceneData->m_drawData->processEntities(m_sceneData->m_rootGroup.get());
+        m_sceneData->m_drawData->processPreviews(m_sceneData->m_previews.get());
     }
 
     DrawData* Scene::getDrawData()
     {
-        return m_sceneData->m_drawData;
+        return m_sceneData->m_drawData.get();
     }
 
     Mat3& Scene::getViewMatrix() const
@@ -175,11 +203,13 @@ namespace MEngine
     void Scene::redo()
     {
         m_sceneData->m_cmdManager->redo();
+        m_sceneData->m_refreshCallback();
     }
 
     void Scene::undo()
     {
         m_sceneData->m_cmdManager->undo();
+        m_sceneData->m_refreshCallback();
     }
 
     void Scene::setView(size_t width, size_t height)

@@ -42,7 +42,12 @@ namespace Ut
         void translation(T x, T y) requires (Rows == 4 && Cols == 4 || Rows == 3 && Cols == 3);
         void translation(const Vec<T, 2>& v) requires (Rows == 4 && Cols == 4 || Rows == 3 && Cols == 3);
 
+        Vec<T, 2> transformPoint(const Vec<T, 2>& point) const requires (Rows == 3 && Cols == 3);
+        
         void rotation(T angle) requires (Rows == 4 && Cols == 4 || Rows == 3 && Cols == 3);
+        void rotation(T angle, T centerX, T centerY) requires (Rows == 4 && Cols == 4 || Rows == 3 && Cols == 3);
+        void rotation(T angle, const Vec<T, 2>&) requires (Rows == 4 && Cols == 4 || Rows == 3 && Cols == 3);
+
 
         void scale(T sx, T sy) requires (Rows == 4 && Cols == 4 || Rows == 3 && Cols == 3);
         void scale(const Vec<T, 2>& s) requires (Rows == 4 && Cols == 4 || Rows == 3 && Cols == 3);
@@ -85,3 +90,4 @@ namespace Ut
 } // namespace Ut
 
 #endif // MATRIX_H
+

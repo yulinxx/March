@@ -166,7 +166,7 @@ void OptBase::mouseMoveEvent(QMouseEvent* event)
     // {
     //     m_selectEnd = world;
     // }
-    
+
     if (event->buttons() & Qt::MiddleButton)
     {
         if (m_bPanning)

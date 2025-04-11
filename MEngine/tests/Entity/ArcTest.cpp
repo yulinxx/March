@@ -222,7 +222,6 @@ namespace MEngineTest
     {
         // 测试用例 1：setByCenterRadius - 标准四分之一圆弧（逆时针）
         {
-
             Arc arc;
             arc.setByCenterRadius(Ut::Vec2(0, 0), 1.0, 0.0, Ut::PI / 2, true);
 
@@ -261,7 +260,6 @@ namespace MEngineTest
 
         // 测试用例 2：setByCenterRadius - 大角度跨度和反向（顺时针）
         {
-
             Arc arc;
             arc.setByCenterRadius(Ut::Vec2(2, 3), 5.0, 3 * Ut::PI / 2, Ut::PI / 2, false); // 顺时针
 
@@ -281,7 +279,6 @@ namespace MEngineTest
                 bool inRange = (angle <= 3 * Ut::PI / 2 + 1e-6) || (angle >= Ut::PI / 2 - 1e-6);
                 ASSERT_TRUE(inRange);
             }
-
         }
 
         {
@@ -309,7 +306,6 @@ namespace MEngineTest
 
         // 测试用例 4：setByThreePoints - 三点共线（预期失败）
         {
-
             Arc arc;
             arc.setByThreePoints(
                 Ut::Vec2(0, 0),
@@ -324,7 +320,6 @@ namespace MEngineTest
 
         // 测试用例 5：setByThreePoints - 逆时针圆弧
         {
-
             Arc arc;
             arc.setByThreePoints(
                 Ut::Vec2(2, 0),   // 起点
@@ -339,22 +334,19 @@ namespace MEngineTest
             double startAngle = arc.getStartAngle();
             double endAngle = arc.getEndAngle();
             ASSERT_GT(endAngle, startAngle);
-
         }
 
         // 边界测试：极小半径
         {
-
             Arc arc;
             arc.setByCenterRadius(Ut::Vec2(0, 0), 0.001, 0.0, Ut::PI, true); // 半径接近阈值
 
             // 检查是否生成顶点（根据代码逻辑，半径 <1e-3 会被拒绝）
             auto [data, size] = arc.getData();
             ASSERT_EQ(size, 0);
-
         }
 
-            //验证矩形包围盒
+        //验证矩形包围盒
         {
             Arc arc;
             arc.setByCenterRadius(Ut::Vec2(0, 0), 1.0, 0.0, Ut::PI / 2, true);
@@ -394,9 +386,3 @@ namespace MEngineTest
         EXPECT_NEAR(ea, endAngle, EPSILON);
     }
 } // namespace MEngineTest
-
-
-
-
-
-

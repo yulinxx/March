@@ -8,25 +8,32 @@
 
 namespace MEngine
 {
-    class MENGINE_API Scene
+    class MENGINE_API Scene final
     {
     public:
         Scene();
         ~Scene();
 
     public:
+        void setLayer(unsigned int nColor);
+
         void addPreview(Entity* entity);
         void removePreview(Entity* entity);
 
-         void addEntity(Entity* entity);
-         bool removeEntity(Entity* entity);
+        void addEntity(Entity* entity);
+        void removeEntity(Entity* entity);
 
-         void selectByRect(Ut::Vec2d& ptA, Ut::Vec2d& ptB);
+        void selectByRect(Ut::Vec2d& ptA, Ut::Vec2d& ptB);
+        void getSelectedEntities(std::vector<std::shared_ptr<Entity>>& entities);
+        void clearSelection();
 
-         //void setRenderInterface(IRender::IRenderInterface* i);
+        void setRefreshCallback(RefreshCallback callback);
+
+        //void setRenderInterface(IRender::IRenderInterface* i);
 
         Group* getRootGroup();
         CommandManager* getCmdManager();
+        LayerManager* getLayerManager();
 
         void paint();   // 绘图入口
         DrawData* getDrawData();
@@ -68,3 +75,4 @@ namespace MEngine
 }
 
 #endif // SCENE_H
+

@@ -31,6 +31,8 @@ void OptDrawRectangle::mousePressEvent(QMouseEvent* event)
 
         // 记录起始点并开始绘制
         m_startPoint = posW;
+
+        m_rectPreview->setLayer(m_scene->getLayerManager()->getCurrentLayer());
         m_rectPreview->setBasePoint(posW);
         m_bFirst = false;
     }

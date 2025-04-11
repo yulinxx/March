@@ -15,7 +15,10 @@ namespace MEngine
     public:
         virtual void clear() override;
         virtual double getLength() const override;
-
+        virtual void transform(const Ut::Mat3& matrix) override
+        {
+            
+        }
         virtual std::pair<Ut::Vec2*, size_t> getData() const
         {
             return std::pair<Ut::Vec2*, size_t>(nullptr, 0);

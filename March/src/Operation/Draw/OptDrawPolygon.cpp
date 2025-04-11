@@ -32,6 +32,7 @@ void OptDrawPolygon::mousePressEvent(QMouseEvent* event)
 
         // 记录起始点并开始绘制
         m_startPoint = posW;
+        m_polygonPreview->setLayer(m_scene->getLayerManager()->getCurrentLayer());
         m_polygonPreview->setBasePoint(posW);
         m_bFirst = false;
     }

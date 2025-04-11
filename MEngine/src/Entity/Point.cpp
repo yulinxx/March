@@ -70,7 +70,10 @@ namespace MEngine
     {
         return 0.0;
     }
-
+    void Point::transform(const Ut::Mat3& matrix)
+    {
+        
+    }
     Ut::Vec2d Point::getValue(double t)
     {
         return getBasePoint();

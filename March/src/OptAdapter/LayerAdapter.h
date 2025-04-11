@@ -18,7 +18,7 @@ signals:
     void sigStatusMsgChanged(const QString &msg);
 
 public slots:
-    void slotSelLayer(const int color);
+    void slotSelLayer(const unsigned int color);
 
 private:
     // ColorLayerBar* m_colorLayerBar{nullptr};

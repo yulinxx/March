@@ -106,5 +106,4 @@ namespace Ut
     //     return point.x() >= minPt.x() && point.x() <= maxPt.x() &&
     //         point.y() >= minPt.y() && point.y() <= maxPt.y();
     // }
-
 } // namespace Ut

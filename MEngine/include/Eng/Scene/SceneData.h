@@ -4,11 +4,14 @@
 #include "DrawData/DrawData.h"
 #include "Scene/EntityIndex.h"
 
+#include "Scene/Layer/LayerManager.h"
 // #include "RI/IRenderInterface.h"
+#include "Scene/SceneComponent.h"
 
 #include "Ut/Matrix.h"
-
 #include "MEngineAPI.h"
+
+typedef std::function<void()> RefreshCallback;
 
 namespace  MEngine
 {
@@ -23,32 +26,27 @@ namespace  MEngine
         ~SceneData();
 
     public:
+
+    private:
         void init();
 
     public:
-
-    public:
-        void insert(std::shared_ptr<Entity> entity, const Ut::Rect2d& box);
-        void insert(Entity* entity, const Ut::Rect2d& box);
-        void addEntity(const std::vector<std::pair<std::shared_ptr<Entity>, Ut::Rect2d>>& entities);
-        bool remove(const std::shared_ptr<Entity>& entity, const Ut::Rect2d& box);
-        bool remove(Entity* entity, const Ut::Rect2d& box);
-        size_t removeEntity(const std::vector<std::pair<std::shared_ptr<Entity>, Ut::Rect2d>>& entities);
-
-    public:
-        Group* m_rootGroup{ nullptr };
-        EntityIndex* m_entTree{ nullptr };
-        CommandManager* m_cmdManager{ nullptr };
-
-        Previews* m_previews{ nullptr };
+        std::shared_ptr<Group> m_rootGroup{ nullptr };
+        std::shared_ptr<EntityIndex> m_entTree{ nullptr };
+        std::shared_ptr<LayerManager> m_layerManager{ nullptr }; // 图层管理器
+        std::shared_ptr<CommandManager> m_cmdManager{ nullptr }; // 命令
 
         //IRender::IRenderInterface* m_iRender{ nullptr };
-        DrawData* m_drawData{ nullptr };
+        std::shared_ptr<DrawData> m_drawData{ nullptr };
+        std::shared_ptr<Previews> m_previews{ nullptr };
 
         float m_dZoomFactor{ 1.0f };
         Ut::Matrix3d m_matOrtho;
         Ut::Vec2i m_vViewSize{ 800, 600 };
 
+        RefreshCallback m_refreshCallback;
+
+        std::vector<std::shared_ptr<SceneComponent>> m_vecComponents;
         std::set<std::shared_ptr<Entity>> m_setSels;
     };
 }

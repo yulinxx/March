@@ -87,8 +87,7 @@ void ViewWrapper::updateRender()
         }
     }
 
-
-    if(1)
+    if (1)
     {
         auto pairLinesData = m_scene->getDrawData()->getLinesData();
         float* ptLines = pairLinesData.first;
@@ -112,7 +111,6 @@ void ViewWrapper::updateRender()
 
     if (1)
     {
-
         auto pairPreviewData = m_scene->getDrawData()->getPreviewData();
         float* ptPreview = pairPreviewData.first;
         size_t szPreview = pairPreviewData.second;
@@ -132,7 +130,6 @@ void ViewWrapper::updateRender()
 
         for (size_t i = 0; i < szPreview; i += 6)
         {
-
             MRender::ColorPoint pt{ *(ptPreview + i), *(ptPreview + i + 1),  *(ptPreview + i + 2),
                 *(ptPreview + i + 3),*(ptPreview + i + 4),*(ptPreview + i + 5) };
 
@@ -161,7 +158,6 @@ void ViewWrapper::updateRender()
         //    m_glView->addLinesPoint(pt);
         //}
     }
-
 
     m_glView->update();
 }

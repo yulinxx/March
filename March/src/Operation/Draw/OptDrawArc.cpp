@@ -45,6 +45,7 @@ void OptDrawArc::mousePressEvent(QMouseEvent* event)
 
         if (m_nPts == 0)  // 第一个点：起点
         {
+            m_linePreview->setLayer(m_scene->getLayerManager()->getCurrentLayer());
             m_linePreview->setPoints(posW, posW);  // 初始化预览线
             m_startPoint = posW;
             m_nPts = 1;

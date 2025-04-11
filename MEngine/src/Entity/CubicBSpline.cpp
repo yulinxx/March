@@ -211,7 +211,10 @@ namespace MEngine
         setRect(rect);
         return Entity::getRect();
     }
-
+    void CubicBSpline::transform(const Ut::Mat3& matrix)
+    {
+        
+    }
     Ut::Vec2d CubicBSpline::getValue(double t)
     {
         return getBasePoint();

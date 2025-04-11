@@ -1,12 +1,11 @@
 #include "Scene/Group.h"
-#include <vector>
 #include <algorithm>
 
 namespace MEngine
 {
     struct Group::Impl
     {
-        std::vector<Entity*> m_vecEntities;
+        std::vector<std::shared_ptr<Entity>> m_vecEntities;
     };
 
     Group::Group()
@@ -20,26 +19,23 @@ namespace MEngine
         m_pImpl = nullptr;
     }
 
-    void Group::addEntity(Entity* entity)
+    void Group::addEntity(std::shared_ptr<Entity> entity)
     {
-        if (entity && std::find(m_pImpl->m_vecEntities.begin(), m_pImpl->m_vecEntities.end(), entity) == m_pImpl->m_vecEntities.end())
-        {
-            m_pImpl->m_vecEntities.push_back(entity);
-        }
+        m_pImpl->m_vecEntities.push_back(entity);
     }
 
-    bool Group::removeEntity(Entity* entity)
+
+    void Group::removeEntity(std::shared_ptr<Entity> entity)
     {
         if (!entity)
-            return false;
+            return;
 
         auto it = std::find(m_pImpl->m_vecEntities.begin(), m_pImpl->m_vecEntities.end(), entity);
         if (it != m_pImpl->m_vecEntities.end())
         {
             m_pImpl->m_vecEntities.erase(it);
-            return true;
+            return;
         }
-        return false;
     }
 
     size_t Group::getChildrenCount() const
@@ -49,7 +45,7 @@ namespace MEngine
 
     Entity* Group::getChild(size_t index) const
     {
-        return (index < m_pImpl->m_vecEntities.size()) ? m_pImpl->m_vecEntities[index] : nullptr;
+        return (index < m_pImpl->m_vecEntities.size()) ? m_pImpl->m_vecEntities[index].get() : nullptr;
     }
 
     template<typename Func>

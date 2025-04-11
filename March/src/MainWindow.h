@@ -14,6 +14,7 @@
 #include "OptAdapter/EntityDrawAdapter.h"
 #include "OptAdapter/FileAdapter.h"
 #include "OptAdapter/MsgAdapter.h"
+#include "OptAdapter/LayerAdapter.h"
 
 /**
  * @class MainWindow
@@ -37,6 +38,9 @@ public:
     InfoToolBar* getMainToolBar() const;
     // 获取绘图工具条对象
     DrawToolBar* getDrawToolBar() const;
+    // 获取图层工具条对象
+    ColorLayerBar* getColorLayerBar() const;
+
     // 获取硬件信息面板对象
     HardInfoDock* getHardInfoDock() const;
 
@@ -63,9 +67,10 @@ private:
     void initData();
 
 private:
-    EntityDrawAdapter* m_entityAdapter{ nullptr }; // 图元工厂适配器
+    EntityDrawAdapter* m_entityAdapter{ nullptr }; // 图元绘制适配器
     FileAdapter* m_fileAdapter{ nullptr }; // 文件适配器
     MsgAdapter* m_msgAdapter{ nullptr }; // 提示适配器
+    LayerAdapter* m_layerAdapter{nullptr}; // 图层适配器
 
     MenuBar* m_menuBar{ nullptr };              // 主菜单栏组件
     InfoToolBar* m_mainToolBar{ nullptr };      // 顶部信息工具栏

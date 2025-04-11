@@ -50,7 +50,7 @@
 //        index.addEntity(p1, Ut::Rect2d({ 0, 0 }, { 1, 1 }));
 //        index.addEntity(p2, Ut::Rect2d({ 2, 2 }, { 3, 3 }));
 //
-//        auto intersects = index.queryIntersects(Ut::Rect2d({ 0.5, 0.5 }, { 1.5, 1.5 }));
+//        auto intersects = index.getCrossEntities(Ut::Rect2d({ 0.5, 0.5 }, { 1.5, 1.5 }));
 //        EXPECT_EQ(intersects.size(), 1);
 //    }
 //
@@ -59,7 +59,7 @@
 //        index.addEntity(p1, Ut::Rect2d({ 1, 1 }, { 1, 1 }));
 //        index.addEntity(p2, Ut::Rect2d({ 5, 5 }, { 1, 1 }));
 //
-//        auto nearest = index.queryNearest(Ut::Point(3, 3), 1);
+//        auto nearest = index.getNearestEntities(Ut::Point(3, 3), 1);
 //        ASSERT_FALSE(nearest.empty());
 //        EXPECT_EQ(nearest[0], p2);
 //    }

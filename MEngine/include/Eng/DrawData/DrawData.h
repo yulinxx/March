@@ -28,7 +28,6 @@ namespace MEngine
         void processEntities(Group* group);
         void processPreviews(Previews* previews);
 
-
     public:
         // 直线段
         std::pair<float*, size_t> getLineData() const;

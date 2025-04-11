@@ -12,6 +12,8 @@
 
 namespace MRender
 {
+#define _DEBUG_ false
+
     MarchView::MarchView(QWidget* parent)
         : QOpenGLWidget(parent)
     {
@@ -115,8 +117,6 @@ namespace MRender
         //}
 
         {
-
-
             m_linesProgram = new QOpenGLShaderProgram(this);
             m_linesProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, linesVS);
             m_linesProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, linesFS);
@@ -139,10 +139,8 @@ namespace MRender
             glBindVertexArray(0);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
         }
         {
-
             m_previewProgram = new QOpenGLShaderProgram(this);
             m_previewProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, linesVS);
             m_previewProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, linesFS);
@@ -165,7 +163,6 @@ namespace MRender
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         }
-
 
         // Cross
         {
@@ -599,6 +596,7 @@ namespace MRender
         memcpy(m_vLinesPoints.data(), points, sz * sizeof(float));
         updateLinesDataBuffer();
 
+#if _DEBUG_
         // 调试：打印数据
         qDebug() << "m_vLinesPoints size:" << m_vLinesPoints.size();
         for (size_t i = 0; i < m_vLinesPoints.size(); i += 6)
@@ -608,6 +606,7 @@ namespace MRender
                 << "), Color: (" << m_vLinesPoints[i + 3] << "," << m_vLinesPoints[i + 4]
                 << "," << m_vLinesPoints[i + 5] << ")";
         }
+#endif
     }
 
     void MarchView::addLinesIndex(const unsigned int* index, size_t sz)
@@ -619,6 +618,7 @@ namespace MRender
         memcpy(m_vLinesIndex.data(), index, sz * sizeof(unsigned int));
 
         // 检查索引范围
+#if _DEBUG_
         unsigned int maxIndex = static_cast<unsigned int>(m_vLinesPoints.size() / 6);
         for (size_t i = 0; i < sz; i++)
         {
@@ -628,15 +628,18 @@ namespace MRender
                 return;
             }
         }
+#endif
 
         updateLinesIndexBuffer();
 
+#if _DEBUG_
         // 调试：打印索引
         qDebug() << "m_vLinesIndex size:" << m_vLinesIndex.size();
         for (size_t i = 0; i < m_vLinesIndex.size(); i++)
         {
             qDebug() << "Index" << i << ":" << m_vLinesIndex[i];
         }
+#endif
     }
 
     void MarchView::addPreviewData(const float* points, size_t sz)
@@ -653,6 +656,7 @@ namespace MRender
         memcpy(m_vPreviewPoints.data(), points, sz * sizeof(float));
         updatePreviewDataBuffer();
 
+#if _DEBUG_
         // 调试：打印数据
         qDebug() << "m_vPreviewPoints size:" << m_vPreviewPoints.size();
         for (size_t i = 0; i < m_vPreviewPoints.size(); i += 6)
@@ -662,6 +666,7 @@ namespace MRender
                 << m_vPreviewPoints[i + 3] << "," << m_vPreviewPoints[i + 4]
                 << "," << m_vPreviewPoints[i + 5] << ")";
         }
+#endif
     }
 
     void MarchView::addPreviewIndex(const unsigned int* index, size_t sz)
@@ -685,12 +690,14 @@ namespace MRender
 
         updatePreviewIndexBuffer();
 
+#if _DEBUG_
         // 调试：打印索引
         qDebug() << "m_vPreviewIndex size:" << m_vPreviewIndex.size();
         for (size_t i = 0; i < m_vPreviewIndex.size(); i++)
         {
             qDebug() << "Index" << i << ":" << m_vPreviewIndex[i];
         }
+#endif
     }
 
     void MarchView::clearLinePoints()

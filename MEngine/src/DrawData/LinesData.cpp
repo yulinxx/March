@@ -27,7 +27,6 @@ namespace MEngine
             m_vLinesPts.push_back(static_cast<float>(pts[i].y()));
         }
 
-        
         constexpr float nan = std::numeric_limits<float>::quiet_NaN();
         m_vLinesPts.push_back(nan);
         m_vLinesPts.push_back(nan);
@@ -47,7 +46,6 @@ namespace MEngine
             m_vLinesPts.push_back(static_cast<float>(pts[i].y()));
         }
 
-        
         constexpr float nan = std::numeric_limits<float>::quiet_NaN();
         m_vLinesPts.push_back(nan);
         m_vLinesPts.push_back(nan);
@@ -80,7 +78,6 @@ namespace MEngine
             }
         }
 
-        
         constexpr float nan = std::numeric_limits<float>::quiet_NaN();
         m_vLinesPts.push_back(nan);
         m_vLinesPts.push_back(nan);
@@ -113,7 +110,6 @@ namespace MEngine
             }
         }
 
-        
         constexpr float nan = std::numeric_limits<float>::quiet_NaN();
         m_vLinesPts.push_back(nan);
         m_vLinesPts.push_back(nan);
@@ -146,7 +142,6 @@ namespace MEngine
             }
         }
 
-        
         constexpr float nan = std::numeric_limits<float>::quiet_NaN();
         m_vLinesPts.push_back(nan);
         m_vLinesPts.push_back(nan);
@@ -166,7 +161,6 @@ namespace MEngine
             m_vLinesPts.push_back(static_cast<float>(pts[i].y()));
         }
 
-        
         constexpr float nan = std::numeric_limits<float>::quiet_NaN();
         m_vLinesPts.push_back(nan);
         m_vLinesPts.push_back(nan);
@@ -186,7 +180,6 @@ namespace MEngine
             m_vLinesPts.push_back(static_cast<float>(pts[i].y()));
         }
 
-        
         constexpr float nan = std::numeric_limits<float>::quiet_NaN();
         m_vLinesPts.push_back(nan);
         m_vLinesPts.push_back(nan);
@@ -206,7 +199,6 @@ namespace MEngine
             m_vLinesPts.push_back(static_cast<float>(pts[i].y()));
         }
 
-        
         constexpr float nan = std::numeric_limits<float>::quiet_NaN();
         m_vLinesPts.push_back(nan);
         m_vLinesPts.push_back(nan);
@@ -238,9 +230,11 @@ namespace MEngine
             }
             else
             {
-                m_vLinesPts.push_back(0.0f); // r
-                m_vLinesPts.push_back(1.0f); // g
-                m_vLinesPts.push_back(0.0f); // b
+                unsigned char r, g, b, a;
+                ent->getLayerColor(&r, &g, &b, &a);
+                m_vLinesPts.push_back(static_cast<float>(r)/255.0f);
+                m_vLinesPts.push_back(static_cast<float>(g)/255.0f);
+                m_vLinesPts.push_back(static_cast<float>(b)/255.0f);
             }
             m_vIndex.push_back(baseIndex + i);
         }

@@ -44,7 +44,6 @@ namespace MEngine
 
         if (pImpl->m_previewsData && !pImpl->m_previewsData->m_vLinesPts.empty())
         {
-
             pImpl->m_previewsData->m_vLinesPts.clear();
             pImpl->m_previewsData->m_vLinesPts.shrink_to_fit();
         }
@@ -54,7 +53,6 @@ namespace MEngine
     {
         if (pImpl->m_lineData && !pImpl->m_lineData->m_vLinePts.empty())
         {
-
             pImpl->m_lineData->m_vLinePts.clear();
             pImpl->m_lineData->m_vLinePts.shrink_to_fit();
         }
@@ -64,12 +62,10 @@ namespace MEngine
     {
         if (pImpl->m_linesData && !pImpl->m_linesData->m_vLinesPts.empty())
         {
-
             pImpl->m_linesData->m_vLinesPts.clear();
             pImpl->m_linesData->m_vLinesPts.shrink_to_fit();
         }
     }
-
 
     void DrawData::processEntities(Group* group)
     {
@@ -258,13 +254,11 @@ namespace MEngine
             pImpl->m_lineData->m_vLinePts.size() };
     }
 
-
     std::pair<float*, size_t> DrawData::getPreviewData() const
     {
         return { pImpl->m_previewData->m_vLinePts.data(),
             pImpl->m_previewData->m_vLinePts.size() };
     }
-
 
     std::pair<float*, size_t> DrawData::getLinesData() const
     {

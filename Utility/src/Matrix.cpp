@@ -200,6 +200,14 @@ namespace Ut
     }
 
     template <typename T, size_t Rows, size_t Cols>
+    Vec<T, 2> Matrix<T, Rows, Cols>::transformPoint(const Vec<T, 2>& point) const requires (Rows == 3 && Cols == 3)
+    {
+        Vec<T, 3> pt3d(point.x(), point.y(), 1.0);
+        auto result = (*this) * pt3d;
+        return {result.x()/result.z(), result.y()/result.z()};
+    }
+
+    template <typename T, size_t Rows, size_t Cols>
     void Matrix<T, Rows, Cols>::rotation(T angle) requires (Rows == 4 && Cols == 4 || Rows == 3 && Cols == 3)
     {
         Matrix<T, Rows, Cols> rotMat;
@@ -211,6 +219,36 @@ namespace Ut
         rotMat.at(1, 0) = s;
         rotMat.at(1, 1) = c;
         *this *= rotMat;
+    }
+   
+    template <typename T, size_t Rows, size_t Cols>
+    void Matrix<T, Rows, Cols>::rotation(T angle, T centerX, T centerY) requires (Rows == 4 && Cols == 4 || Rows == 3 && Cols == 3)
+    {
+        Matrix<T, Rows, Cols> trans1, rotMat, trans2;
+        trans1.identity();
+        rotMat.identity();
+        trans2.identity();
+
+        trans1.translation(-centerX, -centerY);
+        rotMat.rotation(angle);
+        trans2.translation(centerX, centerY);
+
+        *this *= (trans2 * rotMat * trans1);
+    }
+
+    template <typename T, size_t Rows, size_t Cols>
+    void rotation(T angle, const Vec<T, 2>& pt) requires (Rows == 4 && Cols == 4 || Rows == 3 && Cols == 3)
+    {
+        Matrix<T, Rows, Cols> trans1, rotMat, trans2;
+        trans1.identity();
+        rotMat.identity();
+        trans2.identity();
+
+        trans1.translation(-pt.x(), -pt.y());
+        rotMat.rotation(angle);
+        trans2.translation(pt.x(), pt.y());
+
+        *this *= (trans2 * rotMat * trans1);
     }
 
     template <typename T, size_t Rows, size_t Cols>

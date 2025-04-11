@@ -32,6 +32,7 @@ void MainWindow::initData()
     m_entityAdapter = new EntityDrawAdapter(this);
     m_fileAdapter = new FileAdapter(this);
     m_msgAdapter = new MsgAdapter(this);
+    m_layerAdapter = new LayerAdapter(this);
 }
 
 void MainWindow::initUI()
@@ -123,6 +124,11 @@ InfoToolBar* MainWindow::getMainToolBar() const
 DrawToolBar* MainWindow::getDrawToolBar() const
 {
     return m_drawToolBar;
+}
+
+ColorLayerBar* MainWindow::getColorLayerBar() const
+{
+    return m_colorLayer;
 }
 
 HardInfoDock* MainWindow::getHardInfoDock() const

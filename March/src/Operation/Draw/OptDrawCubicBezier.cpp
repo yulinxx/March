@@ -45,7 +45,8 @@ void OptDrawCubicBezier::mousePressEvent(QMouseEvent* event)
             if (m_controlPoints.size() == 4)  // 第 4 个点完成绘制
             {
                 drawBezier();
-                m_bDrawing = false;
+
+                m_bDrawing = true;
                 m_controlPoints.clear();
                 m_bezierPreview->clear();
             }

@@ -4,9 +4,10 @@
 #include <QPointF>
 
 OptDrawSpline::OptDrawSpline(MEngine::Scene* scene)
-    : OptBase(scene), m_splinePreview(std::make_shared<MEngine::CubicBSpline>())
+    : OptBase(scene)
 {
     m_drawType = DrawType::Spline;
+    m_splinePreview = std::make_shared<MEngine::CubicBSpline>();
     m_scene->addPreview(m_splinePreview.get());
 }
 
@@ -22,7 +23,7 @@ void OptDrawSpline::enter()
     m_isClosed = false;
     m_controlPoints.clear();
     m_splinePreview->clear();
-    m_viewWrap->updateRender();
+    //m_viewWrap->updateRender();
 }
 
 void OptDrawSpline::exit()
@@ -44,18 +45,6 @@ void OptDrawSpline::mousePressEvent(QMouseEvent* event)
 
     if (event->button() == Qt::LeftButton && m_isDrawing)
     {
-        for (int i = 0; i < m_controlPoints.size(); ++i)
-        {
-            //if ((posW - m_controlPoints[i]).length() < DRAG_THRESHOLD / m_scene->getZoom())
-            if ((posW - m_controlPoints[i]).length() < DRAG_THRESHOLD)
-            {
-                m_isDragging = true;
-                m_selectedPointIndex = i;
-                m_currentMousePos = posW;
-                return;
-            }
-        }
-
         m_controlPoints.push_back(posW);
         m_currentMousePos = posW;
         updatePreview();
@@ -67,7 +56,7 @@ void OptDrawSpline::mousePressEvent(QMouseEvent* event)
         {
             drawSpline();
         }
-        m_isDrawing = false; 
+        m_isDrawing = false;
         m_controlPoints.clear();
         m_splinePreview->clear();
         m_viewWrap->updateRender();
@@ -80,13 +69,6 @@ void OptDrawSpline::mousePressEvent(QMouseEvent* event)
 
 void OptDrawSpline::mouseReleaseEvent(QMouseEvent* event)
 {
-    if (event->button() == Qt::LeftButton && m_isDragging)
-    {
-        m_isDragging = false;
-        m_selectedPointIndex = -1;
-        updatePreview();
-        m_viewWrap->updateRender();
-    }
     Super::mouseReleaseEvent(event);
 }
 
@@ -95,13 +77,7 @@ void OptDrawSpline::mouseMoveEvent(QMouseEvent* event)
     QPointF pos = event->pos();
     m_currentMousePos = m_scene->screenToWorld({ pos.x(), pos.y() });
 
-    if (m_isDragging && m_selectedPointIndex >= 0)
-    {
-        m_controlPoints[m_selectedPointIndex] = m_currentMousePos;
-        updatePreview();
-        m_viewWrap->updateRender();
-    }
-    else if (m_isDrawing && !m_controlPoints.empty())
+    if (m_isDrawing && !m_controlPoints.empty())
     {
         updatePreview();
         m_viewWrap->updateRender();
@@ -160,21 +136,6 @@ void OptDrawSpline::updatePreview()
         return;
     }
 
-    std::vector<Ut::Vec2d> previewPoints = m_controlPoints;
-    if (previewPoints.size() < 4)
-    {
-        size_t n = previewPoints.size();
-        Ut::Vec2d lastPoint = n > 0 ? previewPoints.back() : m_currentMousePos;
-        for (size_t i = n; i < 4; ++i)
-        {
-            previewPoints.push_back(lastPoint + (m_currentMousePos - lastPoint) * (i - n + 1) / (4 - n));
-        }
-    }
-    else
-    {
-        previewPoints.push_back(m_currentMousePos);
-    }
-
-    m_splinePreview->setControlPoints(previewPoints, m_isClosed);
+    m_splinePreview->setControlPoints(m_controlPoints, m_isClosed);
     m_splinePreview->setSegmentsPerSpan(32);
 }

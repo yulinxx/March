@@ -17,7 +17,7 @@ LayerAdapter::~LayerAdapter()
 {
 }
 
-void LayerAdapter::slotSelLayer(const int color)
+void LayerAdapter::slotSelLayer(const unsigned int color)
 {
 
     // 解析 RGBA
@@ -35,7 +35,8 @@ void LayerAdapter::slotSelLayer(const int color)
         // m_colorLayerBar->createLayer(param);
         //emit sigStatusMsgChanged("Layer created successfully");
 
-        m_mainWnd->getView()->getScene()->
+        m_mainWnd->getView()->getScene()->setLayer(color);
+        //m_mainWnd->getView()->getScene()->setLayer(r, g, b, a);
         emit sigStatusMsgChanged("Layer created successfully");
     }
 }

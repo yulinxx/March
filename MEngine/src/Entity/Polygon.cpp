@@ -115,7 +115,10 @@ namespace MEngine
         setRect(rect);
         return Entity::getRect();
     }
-
+    void Polygon::transform(const Ut::Mat3& matrix)
+    {
+        
+    }
     Ut::Vec2d Polygon::getValue(double t)
     {
         return getBasePoint();

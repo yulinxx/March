@@ -18,7 +18,7 @@ namespace MEngine
         virtual double getLength() const override;
         virtual Ut::Rect2d& getRect() override;
         virtual std::pair<Ut::Vec2*, size_t> getData() const override;
-
+        virtual void transform(const Ut::Mat3& matrix) override;
         virtual Ut::Vec2d getValue(double t) override;
         virtual double EvalParam(const Ut::Vec2& p) override;
 

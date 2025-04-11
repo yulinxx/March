@@ -79,6 +79,24 @@ namespace MEngine
         return 0.0;
     }
 
+    void Rectangle::transform(const Ut::Mat3& matrix)
+    {
+        for(auto& pt : m_impl->vertices)
+        {
+
+            pt = matrix.transformPoint(pt);
+            // pt = matrix * pt;
+
+            // Ut::Vec3 pt3d(pt.x(), pt.y(), 1.0);
+            // auto ptx = matrix * pt3d;
+            // pt = { ptx.x()/ptx.z(), ptx.y()/ptx.z() };
+        }
+        
+        // 更新起点和终点
+        m_impl->start = m_impl->vertices[0];
+        m_impl->end = m_impl->vertices[2];
+    }
+
     Ut::Vec2d Rectangle::getValue(double t)
     {
         return getBasePoint();
