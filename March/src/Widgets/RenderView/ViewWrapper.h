@@ -19,9 +19,7 @@ public:
     ~ViewWrapper();
 
 public:
-    const std::vector<MRender::ColorPoint>& getLinePoints() const;
-    // float getScale() const;
-    //QVector2D getTranslation() const;
+    //const std::vector<MRender::ColorPoint>& getLinePoints() const;
 
 public:
     MRender::MarchView* getGlView() const;
@@ -30,10 +28,13 @@ public:
     void updateRender();
     void updateScene();
 
+    // 设置操作类型
     void setOperation(int nType);
 
 signals:
-    void sigCoordChanged(float x, float y); // 信号：鼠标坐标变化
+    void sigCoordChanged(float x, float y);    // 信号：鼠标坐标变化
+    void sigSelChanged(const size_t n);
+    void sigHardinfo(const QString& text);
 
 protected:
     bool eventFilter(QObject* obj, QEvent* event) override;
@@ -53,7 +54,6 @@ private:
 private:
     MRender::MarchView* m_glView{ nullptr };
     MEngine::Scene* m_scene{ nullptr };
-
 
     std::shared_ptr<OptManager> m_optManager = nullptr;
 };

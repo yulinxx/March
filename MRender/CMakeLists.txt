@@ -23,10 +23,6 @@ GroupHeaderFiles("${HEADERS}" "${CMAKE_CURRENT_SOURCE_DIR}")
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 FindAndGroupFiles(${CMAKE_CURRENT_SOURCE_DIR})
 
-# 添加GLSL文件作为资源
-configure_file(res/shader/vertex_shader.glsl vertex_shader.glsl COPYONLY)
-configure_file(res/shader/fragment_shader.glsl fragment_shader.glsl COPYONLY)
-
 add_library(${PROJECT_NAME} SHARED ${SOURCES} ${HEADERS})
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE MRENDER_EXPORTS)

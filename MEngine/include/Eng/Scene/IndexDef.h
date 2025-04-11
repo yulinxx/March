@@ -15,6 +15,7 @@
 namespace bg = boost::geometry;
 namespace bgi = boost::geometry::index;
 
+// 模板类型定义
 namespace boost
 {
     namespace geometry

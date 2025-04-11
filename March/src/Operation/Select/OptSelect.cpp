@@ -67,6 +67,8 @@ void OptSelect::mousePressEvent(QMouseEvent* event)
     {
         // m_lastPos = event->pos();
     }
+
+    Super::mousePressEvent(event);
 }
 
 //DrawType OptSelect::getDrawType()
@@ -92,7 +94,6 @@ void OptSelect::mouseReleaseEvent(QMouseEvent* event)
         // 判断选择方向
         bool bCrossSel = (m_selectEnd.x() < m_selectStart.x());
 
-        // 执行选择
         if (bCrossSel)
         {
             m_scene->selectByRect(minPt, maxPt); // 交选
@@ -102,16 +103,16 @@ void OptSelect::mouseReleaseEvent(QMouseEvent* event)
             m_scene->selectByRect(minPt, maxPt); // 窗选
         }
 
-        //m_rectPreview->setPts(m_selectStart, m_selectEnd);
         m_rectPreview->clear();
 
         m_bSelecting = false;
 
         m_viewWrap->updateRender();
+
+        emit m_viewWrap->sigSelChanged(m_scene->getSelectSz());
     }
     else if (event->button() == Qt::MiddleButton)
     {
-        // m_bPanning = false;
         m_rectPreview->clear();
         m_viewWrap->updateRender();
     }
@@ -120,6 +121,9 @@ void OptSelect::mouseReleaseEvent(QMouseEvent* event)
         m_rectPreview->clear();
         m_viewWrap->updateRender();
     }
+
+    Super::mouseReleaseEvent(event);
+
 }
 
 void OptSelect::mouseMoveEvent(QMouseEvent* event)
@@ -133,6 +137,8 @@ void OptSelect::mouseMoveEvent(QMouseEvent* event)
         m_rectPreview->setPts(m_selectStart, m_selectEnd);
         m_viewWrap->updateRender();
     }
+
+    Super::mouseMoveEvent(event);
 
     //if (event->buttons() & Qt::MiddleButton)
     //{
@@ -155,6 +161,7 @@ void OptSelect::mouseMoveEvent(QMouseEvent* event)
 
 void OptSelect::mouseDoubleClickEvent(QMouseEvent* event)
 {
+    Super::mouseDoubleClickEvent(event);
 }
 
 void OptSelect::wheelEvent(QWheelEvent* event)
@@ -175,6 +182,8 @@ void OptSelect::wheelEvent(QWheelEvent* event)
     // m_glView->update();
 
     //sigCoordChanged(world.x(), world.y());
+
+    Super::wheelEvent(event);
 }
 
 void OptSelect::keyPressEvent(QKeyEvent* event)
@@ -203,43 +212,44 @@ void OptSelect::keyPressEvent(QKeyEvent* event)
         const double rotateStep = 5.0;
         const double scaleStep = 0.1;
 
-        // 计算所有选中实体的中心点
-        Ut::Vec2d center(0, 0);
+        // 修正中心点计算：使用包围盒中心
         Ut::Rect2d rect;
         for (const auto& entity : entities)
         {
             rect.expand(entity->getRect());
         }
 
-        center /= entities.size();
+        Ut::Vec2d center = rect.getCenter();
 
         Ut::Mat3 transform;
 
-        double dAngle = 1.0;
         if (event->modifiers() & Qt::ShiftModifier)
         {
-            // 以中心点旋转
-            transform.translation(-center);
-            double dR = dAngle * Ut::PI / 180.0;
-            transform.rotation(dR);
+            // 根据方向键设置旋转方向
+            double dR = rotateStep * Ut::PI / 180.0;
+            if (event->key() == Qt::Key_Right) dR *= -1; // 右键顺时针
+            else if (event->key() == Qt::Key_Left) dR *= 1; // 左键逆时针
 
-            //transform.translate(center);
-            transform.translation(center);
+            // 围绕中心旋转的变换矩阵
+            transform.translation(-center);
+            transform.rotation(dR);
+            transform.translation(center);;
         }
         else if (event->modifiers() & Qt::ControlModifier)
         {
-            // 以中心点缩放
-            double scale = (event->key() == Qt::Key_Left || event->key() == Qt::Key_Down)
-                ? 1.0 - scaleStep : 1.0 + scaleStep;
+            // 统一缩放逻辑
+            double scaleX = 1.0;
+            double scaleY = 1.0;
+
+            // 根据按键设置缩放方向和轴
+            if (event->key() == Qt::Key_Left)  scaleX = 1.0 - scaleStep;
+            if (event->key() == Qt::Key_Right) scaleX = 1.0 + scaleStep;
+            if (event->key() == Qt::Key_Up)    scaleY = 1.0 + scaleStep;
+            if (event->key() == Qt::Key_Down)  scaleY = 1.0 - scaleStep;
+
+            // 围绕中心缩放的变换矩阵
             transform.translation(-center);
-            if (event->key() == Qt::Key_Left || event->key() == Qt::Key_Right)
-            {
-                transform.scale(scale, 1.0);
-            }
-            else
-            {
-                transform.scale(1.0, scale);
-            }
+            transform.scale(scaleX, scaleY);
             transform.translation(center);
         }
         else
@@ -260,10 +270,12 @@ void OptSelect::keyPressEvent(QKeyEvent* event)
         m_scene->execute(std::move(cmd));
         m_viewWrap->updateRender();
     }
+    Super::keyPressEvent(event);
 }
 
 void OptSelect::keyReleaseEvent(QKeyEvent* event)
 {
+    Super::keyReleaseEvent(event);
 }
 
 void OptSelect::resizeEvent(QResizeEvent* event)

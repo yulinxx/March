@@ -54,6 +54,8 @@ namespace MEngine
         for (auto& ent : m_sceneData->m_setSels)
             ent->setFlag(EntFlag::Select, false);
 
+        m_sceneData->m_setSels.clear();
+
         std::vector<std::shared_ptr<Entity>> ents;
         if (ptA.x() < ptB.x())
             ents = m_sceneData->m_entTree->getCrossEntities(Ut::Rect2d(ptA, ptB));
@@ -65,6 +67,11 @@ namespace MEngine
             ent->setFlag(EntFlag::Select, true);
             m_sceneData->m_setSels.insert(ent);
         }
+    }
+
+    size_t Scene::getSelectSz() const
+    {
+        return m_sceneData->m_setSels.size();
     }
 
     void Scene::getSelectedEntities(std::vector<std::shared_ptr<Entity>>& entities)

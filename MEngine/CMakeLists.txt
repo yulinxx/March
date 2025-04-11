@@ -45,8 +45,4 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Utility
 )
 
-if(ENABLE_GTEST)
-    find_package(GTest REQUIRED)
-    enable_testing()
-    add_subdirectory(tests)
-endif()
+

@@ -19,5 +19,11 @@ void MsgAdapter::reInit()
     {
         connect(view, &ViewWrapper::sigCoordChanged, statusBar,
             &StatusInfoBar::slotSetCoordInfo, Qt::UniqueConnection);
+
+        connect(view, &ViewWrapper::sigSelChanged, statusBar,
+            &StatusInfoBar::slotSetItemsInfo, Qt::UniqueConnection);
+
+        connect(view, &ViewWrapper::sigHardinfo, statusBar,
+            &StatusInfoBar::slotSetHardwareInfo, Qt::UniqueConnection);
     }
 }

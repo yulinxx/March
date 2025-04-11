@@ -154,7 +154,8 @@ ViewWrapper* MainWindow::getView() const
 QList<ViewWrapper*> MainWindow::getAllViews() const
 {
     QList<ViewWrapper*> views;
-    if (!m_tabView) return views;
+    if (!m_tabView) 
+        return views;
 
     for (int i = 0; i < m_tabView->count(); ++i)
     {

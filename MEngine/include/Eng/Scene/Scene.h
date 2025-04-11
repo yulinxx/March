@@ -24,6 +24,7 @@ namespace MEngine
         void removeEntity(Entity* entity);
 
         void selectByRect(Ut::Vec2d& ptA, Ut::Vec2d& ptB);
+        size_t getSelectSz() const;
         void getSelectedEntities(std::vector<std::shared_ptr<Entity>>& entities);
         void clearSelection();
 

@@ -17,6 +17,7 @@ ViewWrapper::ViewWrapper(QWidget* parent) : QWidget(parent)
 {
     m_scene = new MEngine::Scene();
 
+    m_scene->setRefreshCallback([this]() { updateRender(); });
     //m_scene->setRenderVidget(m_glView);
 
     QVBoxLayout* layout = new QVBoxLayout(this);
@@ -50,10 +51,10 @@ void ViewWrapper::resetView()
     m_glView->update();
 }
 
-const std::vector<MRender::ColorPoint>& ViewWrapper::getLinePoints() const
-{
-    return m_glView->getLinePoints();
-}
+//const std::vector<MRender::ColorPoint>& ViewWrapper::getLinePoints() const
+//{
+//    return m_glView->getLinePoints();
+//}
 
 MRender::MarchView* ViewWrapper::getGlView() const
 {
@@ -274,7 +275,7 @@ void ViewWrapper::resizeEvent(QResizeEvent* event)
     auto sz = m_glView->size();
     m_scene->setView(sz.width(), sz.height());
 
-    auto mat = m_scene->getViewMatrix();
+    auto& mat = m_scene->getViewMatrix();
     m_glView->setViewMatrix(mat);
 }
 

@@ -4,7 +4,6 @@ include(config.cmake)
 include(tools.cmake)
 
 # 设置VCPKG路径
-# set(CMAKE_TOOLCHAIN_FILE C:/vcpkg/scripts/buildsystems/vcpkg.cmake)
 set(CMAKE_TOOLCHAIN_FILE ${VCPKG_DIR}/scripts/buildsystems/vcpkg.cmake)
 
 # 设置项目名称
