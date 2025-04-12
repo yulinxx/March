@@ -56,7 +56,6 @@ namespace MRender
 
     void MarchView::initializeGL()
     {
-        //clearLinePoints();
 
         if (!initializeOpenGLFunctions())
         {
@@ -230,6 +229,7 @@ namespace MRender
             glBindVertexArray(0);
         }
 
+        updateLineDataBuffer();
         updateRuler();
     }
 
@@ -426,6 +426,8 @@ namespace MRender
 
     void MarchView::updateLineDataBuffer()
     {
+        addRectData();
+
         glBindVertexArray(m_lineVao);
         glBindBuffer(GL_ARRAY_BUFFER, m_lineVbo);
         if (m_vLinePoints.empty())
@@ -704,7 +706,11 @@ namespace MRender
     void MarchView::addLineData(const float* points, size_t sz)
     {
         if (sz < 2)
+        {
+            addRectData();
+            updateLineDataBuffer();
             return;
+        }
 
         if (sz % 2 != 0)
         {
@@ -715,7 +721,6 @@ namespace MRender
         m_vLinePoints.clear();
         m_vLinePoints.resize(sz);
         memcpy(m_vLinePoints.data(), points, sz * sizeof(float));
-        addRectData();
         updateLineDataBuffer();
 
 #if _DEBUG_
@@ -758,7 +763,7 @@ namespace MRender
 
 #if _DEBUG_
         // 调试：打印数据
-        qDebug() << "\n"<<m_nIndex<<"  ---- - addLinePreview\n" << "m_vLinePreview size : " << m_vLinePreview.size();
+        qDebug() << "\n" << m_nIndex << "  ---- - addLinePreview\n" << "m_vLinePreview size : " << m_vLinePreview.size();
         for (size_t i = 0; i < m_vLinePreview.size(); i += 6)
         {
             qDebug() << "Vertex" << i / 6 << ": (" << m_vLinePreview[i] << ","
@@ -882,7 +887,6 @@ namespace MRender
         updatePreviewIndexBuffer();
 
 #if _DEBUG_
-        // 调试：打印索引
         qDebug() << m_nIndex++ << "  m_vPreviewIndex size:" << m_vPreviewIndex.size();
         for (size_t i = 0; i < m_vPreviewIndex.size(); i++)
         {
@@ -896,8 +900,12 @@ namespace MRender
         m_linePoints.clear();
         // m_linePoints.shrink_to_fit();
         m_vLinePoints.clear();
-        //m_vLinePreview.clear();
+        m_vLinePreview.clear();
+
+#if _DEBUG_
         qWarning() << "\n" << m_nIndex++ << "   m_vLinePreview.clear()";
+#endif
+
         //return;
 
         // 添加矩形的四个顶点

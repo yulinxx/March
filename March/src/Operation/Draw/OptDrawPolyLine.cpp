@@ -27,9 +27,9 @@ void OptDrawPolyLine::enter()
 void OptDrawPolyLine::exit()
 {
     m_scene->removePreview(m_polyLinePreview.get());
+    m_polyLinePreview->clear();
     m_bDrawing = false;
     m_points.clear();
-    m_polyLinePreview->clear();
 }
 
 void OptDrawPolyLine::mousePressEvent(QMouseEvent* event)
@@ -41,8 +41,9 @@ void OptDrawPolyLine::mousePressEvent(QMouseEvent* event)
         m_points.push_back(posW);
 
         // 更新预览
-        m_polyLinePreview->setPoints(m_points, m_bClosed);
-        m_viewWrap->updateRender();
+        const std::vector<Ut::Vec2> vPts = { posW, posW };
+        m_polyLinePreview->setPoints(vPts, m_bClosed);
+        //m_viewWrap->updateRender();
     }
     else if (event->button() == Qt::RightButton && m_bDrawing)
     {
@@ -50,6 +51,7 @@ void OptDrawPolyLine::mousePressEvent(QMouseEvent* event)
         {
             drawPolyLine();
         }
+
         m_bDrawing = false;
         m_points.clear();
         m_polyLinePreview->clear();

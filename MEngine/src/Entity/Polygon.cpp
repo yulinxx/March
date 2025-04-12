@@ -115,9 +115,13 @@ namespace MEngine
         setRect(rect);
         return Entity::getRect();
     }
+
     void Polygon::transform(const Ut::Mat3& matrix)
     {
-        
+        for (auto& pt : m_impl->vertices)
+        {
+            pt = matrix.transformPoint(pt);
+        }
     }
     Ut::Vec2d Polygon::getValue(double t)
     {

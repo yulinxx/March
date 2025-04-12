@@ -108,6 +108,7 @@ namespace MEngine
 
         setBasePoint(ptS);
         m_impl->end = ptE;
+        updateVertices();
     }
 
     Ut::Vec2d Line::getValue(double t)

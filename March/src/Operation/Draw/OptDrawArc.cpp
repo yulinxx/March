@@ -60,15 +60,18 @@ void OptDrawArc::mousePressEvent(QMouseEvent* event)
         else if (m_nPts == 2)  // 第三个点：终点
         {
             m_linePreview->clear();
+            m_arcPreview->clear();
+
             m_endPoint = posW;
+
             if ((m_startPoint - m_midPoint).length() > 1e-3 &&
                 (m_midPoint - m_endPoint).length() > 1e-3 &&
                 (m_startPoint - m_endPoint).length() > 1e-3)
             {
                 drawArc();
             }
+
             m_nPts = 0;
-            m_arcPreview->clear();
             m_viewWrap->updateRender();
         }
     }

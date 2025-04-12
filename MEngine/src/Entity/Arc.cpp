@@ -180,7 +180,8 @@ namespace MEngine
 
     void Arc::transform(const Ut::Mat3& matrix)
     {
-        
+        m_impl->center = matrix.transformPoint(m_impl->center);
+        updateVertices();
     }
     
     std::pair<Ut::Vec2*, size_t> Arc::getData() const

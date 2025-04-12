@@ -139,10 +139,16 @@ namespace MEngine
         double dLen = bezier.length();
         return dLen;
     }
+
     void CubicBezier::transform(const Ut::Mat3& matrix)
     {
-        
+        m_impl->p0 = matrix.transformPoint(m_impl->p0);
+        m_impl->p1 = matrix.transformPoint(m_impl->p1);
+        m_impl->p2 = matrix.transformPoint(m_impl->p2);
+        m_impl->p3 = matrix.transformPoint(m_impl->p3);
+        updateVertices();
     }
+
     Ut::Vec2d CubicBezier::getValue(double t)
     {
         return getBasePoint();

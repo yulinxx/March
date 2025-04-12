@@ -103,8 +103,6 @@ void ViewWrapper::updateRender()
         m_glView->addLinePreview(ptLines, szLines);
     }
 
-    m_glView->update();
-    return;
 
     if (1)
     {

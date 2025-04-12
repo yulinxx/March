@@ -83,13 +83,7 @@ namespace MEngine
     {
         for(auto& pt : m_impl->vertices)
         {
-
             pt = matrix.transformPoint(pt);
-            // pt = matrix * pt;
-
-            // Ut::Vec3 pt3d(pt.x(), pt.y(), 1.0);
-            // auto ptx = matrix * pt3d;
-            // pt = { ptx.x()/ptx.z(), ptx.y()/ptx.z() };
         }
         
         // 更新起点和终点

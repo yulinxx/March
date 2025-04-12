@@ -131,7 +131,14 @@ namespace MEngine
 
     void Circle::transform(const Ut::Mat3& matrix)
     {
+        // 变换圆心坐标
+        m_impl->center = matrix.transformPoint(m_impl->center);
         
+        //double scale = sqrt(matrix[0][0]*matrix[0][0] + matrix[0][1]*matrix[0][1]);
+        //m_impl->radius *= scale;
+
+        // 更新顶点数据
+        updateVertices();
     }
 
     std::pair<Ut::Vec2*, size_t> Circle::getData() const

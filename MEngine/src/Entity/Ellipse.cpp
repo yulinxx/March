@@ -175,8 +175,10 @@ namespace MEngine
     
     void Ellipse::transform(const Ut::Mat3& matrix)
     {
-        
+        m_impl->center = matrix.transformPoint(m_impl->center);
+        updateVertices();
     }
+
     Ut::Vec2d Ellipse::getValue(double t)
     {
         return getBasePoint();
