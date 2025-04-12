@@ -1,5 +1,5 @@
-#ifndef LINE_H
-#define LINE_H
+#ifndef SHADERDEF_H
+#define SHADERDEF_H
 
 extern const char* lineVS;
 extern const char* lineFS;
@@ -13,4 +13,4 @@ extern const char* crossFS;
 extern const char* rulerVS;
 extern const char* rulerFS;
 
-#endif // LINE_H
+#endif // SHADERDEF_H

@@ -45,7 +45,7 @@ void ViewWrapper::resetView()
     //auto sz = m_glView->size();
     //m_scene->setView(sz.width(), sz.height());
 
-    auto mat = m_scene->getViewMatrix();
+    auto& mat = m_scene->getViewMatrix();
     m_glView->clearLinePoints();
     m_glView->setViewMatrix(mat);
     m_glView->update();
@@ -75,18 +75,36 @@ void ViewWrapper::updateRender()
 
     //m_scene->getDrawData()->clear();
 
-    if (0)
+    if (1)
     {
         auto pairLinesData = m_scene->getDrawData()->getLineData();
         float* ptLines = pairLinesData.first;
         size_t szLines = pairLinesData.second;
 
-        for (size_t i = 0; i < szLines; i += 2)
-        {
-            MRender::ColorPoint pt{ *(ptLines + i), *(ptLines + i + 1), 0.0f, 1.0f, 0.0f, 0.0f };
-            m_glView->addLinePoint(pt);
-        }
+        //for (size_t i = 0; i < szLines; i += 2)
+        //{
+        //    MRender::ColorPoint pt{ *(ptLines + i), *(ptLines + i + 1), 0.0f, 1.0f, 0.0f, 0.0f };
+        //}
+
+        m_glView->addLineData(ptLines, szLines);
     }
+
+    if (1)
+    {
+        auto pairLinesData = m_scene->getDrawData()->getPreviewData();
+        float* ptLines = pairLinesData.first;
+        size_t szLines = pairLinesData.second;
+
+        //for (size_t i = 0; i < szLines; i += 2)
+        //{
+        //    MRender::ColorPoint pt{ *(ptLines + i), *(ptLines + i + 1), 0.0f, 1.0f, 0.0f, 0.0f };
+        //}
+
+        m_glView->addLinePreview(ptLines, szLines);
+    }
+
+    m_glView->update();
+    return;
 
     if (1)
     {
@@ -116,11 +134,13 @@ void ViewWrapper::updateRender()
         float* ptPreview = pairPreviewData.first;
         size_t szPreview = pairPreviewData.second;
 
-        for (size_t i = 0; i < szPreview; i += 2)
-        {
-            MRender::ColorPoint pt{ *(ptPreview + i), *(ptPreview + i + 1), 0.0f, 1.0f, 0.0f, 0.0f };
-            m_glView->addLinePoint(pt);
-        }
+        //for (size_t i = 0; i < szPreview; i += 2)
+        //{
+        //    MRender::ColorPoint pt{ *(ptPreview + i), *(ptPreview + i + 1), 0.0f, 1.0f, 0.0f, 0.0f };
+        //    m_glView->addLinePoint(pt);
+        //}
+
+        m_glView->addLinePreview(ptPreview, szPreview);
     }
 
     if (0)

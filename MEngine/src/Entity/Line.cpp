@@ -7,8 +7,8 @@ namespace MEngine
     struct Line::Impl
     {
         //Ut::Vec2 start;           // 起点
-        Ut::Vec2 end;             // 终点
-        std::vector<Ut::Vec2> vertices; // 顶点数据（两个点）
+        Ut::Vec2 end;               // 终点
+        std::vector<Ut::Vec2> vertices; // 顶点数据（两个点构成一条线段）
     };
 
     Line::Line()
@@ -39,7 +39,7 @@ namespace MEngine
     void Line::clear()
     {
         m_impl->vertices.clear();
-        m_impl->vertices.shrink_to_fit();
+        //m_impl->vertices.shrink_to_fit();
     }
 
     void Line::setPoints(const Ut::Vec2& start, const Ut::Vec2& end)
@@ -53,13 +53,13 @@ namespace MEngine
     void Line::setEndPoint(const Ut::Vec2& end)
     {
         m_impl->end = end;
+        updateVertices();
     }
 
     void Line::updateVertices()
     {
         clear();
-        auto& start = getBasePoint();
-        m_impl->vertices.push_back(start);
+        m_impl->vertices.push_back(getBasePoint());
         m_impl->vertices.push_back(m_impl->end);
     }
 
@@ -70,8 +70,8 @@ namespace MEngine
 
     Ut::Rect2d& Line::getRect()
     {
-        auto ptMin = m_impl->end;
-        auto& ptMax = getBasePoint();
+        auto& ptMin = getBasePoint();
+        auto ptMax = m_impl->end;
 
         Ut::Rect2d rect{ ptMin, ptMax };
         setRect(rect);
@@ -85,6 +85,11 @@ namespace MEngine
         end = m_impl->end;
     }
 
+    void Line::getStartPoint(Ut::Vec2& start) const
+    {
+        start = getBasePoint();
+    }
+
     void Line::getEndPoint(Ut::Vec2& end) const
     {
         end = m_impl->end;
@@ -94,17 +99,22 @@ namespace MEngine
     {
         auto& start = getBasePoint();
         return (m_impl->end - start).length();
-        //double dx = m_impl->end.x() - start.x();
-        //double dy = m_impl->end.y() - start.y();
-        //return sqrt(dx * dx + dy * dy);
     }
+
     void Line::transform(const Ut::Mat3& matrix)
     {
-        
+        auto ptS = matrix.transformPoint(getBasePoint());
+        auto ptE = matrix.transformPoint(m_impl->end);
+
+        setBasePoint(ptS);
+        m_impl->end = ptE;
     }
+
     Ut::Vec2d Line::getValue(double t)
     {
-        return getBasePoint();
+        auto dLen = getLength();
+        double d = t / dLen;
+        return getBasePoint() + (m_impl->end - getBasePoint()).normalize() * d;
     }
 
     double Line::EvalParam(const Ut::Vec2& p)

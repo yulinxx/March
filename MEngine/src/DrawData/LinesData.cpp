@@ -219,7 +219,7 @@ namespace MEngine
             // 添加位置 (xyz)
             m_vLinesPts.push_back(static_cast<float>(pts[i].x()));
             m_vLinesPts.push_back(static_cast<float>(pts[i].y()));
-            m_vLinesPts.push_back(0.0f); // z 固定为 0
+            m_vLinesPts.push_back(0.0f);
 
             // 根据选择状态添加颜色 (rgb)
             if (ent->getFlag(EntFlag::Select))

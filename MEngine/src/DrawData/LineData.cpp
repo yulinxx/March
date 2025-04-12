@@ -28,6 +28,22 @@ namespace MEngine
         {
             m_vLinePts.push_back(static_cast<float>(pts[i].x()));
             m_vLinePts.push_back(static_cast<float>(pts[i].y()));
+            m_vLinePts.push_back(0.0f);
+
+            if (line->getFlag(EntFlag::Select))
+            {
+                m_vLinePts.push_back(1.0f); // r
+                m_vLinePts.push_back(0.0f); // g
+                m_vLinePts.push_back(0.0f); // b
+            }
+            else
+            {
+                unsigned char r, g, b, a;
+                line->getLayerColor(&r, &g, &b, &a);
+                m_vLinePts.push_back(static_cast<float>(r) / 255.0f);
+                m_vLinePts.push_back(static_cast<float>(g) / 255.0f);
+                m_vLinePts.push_back(static_cast<float>(b) / 255.0f);
+            }
         }
     }
 

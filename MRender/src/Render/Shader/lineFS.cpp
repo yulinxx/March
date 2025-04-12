@@ -1,12 +1,12 @@
 #include "Shader/ShaderDef.h"
 
 const char* lineFS = R"(
-#version 330 core
-out vec4 FragColor;
-uniform vec3 lineColor;
+#version 460
+in vec3 fragColor;
+out vec4 outColor;
 
 void main()
 {
-    FragColor = vec4(lineColor, 1.0);
+    outColor = vec4(fragColor, 1.0);
 }
 )";

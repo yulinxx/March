@@ -39,6 +39,9 @@ namespace MRender
         void addLinePoint(const ColorPoint& point);
         void addLinesPoint(const ColorPoint& point);
 
+        void addLineData(const float* points, size_t sz);
+        void addLinePreview(const float* points, size_t sz);
+
         void addLinesData(const float* points, size_t sz);
         void addLinesIndex(const unsigned int* index, size_t sz);
 
@@ -61,16 +64,20 @@ namespace MRender
         //     void keyPressEvent(QKeyEvent* event) override;
 
     private:
-        void updateLineBuffer();
+        void addRectData();
 
-        void updateLinesDataBuffer();
+        void updateLineBuffer(); // 更新线段数据
+        void updateLineDataBuffer(); // 线段
+        void updateLinePreviewBuffer(); // 线段预览
+
+        void updateLinesDataBuffer(); // 多线段
         void updateLinesIndexBuffer();
 
         void updatePreviewDataBuffer();
         void updatePreviewIndexBuffer();
 
-        void updateCrossBuffer();
-        void updateRuler();
+        void updateCrossBuffer(); // 十字标
+        void updateRuler(); // 标尺
 
     private:
         // 单线段资源
@@ -78,7 +85,15 @@ namespace MRender
         GLuint m_lineVbo;
         QOpenGLShaderProgram* m_lineProgram{ nullptr };
 
+        std::vector<float> m_vLinePoints;
         std::vector<ColorPoint> m_linePoints;
+
+        std::vector<float> vRectPoints;
+
+        GLuint m_linePreviewVao;
+        GLuint m_linePreviewVbo;
+        QOpenGLShaderProgram* m_linePreviewProgram{ nullptr };
+        std::vector<float> m_vLinePreview;
 
         // 多段线资源
         GLuint m_linesVao;
@@ -121,6 +136,7 @@ namespace MRender
 
         QVector2D m_translation;
         QPoint m_lastPos;
+        size_t m_nIndex = 0;
     };
 }
 

@@ -73,7 +73,8 @@ void OptDrawLine::mouseReleaseEvent(QMouseEvent* event)
 
         drawLine();
         m_bFirst = true;
-        m_linePreview->setPoints(m_startPoint, m_startPoint);  // 重置预览线
+        //m_linePreview->setPoints(m_startPoint, m_startPoint);  // 重置预览线
+        m_linePreview->clear();
         m_viewWrap->updateRender();
     }
     Super::mouseReleaseEvent(event);
@@ -95,9 +96,11 @@ void OptDrawLine::keyPressEvent(QKeyEvent* event)
         else
         {
             m_bFirst = true;
-            m_linePreview->setPoints(m_startPoint, m_startPoint);
-            m_viewWrap->updateRender();
         }
+
+        m_linePreview->clear();
+        m_viewWrap->updateRender();
+
     }
     Super::keyPressEvent(event);
 }

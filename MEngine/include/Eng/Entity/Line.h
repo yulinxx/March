@@ -33,6 +33,7 @@ namespace MEngine
 
         // 获取端点
         void getPoints(Ut::Vec2& start, Ut::Vec2& end) const;
+        void getStartPoint(Ut::Vec2& start) const;
         void getEndPoint(Ut::Vec2& end) const;
 
     private:

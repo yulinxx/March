@@ -12,7 +12,7 @@ FileAdapter::FileAdapter(MainWindow* parent) : QObject(parent)
     connect(m, &MenuBar::sigOpenFile, this, &FileAdapter::slotOpenFile, Qt::UniqueConnection);
     connect(m, &MenuBar::sigSaveFile, this, &FileAdapter::slotSaveFile, Qt::UniqueConnection);
 
-    // 修改撤销重做信号关联的槽函数
+    // 撤销重做信号关联槽函数
     connect(m, &MenuBar::sigUndo, this, &FileAdapter::slotUndo, Qt::UniqueConnection);
     connect(m, &MenuBar::sigRedo, this, &FileAdapter::slotRedo, Qt::UniqueConnection);
 
@@ -34,14 +34,12 @@ void FileAdapter::slotSaveFile(const QString& filePath)
 {
 }
 
-// 添加撤销槽函数实现
 void FileAdapter::slotUndo()
 {
     m_mainWnd->getView()->getScene()->undo();
     m_mainWnd->updateScene();
 }
 
-// 实现重做功能的逻辑
 void FileAdapter::slotRedo()
 {
     m_mainWnd->getView()->getScene()->redo();

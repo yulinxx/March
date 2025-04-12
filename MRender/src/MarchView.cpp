@@ -6,7 +6,6 @@
 #include <QDebug>
 #include <cmath>
 #include <random>
-
 #include "Logger.h"
 #include "Shader/ShaderDef.h"
 
@@ -46,6 +45,7 @@ namespace MRender
             };
 
         delFunc(m_lineProgram, m_lineVao, m_lineVbo);
+        delFunc(m_linePreviewProgram, m_linePreviewVao, m_linePreviewVbo);
         delFunc(m_linesProgram, m_linesVao, m_linesVbo, m_linesEbo);
         delFunc(m_previewProgram, m_previewVao, m_previewVbo, m_previewEbo);
         delFunc(m_crossProgram, m_crossVao, m_crossVbo);
@@ -56,6 +56,8 @@ namespace MRender
 
     void MarchView::initializeGL()
     {
+        //clearLinePoints();
+
         if (!initializeOpenGLFunctions())
         {
             qFatal("Could not initialize OpenGL 4.6 functions");
@@ -73,14 +75,37 @@ namespace MRender
             glBindVertexArray(m_lineVao);
             glBindBuffer(GL_ARRAY_BUFFER, m_lineVbo);
 
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ColorPoint), nullptr);
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr);
             glEnableVertexAttribArray(0);
-            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ColorPoint), (void*)(3 * sizeof(float)));
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
             glEnableVertexAttribArray(1);
 
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindVertexArray(0);
         }
+
+        // Line preview
+        {
+            m_linePreviewProgram = new QOpenGLShaderProgram(this);
+            m_linePreviewProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, lineVS);
+            m_linePreviewProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, lineFS);
+            m_linePreviewProgram->link();
+
+            glGenVertexArrays(1, &m_linePreviewVao);
+            glGenBuffers(1, &m_linePreviewVbo);
+            glBindVertexArray(m_linePreviewVao);
+            glBindBuffer(GL_ARRAY_BUFFER, m_linePreviewVbo);
+
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr);
+            glEnableVertexAttribArray(0);
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+            glEnableVertexAttribArray(1);
+
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glBindVertexArray(0);
+        }
+
+        // addLinePreview(nullptr, 0);
 
         // 初始化 Lines 和 Preview
         //{
@@ -205,7 +230,6 @@ namespace MRender
             glBindVertexArray(0);
         }
 
-        clearLinePoints();
         updateRuler();
     }
 
@@ -231,6 +255,41 @@ namespace MRender
             glDrawArrays(GL_LINES, 0, GLsizei(m_linePoints.size()));
             glBindVertexArray(0);
             m_lineProgram->release();
+        }
+
+        if (m_vLinePoints.size() >= 2 && m_lineProgram->bind())
+        {
+            m_lineProgram->setUniformValue("projection", m_viewMatrix);
+            m_lineProgram->setUniformValue("translation", m_translation);
+            glBindVertexArray(m_lineVao);
+            glDrawArrays(GL_LINES, 0, GLsizei(m_vLinePoints.size()) / 6);
+            glBindVertexArray(0);
+            m_lineProgram->release();
+        }
+
+        if (m_vLinePreview.size() >= 2 && m_linePreviewProgram->bind())
+        {
+#if _DEBUG_
+            qDebug() << "Drawing line preview with" << m_vLinePreview.size() / 6 << "vertices";
+            for (size_t i = 0; i < m_vLinePreview.size(); i += 6)
+            {
+                qDebug() << "Vertex" << i / 6 << ": (" << m_vLinePreview[i] << ","
+                    << m_vLinePreview[i + 1] << "), Color: (" << m_vLinePreview[i + 3] << ","
+                    << m_vLinePreview[i + 4] << "," << m_vLinePreview[i + 5] << ")";
+            }
+#endif 
+
+            m_linePreviewProgram->setUniformValue("projection", m_viewMatrix);
+            m_linePreviewProgram->setUniformValue("translation", m_translation);
+            glBindVertexArray(m_linePreviewVao);
+            glDrawArrays(GL_LINES, 0, GLsizei(m_vLinePreview.size() / 6));
+
+            GLenum err = glGetError();
+            if (err != GL_NO_ERROR)
+                qWarning() << "OpenGL error after drawing line preview:" << err;
+
+            glBindVertexArray(0);
+            m_linePreviewProgram->release();
         }
 
         if (m_vLinesPoints.size() >= 6 && m_linesProgram->bind())
@@ -365,6 +424,65 @@ namespace MRender
         glBindVertexArray(0);
     }
 
+    void MarchView::updateLineDataBuffer()
+    {
+        glBindVertexArray(m_lineVao);
+        glBindBuffer(GL_ARRAY_BUFFER, m_lineVbo);
+        if (m_vLinePoints.empty())
+        {
+            glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_STATIC_DRAW);
+        }
+        else
+        {
+            size_t bufferSize = m_vLinePoints.size() * sizeof(float);
+            if (bufferSize > static_cast<size_t>(std::numeric_limits<GLsizei>::max()))
+            {
+                qWarning() << "Buffer size exceeds GLsizei limit";
+                return;
+            }
+            GLsizei nBufferSz = static_cast<GLsizei>(bufferSize);
+            glBufferData(GL_ARRAY_BUFFER, nBufferSz, m_vLinePoints.data(), GL_STATIC_DRAW);
+        }
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+    }
+
+
+    void MarchView::updateLinePreviewBuffer()
+    {
+        glBindVertexArray(m_linePreviewVao);
+        glBindBuffer(GL_ARRAY_BUFFER, m_linePreviewVbo);
+        if (m_vLinePreview.empty())
+        {
+            glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_STATIC_DRAW);
+        }
+        else
+        {
+            size_t bufferSize = m_vLinePreview.size() * sizeof(float);
+            if (bufferSize > static_cast<size_t>(std::numeric_limits<GLsizei>::max()))
+            {
+                qWarning() << "Buffer size exceeds GLsizei limit";
+                return;
+            }
+            GLsizei nBufferSz = static_cast<GLsizei>(bufferSize);
+            glBufferData(GL_ARRAY_BUFFER, nBufferSz, m_vLinePreview.data(), GL_STATIC_DRAW);
+        }
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+        glEnableVertexAttribArray(1);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+    }
+
+
     void MarchView::updateLinesDataBuffer()
     {
         glBindBuffer(GL_ARRAY_BUFFER, m_linesVbo);
@@ -465,6 +583,7 @@ namespace MRender
             qWarning() << "Buffer size exceeds GLsizei limit";
             return;
         }
+
         GLsizei nBufferSz = static_cast<GLsizei>(bufferSize);
         glBufferData(GL_ARRAY_BUFFER, nBufferSz, m_crossPoints.data(), GL_STATIC_DRAW);
 
@@ -582,12 +701,83 @@ namespace MRender
         // updateLinesDataBuffer();
     }
 
+    void MarchView::addLineData(const float* points, size_t sz)
+    {
+        if (sz < 2)
+            return;
+
+        if (sz % 2 != 0)
+        {
+            qWarning() << "addLineData: sz must be a multiple of 2, got" << sz;
+            return;
+        }
+
+        m_vLinePoints.clear();
+        m_vLinePoints.resize(sz);
+        memcpy(m_vLinePoints.data(), points, sz * sizeof(float));
+        addRectData();
+        updateLineDataBuffer();
+
+#if _DEBUG_
+        // 调试：打印数据
+        qDebug() << "m_vLinesPoints size:" << m_vLinesPoints.size();
+        for (size_t i = 0; i < m_vLinesPoints.size(); i += 6)
+        {
+            qDebug() << "Vertex" << i / 6 << ": (" << m_vLinesPoints[i] << ","
+                << m_vLinesPoints[i + 1] << "," << m_vLinesPoints[i + 2]
+                << "), Color: (" << m_vLinesPoints[i + 3] << "," << m_vLinesPoints[i + 4]
+                << "," << m_vLinesPoints[i + 5] << ")";
+        }
+#endif
+    }
+
+    void MarchView::addLinePreview(const float* points, size_t sz)
+    {
+        if (sz < 6 || sz % 6 != 0)
+        {
+            if (sz > 0)
+                qWarning() << "addLinePreview: sz must be a multiple of 6, got" << sz;
+            return;
+        }
+
+        m_vLinePreview.resize(sz);
+
+        //qWarning() << "m_vLinePreview.clear(): " << sz;
+
+        if (0)
+        {
+            m_vLinePreview = {
+                10.0f, 10.0f, 0.0f, 1.0f, 0.0f, 0.0f, // Vertex 1
+                800.5f, 800.5f, 0.0f, 1.0f, 0.0f, 0.0f  // Vertex 2
+            };
+        }
+        else
+        {
+            memcpy(m_vLinePreview.data(), points, sz * sizeof(float));
+        }
+
+#if _DEBUG_
+        // 调试：打印数据
+        qDebug() << "\n"<<m_nIndex<<"  ---- - addLinePreview\n" << "m_vLinePreview size : " << m_vLinePreview.size();
+        for (size_t i = 0; i < m_vLinePreview.size(); i += 6)
+        {
+            qDebug() << "Vertex" << i / 6 << ": (" << m_vLinePreview[i] << ","
+                << m_vLinePreview[i + 1] << "," << m_vLinePreview[i + 2]
+                << "), Color: (" << m_vLinePreview[i + 3] << "," << m_vLinePreview[i + 4]
+                << "," << m_vLinePreview[i + 5] << ")";
+        }
+#endif
+
+        updateLinePreviewBuffer();
+    }
+
     void MarchView::addLinesData(const float* points, size_t sz)
     {
-        if (sz < 2) return;
-        if (sz % 6 != 0)
+        if (sz < 2 || sz % 6 != 0)
         {
-            qWarning() << "addLinesData: sz must be a multiple of 6, got" << sz;
+            if (sz > 0)
+                qWarning() << "addLinesData: sz must be a multiple of 6, got" << sz;
+
             return;
         }
 
@@ -671,7 +861,8 @@ namespace MRender
 
     void MarchView::addPreviewIndex(const unsigned int* index, size_t sz)
     {
-        if (sz < 2) return;
+        if (sz < 2)
+            return;
 
         m_vPreviewIndex.clear();
         m_vPreviewIndex.resize(sz);
@@ -692,7 +883,7 @@ namespace MRender
 
 #if _DEBUG_
         // 调试：打印索引
-        qDebug() << "m_vPreviewIndex size:" << m_vPreviewIndex.size();
+        qDebug() << m_nIndex++ << "  m_vPreviewIndex size:" << m_vPreviewIndex.size();
         for (size_t i = 0; i < m_vPreviewIndex.size(); i++)
         {
             qDebug() << "Index" << i << ":" << m_vPreviewIndex[i];
@@ -704,8 +895,10 @@ namespace MRender
     {
         m_linePoints.clear();
         // m_linePoints.shrink_to_fit();
-
-        return;
+        m_vLinePoints.clear();
+        //m_vLinePreview.clear();
+        qWarning() << "\n" << m_nIndex++ << "   m_vLinePreview.clear()";
+        //return;
 
         // 添加矩形的四个顶点
         ColorPoint redColor = { 1.0f, 0.0f, 0.0f };
@@ -721,23 +914,108 @@ namespace MRender
 
         const RectangleCoords rect = { 10.0f, 10.0f, 800.0f, 800.0f };
 
-        // 第一条边: (x1, y1) 到 (x2, y1)
-        m_linePoints.push_back({ rect.x1, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b });
-        m_linePoints.push_back({ rect.x2, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b });
+        //// 第一条边: (x1, y1) 到 (x2, y1)
+        //ColorPoint({ rect.x1, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b });
+        //m_vLinePoints.push_back({ rect.x2, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b });
 
-        // 第二条边: (x2, y1) 到 (x2, y2)
-        m_linePoints.push_back({ rect.x2, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b });
-        m_linePoints.push_back({ rect.x2, rect.y2, 0.0f, redColor.r, redColor.g, redColor.b });
+        //// 第二条边: (x2, y1) 到 (x2, y2)
+        //m_vLinePoints.push_back({ rect.x2, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b });
+        //m_vLinePoints.push_back({ rect.x2, rect.y2, 0.0f, redColor.r, redColor.g, redColor.b });
 
-        // 第三条边: (x2, y2) 到 (x1, y2)
-        m_linePoints.push_back({ rect.x2, rect.y2, 0.0f, redColor.r, redColor.g, redColor.b });
-        m_linePoints.push_back({ rect.x1, rect.y2, 0.0f, redColor.r, redColor.g, redColor.b });
+        //// 第三条边: (x2, y2) 到 (x1, y2)
+        //m_vLinePoints.push_back({ rect.x2, rect.y2, 0.0f, redColor.r, redColor.g, redColor.b });
+        //m_vLinePoints.push_back({ rect.x1, rect.y2, 0.0f, redColor.r, redColor.g, redColor.b });
 
-        // 第四条边: (x1, y2) 到 (x1, y1)
-        m_linePoints.push_back({ rect.x1, rect.y2, 0.0f, redColor.r, redColor.g, redColor.b });
-        m_linePoints.push_back({ rect.x1, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b });
+        //// 第四条边: (x1, y2) 到 (x1, y1)
+        //m_vLinePoints.push_back({ rect.x1, rect.y2, 0.0f, redColor.r, redColor.g, redColor.b });
+        //m_vLinePoints.push_back({ rect.x1, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b });
 
-        updateLineBuffer();
+        addRectData();
+
+
+        updateLineDataBuffer();
+    }
+
+    void MarchView::addRectData()
+    {
+        if (vRectPoints.empty())
+        {
+            // 添加矩形的四个顶点
+            ColorPoint redColor = { 1.0f, 0.0f, 0.0f };
+
+            // 定义一个结构体来存储矩形的坐标
+            struct RectangleCoords
+            {
+                float x1 = 10.0f;
+                float y1 = 10.0f;
+                float x2 = 800.0f;
+                float y2 = 800.0f;
+            };
+
+            const RectangleCoords rect = { 10.0f, 10.0f, 800.0f, 800.0f };
+
+            // 第一条边: (x1, y1) 到 (x2, y1)
+            vRectPoints.push_back(rect.x1);
+            vRectPoints.push_back(rect.y1);
+            vRectPoints.push_back(0.0f);
+            vRectPoints.push_back(redColor.r);
+            vRectPoints.push_back(redColor.g);
+            vRectPoints.push_back(redColor.b);
+
+            vRectPoints.push_back(rect.x2);
+            vRectPoints.push_back(rect.y1);
+            vRectPoints.push_back(0.0f);
+            vRectPoints.push_back(redColor.r);
+            vRectPoints.push_back(redColor.g);
+            vRectPoints.push_back(redColor.b);
+
+            // 第二条边: (x2, y1) 到 (x2, y2)
+            vRectPoints.push_back(rect.x2);
+            vRectPoints.push_back(rect.y1);
+            vRectPoints.push_back(0.0f);
+            vRectPoints.push_back(redColor.r);
+            vRectPoints.push_back(redColor.g);
+            vRectPoints.push_back(redColor.b);
+
+            vRectPoints.push_back(rect.x2);
+            vRectPoints.push_back(rect.y2);
+            vRectPoints.push_back(0.0f);
+            vRectPoints.push_back(redColor.r);
+            vRectPoints.push_back(redColor.g);
+            vRectPoints.push_back(redColor.b);
+
+            // 第三条边: (x2, y2) 到 (x1, y2)
+            vRectPoints.push_back(rect.x2);
+            vRectPoints.push_back(rect.y2);
+            vRectPoints.push_back(0.0f);
+            vRectPoints.push_back(redColor.r);
+            vRectPoints.push_back(redColor.g);
+            vRectPoints.push_back(redColor.b);
+
+            vRectPoints.push_back(rect.x1);
+            vRectPoints.push_back(rect.y2);
+            vRectPoints.push_back(0.0f);
+            vRectPoints.push_back(redColor.r);
+            vRectPoints.push_back(redColor.g);
+            vRectPoints.push_back(redColor.b);
+
+            // 第四条边: (x1, y2) 到 (x1, y1)
+            vRectPoints.push_back(rect.x1);
+            vRectPoints.push_back(rect.y2);
+            vRectPoints.push_back(0.0f);
+            vRectPoints.push_back(redColor.r);
+            vRectPoints.push_back(redColor.g);
+            vRectPoints.push_back(redColor.b);
+
+            vRectPoints.push_back(rect.x1);
+            vRectPoints.push_back(rect.y1);
+            vRectPoints.push_back(0.0f);
+            vRectPoints.push_back(redColor.r);
+            vRectPoints.push_back(redColor.g);
+            vRectPoints.push_back(redColor.b);
+        }
+
+        m_vLinePoints.insert(m_vLinePoints.end(), vRectPoints.begin(), vRectPoints.end());
     }
 
     void MarchView::clearLinesPoints()
