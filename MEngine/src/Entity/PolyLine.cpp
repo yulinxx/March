@@ -39,12 +39,12 @@ namespace MEngine
     void PolyLine::setPoints(const std::vector<Ut::Vec2>& points, bool closed)
     {
         if (points.size() < 2)
-        {
             return;
-        }
+
         clear();
-        m_impl->vertices = points;
         setClosed(closed);
+
+        m_impl->vertices = points;
         updateVertices();
     }
 
@@ -57,21 +57,13 @@ namespace MEngine
     void PolyLine::setClosed(bool closed)
     {
         Entity::setClosed(closed);
-        updateVertices();
+        //updateVertices();
     }
 
     void PolyLine::updateVertices()
     {
-        m_impl->vertices.clear();
-        if (m_impl->vertices.size() < 2)
-        {
-            return;
-        }
-
         if (isClosed())
-        {
             m_impl->vertices.push_back(m_impl->vertices.front());
-        }
     }
 
     std::pair<Ut::Vec2*, size_t> PolyLine::getData() const
@@ -89,8 +81,8 @@ namespace MEngine
         double totalLength = 0.0;
         for (size_t i = 1; i < m_impl->vertices.size(); ++i)
         {
-            auto ptA = m_impl->vertices[i - 1];
-            auto ptB = m_impl->vertices[i];
+            auto& ptA = m_impl->vertices[i - 1];
+            auto& ptB = m_impl->vertices[i];
             totalLength += (ptB - ptA).length();
         }
 
@@ -100,7 +92,7 @@ namespace MEngine
     Ut::Rect2d& PolyLine::getRect()
     {
         Ut::Rect2d rect;
-        for (auto pt : m_impl->vertices)
+        for (auto& pt : m_impl->vertices)
         {
             rect.expand(pt);
         }
@@ -108,10 +100,15 @@ namespace MEngine
         setRect(rect);
         return Entity::getRect();
     }
+
     void PolyLine::transform(const Ut::Mat3& matrix)
     {
-        
+        for (auto& pt : m_impl->vertices)
+        {
+            pt = matrix.transformPoint(pt);
+        }
     }
+
     Ut::Vec2d PolyLine::getValue(double t)
     {
         return getBasePoint();
