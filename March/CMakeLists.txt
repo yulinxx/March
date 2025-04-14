@@ -57,14 +57,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE MRender MLog MEngine Utility)
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core Qt5::OpenGL)
 target_link_libraries(${PROJECT_NAME} PRIVATE Eigen3::Eigen)
 
-# find_package(unofficial-breakpad CONFIG REQUIRED)
-# if(unofficial-breakpad_FOUND)
-#     target_link_libraries(${PROJECT_NAME} PRIVATE 
-#     unofficial::breakpad::libbreakpad unofficial::breakpad::libbreakpad_client)
-# else()
-#     message(FATAL_ERROR "找不到 breakpad" )
-# endif()
-
 if(APPLE)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${Qt5_DIR}/../../../bin/macdeployqt $<TARGET_FILE:${PROJECT_NAME}>

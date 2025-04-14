@@ -2,11 +2,9 @@
 
 #include "MainWindow.h"
 #include "Logger.h"
-// #include "PreInit.h"
 
 int main(int argc, char* argv[])
 {
-    // PreInitialize();
     MLog::Logger::Init();
 
     QApplication a(argc, argv);

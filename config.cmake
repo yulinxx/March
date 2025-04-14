@@ -28,6 +28,3 @@ endif()
 
 #set(OUT_CMAKE_MSG  TRUE)
 set(OUT_CMAKE_MSG TRUE)
-
-option(ENABLE_GTEST "Enable Google Test" ON)
-#option(ENABLE_GTEST "Enable Google Test" ON)

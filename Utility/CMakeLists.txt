@@ -25,9 +25,3 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 #     Eigen3::Eigen
 # )
 
-if(ENABLE_GTEST)
-    find_package(GTest REQUIRED)
-    enable_testing()
-    
-    add_subdirectory(tests)
-endif()
