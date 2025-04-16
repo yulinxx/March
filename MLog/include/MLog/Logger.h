@@ -4,11 +4,16 @@
 #include <memory>
 #include <string>
 
-#ifdef MLOG_EXPORTS
-#define MLOG_API __declspec(dllexport)
+#ifdef _WIN32
+    #ifdef MLOG_EXPORTS
+        #define MLOG_API __declspec(dllexport)
+    #else
+        #define MLOG_API __declspec(dllimport)
+    #endif
 #else
-#define MLOG_API __declspec(dllimport)
+    #define MLOG_API
 #endif
+
 
 namespace MLog
 {

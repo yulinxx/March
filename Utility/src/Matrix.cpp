@@ -103,17 +103,6 @@ namespace Ut
         return *this;
     }
 
-    // 初始化列表构造函数
-    // template <typename T, size_t Rows, size_t Cols>
-    // Matrix<T, Rows, Cols>::Matrix(std::initializer_list<T> init) {
-    //     if (init.size() == Rows * Cols) {
-    //         std::copy(init.begin(), init.end(), data.begin());
-    //     } else {
-    //         throw std::invalid_argument("Initializer list size must match matrix dimensions");
-    //     }
-    // }
-
-    // 初始化列表赋值运算符
     template <typename T, size_t Rows, size_t Cols>
     Matrix<T, Rows, Cols>& Matrix<T, Rows, Cols>::operator=(std::initializer_list<T> init)
     {
@@ -220,7 +209,7 @@ namespace Ut
         rotMat.at(1, 1) = c;
         *this *= rotMat;
     }
-   
+
     template <typename T, size_t Rows, size_t Cols>
     void Matrix<T, Rows, Cols>::rotation(T angle, T centerX, T centerY) requires (Rows == 4 && Cols == 4 || Rows == 3 && Cols == 3)
     {
@@ -237,7 +226,7 @@ namespace Ut
     }
 
     template <typename T, size_t Rows, size_t Cols>
-    void rotation(T angle, const Vec<T, 2>& pt) requires (Rows == 4 && Cols == 4 || Rows == 3 && Cols == 3)
+    void Matrix<T, Rows, Cols>::rotation(T angle, const Vec<T, 2>& pt) requires (Rows == 4 && Cols == 4 || Rows == 3 && Cols == 3)
     {
         Matrix<T, Rows, Cols> trans1, rotMat, trans2;
         trans1.identity();
@@ -358,7 +347,6 @@ namespace Ut
         orthoMat.at(1, 1) = T(2) / (top - bottom);
         orthoMat.at(0, 2) = -(right + left) / (right - left);
         orthoMat.at(1, 2) = -(top + bottom) / (top - bottom);
-        //*this *= orthoMat;
         *this = orthoMat;
     }
 
@@ -452,12 +440,6 @@ namespace Ut
         }
         else if constexpr (Rows == 4)
         {
-            // 这里可以使用更复杂的算法，例如高斯 - 约旦消元法
-            // 以下是一个简单的实现示例
-            T det = determinant();
-            if (det == T(0)) throw std::runtime_error("Matrix is not invertible");
-            Matrix result;
-            // 这里需要实现 4x4 矩阵的求逆算法
             throw std::runtime_error("4x4 inverse implementation is not fully completed");
         }
         else
@@ -497,17 +479,4 @@ namespace Ut
     template std::ostream& operator<<(std::ostream&, const Matrix<double, 2, 2>&);
     template std::ostream& operator<<(std::ostream&, const Matrix<double, 3, 3>&);
     template std::ostream& operator<<(std::ostream&, const Matrix<double, 4, 4>&);
-    template std::ostream& operator<<(std::ostream&, const Matrix<double, 3, 3>&);
-    template UTILITY_API Matrix<double, 2, 2> Matrix<double, 2, 2>::operator*<2>(const Matrix<double, 2, 2>&) const;
-
-    template UTILITY_API double& Matrix<double, 3, 3>::operator()(size_t, size_t);
-    template UTILITY_API const double& Matrix<double, 3, 3>::operator()(size_t, size_t) const;
-    template UTILITY_API Matrix<double, 3, 3> Matrix<double, 3, 3>::operator*<3>(const Matrix<double, 3, 3>&) const;
-
-    template UTILITY_API Matrix<float, 3, 3>& Matrix<float, 3, 3>::operator*=(const Matrix<float, 3, 3>&);
-    template UTILITY_API Matrix<float, 3, 3> Matrix<float, 3, 3>::operator*<3>(const Matrix<float, 3, 3>&) const;
-    template UTILITY_API Matrix<double, 3, 3>& Matrix<double, 3, 3>::operator*=(const Matrix<double, 3, 3>&);
-
-    template UTILITY_API Matrix<float, 4, 4>& Matrix<float, 4, 4>::operator*=(const Matrix<float, 4, 4>&);
-    template UTILITY_API Matrix<double, 4, 4>& Matrix<double, 4, 4>::operator*=(const Matrix<double, 4, 4>&);
 } // namespace Ut
