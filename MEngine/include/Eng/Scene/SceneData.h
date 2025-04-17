@@ -4,9 +4,10 @@
 #include "DrawData/DrawData.h"
 #include "Scene/EntityIndex.h"
 
-#include "Scene/Layer/LayerManager.h"
+#include "Scene/OrderManager.h"
 // #include "RI/IRenderInterface.h"
 #include "Scene/SceneComponent.h"
+#include "Scene/Layer/LayerManager.h"
 
 #include "Ut/Matrix.h"
 #include "MEngineAPI.h"
@@ -35,6 +36,7 @@ namespace  MEngine
         std::shared_ptr<EntityIndex> m_entTree{ nullptr };
         std::shared_ptr<LayerManager> m_layerManager{ nullptr }; // 图层管理器
         std::shared_ptr<CommandManager> m_cmdManager{ nullptr }; // 命令
+        std::shared_ptr<OrderManager> m_orderManager{ nullptr }; // 顺序 
 
         //IRender::IRenderInterface* m_iRender{ nullptr };
         std::shared_ptr<DrawData> m_drawData{ nullptr };

@@ -32,10 +32,13 @@ namespace MEngine
         //m_rootGroup->setLayerManager(m_layerManager.get());
         
         m_entTree = std::make_shared<EntityIndex>();
+        m_orderManager = std::make_shared<OrderManager>();
+
 
         m_vecComponents.push_back(m_layerManager);
         m_vecComponents.push_back(m_rootGroup);
         m_vecComponents.push_back(m_entTree);
+        m_vecComponents.push_back(m_orderManager);
 
         m_cmdManager = std::make_shared<CommandManager>(20);
 

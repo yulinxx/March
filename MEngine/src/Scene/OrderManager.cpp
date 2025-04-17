@@ -3,10 +3,9 @@
 namespace MEngine
 {
     // OrderManager::OrderManager() = default;
-
     // OrderManager::~OrderManager() = default;
 
-    void OrderManager::addEntity(Entity* entity)
+    void OrderManager::addEntity(std::shared_ptr<Entity> entity)
     {
         if (m_mapEntIndex.find(entity) == m_mapEntIndex.end())
         {
@@ -22,7 +21,7 @@ namespace MEngine
         }
     }
 
-    bool OrderManager::removeEntity(Entity* entity)
+    void OrderManager::removeEntity(std::shared_ptr<Entity> entity)
     {
         auto it = m_mapEntIndex.find(entity);
         if (it != m_mapEntIndex.end())
@@ -37,18 +36,16 @@ namespace MEngine
             }
             // 从哈希表中移除该元素
             m_mapEntIndex.erase(it);
-            return true;
         }
-        return false;
     }
 
-    std::vector<Entity*>& OrderManager::getOrderedEntities()
+    std::vector<std::shared_ptr<Entity>>& OrderManager::getOrderedEntities()
     {
         // 返回按 m_nId 排序的图元列表
         return m_vOrderedEntities;
     }
 
-    void OrderManager::swapEntities(Entity* entity1, Entity* entity2)
+    void OrderManager::swapEntities(std::shared_ptr<Entity> entity1, std::shared_ptr<Entity> entity2)
     {
         auto it1 = m_mapEntIndex.find(entity1);
         auto it2 = m_mapEntIndex.find(entity2);
@@ -64,7 +61,7 @@ namespace MEngine
         }
     }
 
-    void OrderManager::moveEntityToPos(Entity* entity, size_t position)
+    void OrderManager::moveEntityToPos(std::shared_ptr<Entity> entity, size_t position)
     {
         auto it = m_mapEntIndex.find(entity);
         if (it != m_mapEntIndex.end())
