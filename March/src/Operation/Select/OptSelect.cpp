@@ -27,45 +27,37 @@ void OptSelect::exit()
 
 void OptSelect::mousePressEvent(QMouseEvent* event)
 {
+    if (event->button() == Qt::LeftButton)
+    {
+        m_posStart = m_scene->screenToWorld({ event->pos().x(), event->pos().y() });
+
+        auto sz = m_scene->getSelectSz();
+        if(sz)
+        {
+            m_bSelecting = false;
+            m_bMoving = true;
+        }
+        else
+        {
+            // 记录选择起始点
+            m_posEnd = m_posStart;
+
+            m_rectPreview->clear();
+            m_rectPreview->setLayer(m_scene->getLayerManager()->getCurrentLayer());
+            m_viewWrap->updateRender();
+
+            m_bSelecting = true;
+            m_bMoving = false;
+        }
+    }
     if (event->button() == Qt::MiddleButton)
     {
-        // m_lastPanPos = event->pos();
-        // m_bPanning = true;
 
-        // if (1)
-        // {
-        //     qint64 curTime = QDateTime::currentMSecsSinceEpoch();
-        //     if (curTime - m_lastMiddleClickTime < QApplication::doubleClickInterval()
-        //         && (event->pos() - m_lastMiddlePos).manhattanLength() < 5)
-        //     {
-        //         resetView();
-        //         return;
-        //     }
-
-        //     m_lastMiddleClickTime = curTime;
-        //     m_lastMiddlePos = event->pos();
-        //     m_lastPos = event->pos();
-        // }
-    }
-    else if (event->button() == Qt::LeftButton)
-    {
-        // 记录选择起始点
-        m_selectStart = m_scene->screenToWorld({ event->pos().x(), event->pos().y() });
-        m_selectEnd = m_selectStart;
-
-        m_rectPreview->clear();
-        m_rectPreview->setLayer(m_scene->getLayerManager()->getCurrentLayer());
-        m_viewWrap->updateRender();
-
-        m_bSelecting = true;
     }
     else if (event->button() == Qt::RightButton)
     {
     }
-    else if (event->button() == Qt::MiddleButton)
-    {
-        // m_lastPos = event->pos();
-    }
+
 
     Super::mousePressEvent(event);
 }
@@ -75,41 +67,94 @@ void OptSelect::mousePressEvent(QMouseEvent* event)
 //    return m_drawType;
 //}
 
+void OptSelect::mouseMoveEvent(QMouseEvent* event)
+{
+    if (event->buttons() & Qt::LeftButton)
+    {
+        QPoint curPos = event->pos();
+        Ut::Vec2d currentPos = m_scene->screenToWorld({ curPos.x(), curPos.y() });
+
+        if (m_bSelecting)
+        {
+            m_posEnd = currentPos;
+    
+            m_rectPreview->setPts(m_posStart, m_posEnd);
+            m_viewWrap->updateRender();
+        }
+        else if (m_bMoving)
+        {
+            std::vector<std::shared_ptr<MEngine::Entity>> entities;
+            m_scene->getSelectedEntities(entities);
+            
+            if (!entities.empty())
+            {
+                Ut::Vec2d delta = currentPos - m_posStart;
+                
+                Ut::Mat3 transform;
+                transform.translation(delta);
+                
+                auto cmd = std::make_unique<MEngine::TransformCmd>(m_scene, entities, transform);
+                m_scene->execute(std::move(cmd));
+                
+                m_posEnd = currentPos;
+                m_viewWrap->updateRender();
+            }
+        }
+    }
+
+    Super::mouseMoveEvent(event);
+}
+
 void OptSelect::mouseReleaseEvent(QMouseEvent* event)
 {
-    if (event->button() == Qt::LeftButton && m_bSelecting)
+    if (event->button() == Qt::LeftButton)
     {
-        // 计算选择区域
-        Ut::Vec2d minPt(
-            std::min(m_selectStart.x(), m_selectEnd.x()),
-            std::min(m_selectStart.y(), m_selectEnd.y())
-        );
-
-        Ut::Vec2d maxPt(
-            std::max(m_selectStart.x(), m_selectEnd.x()),
-            std::max(m_selectStart.y(), m_selectEnd.y())
-        );
-
-        // 判断选择方向
-        bool bCrossSel = (m_selectEnd.x() < m_selectStart.x());
-
-        if (bCrossSel)
+        if(m_bSelecting)
         {
-            m_scene->selectByRect(minPt, maxPt); // 交选
+            // 计算选择区域
+            Ut::Vec2d minPt(
+                std::min(m_posStart.x(), m_posEnd.x()),
+                std::min(m_posStart.y(), m_posEnd.y())
+            );
+
+            Ut::Vec2d maxPt(
+                std::max(m_posStart.x(), m_posEnd.x()),
+                std::max(m_posStart.y(), m_posEnd.y())
+            );
+
+            // 判断选择方向
+            bool bCrossSel = (m_posEnd.x() < m_posStart.x());
+
+            if (bCrossSel)
+            {
+                m_scene->selectByRect(minPt, maxPt); // 交选
+            }
+            else
+            {
+                m_scene->selectByRect(minPt, maxPt); // 窗选
+            }
+
+            //m_rectPreview->setPts(m_posStart, m_posEnd);
+            m_rectPreview->clear();
+
+            m_bSelecting = false;
+
+            m_viewWrap->updateRender();
+
+            emit m_viewWrap->sigSelChanged(m_scene->getSelectSz());
         }
-        else
+        else if(m_bMoving)
         {
-            m_scene->selectByRect(minPt, maxPt); // 窗选
+            std::vector<std::shared_ptr<MEngine::Entity>> entities;
+            m_scene->getSelectedEntities(entities);
+
+            Ut::Mat3 transform;
+            Ut::Vec2d delta = m_posStart - m_posEnd;
+            transform.translation(delta);
+
+            auto moveCmd = std::make_unique<MEngine::TransformCmd>(
+                m_scene, entities, transform);
         }
-
-        //m_rectPreview->setPts(m_selectStart, m_selectEnd);
-        m_rectPreview->clear();
-
-        m_bSelecting = false;
-
-        m_viewWrap->updateRender();
-
-        emit m_viewWrap->sigSelChanged(m_scene->getSelectSz());
     }
     else if (event->button() == Qt::MiddleButton)
     {
@@ -123,41 +168,8 @@ void OptSelect::mouseReleaseEvent(QMouseEvent* event)
     }
 
     Super::mouseReleaseEvent(event);
-
 }
 
-void OptSelect::mouseMoveEvent(QMouseEvent* event)
-{
-    if (m_bSelecting && (event->buttons() & Qt::LeftButton))
-    {
-        QPoint curPos = event->pos();
-        Ut::Vec2d world = m_scene->screenToWorld({ curPos.x(), curPos.y() });
-        m_selectEnd = world;
-
-        m_rectPreview->setPts(m_selectStart, m_selectEnd);
-        m_viewWrap->updateRender();
-    }
-
-    Super::mouseMoveEvent(event);
-
-    //if (event->buttons() & Qt::MiddleButton)
-    //{
-        // if (m_bPanning)
-        // {
-        //     auto posA = m_scene->screenToWorld({ m_lastPanPos.x(), m_lastPanPos.y() });
-        //     auto dir = world - posA;
-
-        //     m_scene->pan(dir);
-
-        //     auto& mat = m_scene->getViewMatrix();
-        //     m_glView->setViewMatrix(mat);
-
-        //     m_lastPanPos = curPos;
-        // }
-    //}
-
-    //m_viewWrap->set
-}
 
 void OptSelect::mouseDoubleClickEvent(QMouseEvent* event)
 {
@@ -166,23 +178,6 @@ void OptSelect::mouseDoubleClickEvent(QMouseEvent* event)
 
 void OptSelect::wheelEvent(QWheelEvent* event)
 {
-    // QPointF curPos = event->position();
-    // Ut::Vec2d world = m_scene->screenToWorld({ curPos.x(), curPos.y() });
-
-    // float delta = event->angleDelta().y() > 0 ? 1.1f : 0.9f;
-
-    // // 中心点缩放
-    // m_scene->zoomAt(Ut::Vec2{ world.x(), world.y() }, delta);
-    // // 视图中心点缩放
-    // //m_scene->setZoom(delta);
-
-    // Ut::Mat3& matView = m_scene->getViewMatrix();
-    // m_glView->setViewMatrix(matView);
-
-    // m_glView->update();
-
-    //sigCoordChanged(world.x(), world.y());
-
     Super::wheelEvent(event);
 }
 
@@ -358,24 +353,3 @@ void OptSelect::enterEvent(QEnterEvent* event)
 void OptSelect::leaveEvent(QEvent* event)
 {
 }
-
-//void OptSelect::resetView()
-//{
-//    auto sz = m_glView->size();
-//    m_scene->setView(sz.width(), sz.height());
-//
-//    auto& mat = m_scene->getViewMatrix();
-//    m_glView->clearLinePoints();
-//    m_glView->setViewMatrix(mat);
-//    m_glView->update();
-//}
-
-//void OptSelect::setViewWidget(ViewWrapper* parent)
-//{
-//    m_viewWrap = parent;
-//}
-//
-//void OptSelect::setGLView(MRender::MarchView* glView)
-//{
-//    m_glView = glView;
-//}

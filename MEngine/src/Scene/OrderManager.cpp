@@ -10,13 +10,21 @@ namespace MEngine
         if (m_mapEntIndex.find(entity) == m_mapEntIndex.end())
         {
             m_vOrderedEntities.push_back(entity);
-            m_mapEntIndex[entity] = m_vOrderedEntities.size() - 1;
+
+            auto nIndex = m_vOrderedEntities.size() - 1;
+
+            m_mapEntIndex[entity] = nIndex;
+            entity->setId(nIndex);
+
             // 每次添加后按 m_nId 排序
             std::sort(m_vOrderedEntities.begin(), m_vOrderedEntities.end(), compareById);
+
             // 更新索引
             for (size_t i = 0; i < m_vOrderedEntities.size(); ++i)
             {
-                m_mapEntIndex[m_vOrderedEntities[i]] = i;
+                auto& entity = m_vOrderedEntities[i];
+                entity->setId(i);
+                m_mapEntIndex[entity] = i;
             }
         }
     }
@@ -27,12 +35,16 @@ namespace MEngine
         if (it != m_mapEntIndex.end())
         {
             size_t nIndex = it->second;
+
             // 移除指定元素
             m_vOrderedEntities.erase(m_vOrderedEntities.begin() + nIndex);
+
             // 更新后续元素的索引
             for (size_t i = nIndex; i < m_vOrderedEntities.size(); ++i)
             {
-                m_mapEntIndex[m_vOrderedEntities[i]] = i;
+                auto& entity = m_vOrderedEntities[i];
+                entity->setId(i);
+                m_mapEntIndex[entity] = i;
             }
             // 从哈希表中移除该元素
             m_mapEntIndex.erase(it);
@@ -53,11 +65,20 @@ namespace MEngine
         {
             size_t nIndex1 = it1->second;
             size_t nIndex2 = it2->second;
+
+            auto& entity1 = m_vOrderedEntities[nIndex1];
+            auto& entity2 = m_vOrderedEntities[nIndex2];
+
             // 交换向量中的元素
-            std::swap(m_vOrderedEntities[nIndex1], m_vOrderedEntities[nIndex2]);
-            // 更新哈希表中的索引
+            std::swap(entity1, entity2);
+
+            // 更新索引
+            entity1->setId(nIndex2);
+            entity2->setId(nIndex1);
+
             m_mapEntIndex[entity1] = nIndex2;
             m_mapEntIndex[entity2] = nIndex1;
+
         }
     }
 
@@ -81,7 +102,10 @@ namespace MEngine
                 // 更新所有元素的索引
                 for (size_t i = 0; i < m_vOrderedEntities.size(); ++i)
                 {
-                    m_mapEntIndex[m_vOrderedEntities[i]] = i;
+                    auto& entity = m_vOrderedEntities[i];
+                    entity->setId(i);
+                    m_mapEntIndex[entity] = i;
+
                 }
             }
         }

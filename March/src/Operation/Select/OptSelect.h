@@ -62,8 +62,9 @@ public:
 
     // 窗、交选
     bool m_bSelecting = false;
-    Ut::Vec2d m_selectStart;
-    Ut::Vec2d m_selectEnd;
+    bool m_bMoving = false;
+    Ut::Vec2d m_posStart;
+    Ut::Vec2d m_posEnd;
 
     std::shared_ptr<MEngine::Rectangle> m_rectPreview = nullptr;
 
