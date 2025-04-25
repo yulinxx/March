@@ -19,7 +19,6 @@ namespace MEngine
         virtual void addEntity(std::shared_ptr<Entity> entity) override;
         virtual void removeEntity(std::shared_ptr<Entity> entity) override;
 
-
     public:
         // 添加图层
         Layer* setCurrentLayer(unsigned int nColor = 0xFF000000); // 默认黑色

@@ -88,7 +88,8 @@ void OptSelect::mouseMoveEvent(QMouseEvent* event)
             
             if (!entities.empty())
             {
-                Ut::Vec2d delta = currentPos - m_posStart;
+                // 修正：应该使用当前坐标和上一次坐标的差值
+                Ut::Vec2d delta = currentPos - m_posEnd;  // 改为使用m_posEnd而不是m_posStart
                 
                 Ut::Mat3 transform;
                 transform.translation(delta);
@@ -96,7 +97,7 @@ void OptSelect::mouseMoveEvent(QMouseEvent* event)
                 auto cmd = std::make_unique<MEngine::TransformCmd>(m_scene, entities, transform);
                 m_scene->execute(std::move(cmd));
                 
-                m_posEnd = currentPos;
+                m_posEnd = currentPos;  // 更新结束坐标为当前坐标
                 m_viewWrap->updateRender();
             }
         }
@@ -142,6 +143,8 @@ void OptSelect::mouseReleaseEvent(QMouseEvent* event)
             m_viewWrap->updateRender();
 
             emit m_viewWrap->sigSelChanged(m_scene->getSelectSz());
+
+            showEntityInfo();
         }
         else if(m_bMoving)
         {
@@ -149,11 +152,15 @@ void OptSelect::mouseReleaseEvent(QMouseEvent* event)
             m_scene->getSelectedEntities(entities);
 
             Ut::Mat3 transform;
-            Ut::Vec2d delta = m_posStart - m_posEnd;
+            Ut::Vec2d delta = m_posEnd - m_posStart;  // 使用最终坐标差
             transform.translation(delta);
 
             auto moveCmd = std::make_unique<MEngine::TransformCmd>(
                 m_scene, entities, transform);
+            m_scene->execute(std::move(moveCmd));  // 添加命令执行
+            
+            m_bMoving = false;  // 清除移动标志
+            m_posStart = m_posEnd;  // 同步起始坐标
         }
     }
     else if (event->button() == Qt::MiddleButton)
@@ -169,7 +176,6 @@ void OptSelect::mouseReleaseEvent(QMouseEvent* event)
 
     Super::mouseReleaseEvent(event);
 }
-
 
 void OptSelect::mouseDoubleClickEvent(QMouseEvent* event)
 {
@@ -291,8 +297,10 @@ void OptSelect::keyPressEvent(QKeyEvent* event)
         {
             // 根据方向键设置旋转方向
             double dR = rotateStep * Ut::PI / 180.0;
-            if (event->key() == Qt::Key_Right) dR *= -1; // 右键顺时针
-            else if (event->key() == Qt::Key_Left) dR *= 1; // 左键逆时针
+            if (event->key() == Qt::Key_Right)
+                dR *= -1; // 右键顺时针
+            else if (event->key() == Qt::Key_Left)
+                dR *= 1; // 左键逆时针
 
             // 围绕中心旋转的变换矩阵
             transform.translation(-center);
@@ -352,4 +360,27 @@ void OptSelect::enterEvent(QEnterEvent* event)
 
 void OptSelect::leaveEvent(QEvent* event)
 {
+}
+
+void OptSelect::showEntityInfo()
+{
+    std::vector<std::shared_ptr<MEngine::Entity>> entities;
+    m_scene->getSelectedEntities(entities);
+
+    for(auto& ent : entities)
+    {
+        showEntityInfo(ent);
+    }
+}
+
+void OptSelect::showEntityInfo(std::shared_ptr<MEngine::Entity> entity)
+{
+    if(entity)
+    {
+        auto& rect = entity->getRect();
+        qDebug() << "--------------------Entity Info:";
+        qDebug() << "  Layer: " << entity->getLayer()->getName(); 
+        qDebug() << "  ID: " << entity->getId();
+        //qDebug() << "  Type: " << entity->getType();
+    }
 }

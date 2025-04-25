@@ -12,6 +12,7 @@ namespace MEngine
     public:
         std::unique_ptr<LineData> m_lineData{ nullptr };
         std::unique_ptr<LinesData> m_linesData{ nullptr };
+        std::unique_ptr<ImageData> m_imageData{ nullptr };
         std::unique_ptr<LineData> m_previewData{ nullptr };
         std::unique_ptr<LinesData> m_previewsData{ nullptr };
     };
@@ -75,12 +76,16 @@ namespace MEngine
         if (!pImpl->m_lineData)
             pImpl->m_lineData = std::make_unique<LineData>();
 
-        pImpl->m_lineData->clear();
-
+        
         if (!pImpl->m_linesData)
             pImpl->m_linesData = std::make_unique<LinesData>();
+    
+        if (!pImpl->m_imageData)
+            pImpl->m_imageData = std::make_unique<ImageData>();
 
+        pImpl->m_lineData->clear();
         pImpl->m_linesData->clear();
+        pImpl->m_imageData->clear();
 
         for (size_t i = 0; i < group->getChildrenCount(); i++)
         {
@@ -147,6 +152,10 @@ namespace MEngine
                 }
                 break;
                 case EntType::TEXT:
+                    break;
+                case EntType::IMAGE:
+                    auto image = static_cast<Image*>(entity);
+                    pImpl->m_imageData->collectImageData(image);
                     break;
                 case EntType::UNKNOWN:
                     break;
@@ -282,5 +291,10 @@ namespace MEngine
     {
         return { pImpl->m_previewsData->m_vIndex.data(),
             pImpl->m_previewsData->m_vIndex.size() };
+    }
+
+    std::pair<float*, size_t> DrawData::getImageData() const
+    {
+        return pImpl->m_imageData->getImageData();
     }
 }

@@ -38,6 +38,8 @@ public:
     virtual void leaveEvent(QEvent* event);
 
 public:
+    void showEntityInfo();
+    void showEntityInfo(std::shared_ptr<MEngine::Entity> entity);
     //void resetView();
 
     //void setViewWidget(ViewWrapper* parent);
@@ -49,16 +51,6 @@ public:
     //private:
 public:
     DrawType m_drawType = DrawType::Select;
-
-    // ViewWrapper* m_viewWrap = nullptr;
-    // MEngine::Scene* m_scene = nullptr;
-    // MRender::MarchView* m_glView = nullptr;
-
-    // QPoint m_lastPos;
-    // qint64 m_lastMiddleClickTime = 0; // 中键点击时间
-    // QPoint m_lastMiddlePos; // 鼠标位置
-    // bool m_bPanning = false; // 是否平移
-    // QPoint m_lastPanPos; // 上次平移位置
 
     // 窗、交选
     bool m_bSelecting = false;

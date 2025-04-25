@@ -25,6 +25,7 @@ namespace MEngine
         RECTANGLE,
         BSPLINE,
         BEZIER,
+        IMAGE,
         UNKNOWN
     };
 
