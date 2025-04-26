@@ -7,7 +7,7 @@
 #include <QKeyEvent>
 
 #include "def.h"
-
+#include "Command/AddEntityCmd.h"
 #include "Widgets/RenderView/ViewWrapper.h"
 #include "Scene/Scene.h"
 

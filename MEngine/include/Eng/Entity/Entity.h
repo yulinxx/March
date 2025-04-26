@@ -34,8 +34,8 @@ namespace MEngine
     {
         Select = 0, // 选择标志位
         Show = 1,   // 显示标志位
-        Lock = 2,     // 锁定标志位
-        Dirty = 3,    // 脏标记标志位
+        Lock = 2,   // 锁定标志位
+        Dirty = 3,  // 脏标记标志位
     };
 
     class MENGINE_API Entity
@@ -79,7 +79,6 @@ namespace MEngine
         void setBasePoint(const Ut::Vec2d& basePt);
         void setReversed(bool reverse);
         void setClosed(bool closed);
-        
 
         void setFlag(EntFlag flag, bool b = true);
         bool getFlag(EntFlag flag) const;

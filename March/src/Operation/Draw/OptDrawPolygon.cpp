@@ -1,7 +1,6 @@
 #include "OptDrawPolygon.h"
 
 #include "Eng/Entity/Polygon.h"
-#include "Command/AddEntityCmd.h"
 
 OptDrawPolygon::OptDrawPolygon(MEngine::Scene* scene)
     : OptBase(scene)

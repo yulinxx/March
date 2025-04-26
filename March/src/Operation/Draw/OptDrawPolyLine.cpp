@@ -1,6 +1,5 @@
 #include "OptDrawPolyLine.h"
 #include "Entity/PolyLine.h"
-#include "Command/AddEntityCmd.h"
 #include "Render/MarchView.h"
 
 OptDrawPolyLine::OptDrawPolyLine(MEngine::Scene* scene)

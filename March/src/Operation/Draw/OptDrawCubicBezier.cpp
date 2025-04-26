@@ -1,6 +1,5 @@
 #include "OptDrawCubicBezier.h"
 #include "Entity/CubicBezier.h"
-#include "Command/AddEntityCmd.h"
 
 OptDrawCubicBezier::OptDrawCubicBezier(MEngine::Scene* scene)
     : OptBase(scene)

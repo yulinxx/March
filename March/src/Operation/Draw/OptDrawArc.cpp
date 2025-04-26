@@ -2,7 +2,6 @@
 #include "Entity/Arc.h"
 #include "Eng/Entity/Line.h"
 
-#include "Command/AddEntityCmd.h"
 #include "Render/MarchView.h"
 
 OptDrawArc::OptDrawArc(MEngine::Scene* scene)

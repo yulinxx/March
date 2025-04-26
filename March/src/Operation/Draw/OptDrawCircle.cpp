@@ -1,7 +1,6 @@
 #include "OptDrawCircle.h"
 
 #include "Eng/Entity/Circle.h"
-#include "Command/AddEntityCmd.h"
 
 OptDrawCircle::OptDrawCircle(MEngine::Scene* scene)
     : OptBase(scene)

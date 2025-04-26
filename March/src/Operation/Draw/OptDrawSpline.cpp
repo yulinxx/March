@@ -1,6 +1,5 @@
 #include "OptDrawSpline.h"
 #include "Entity/CubicBSpline.h"
-#include "Command/AddEntityCmd.h"
 #include <QPointF>
 
 OptDrawSpline::OptDrawSpline(MEngine::Scene* scene)

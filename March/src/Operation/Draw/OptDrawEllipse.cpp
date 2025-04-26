@@ -1,6 +1,5 @@
 #include "OptDrawEllipse.h"
 #include "Entity/Ellipse.h"
-#include "Command/AddEntityCmd.h"
 
 OptDrawEllipse::OptDrawEllipse(MEngine::Scene* scene)
     : OptBase(scene)
@@ -35,7 +34,7 @@ void OptDrawEllipse::mousePressEvent(QMouseEvent* event)
 
         if (m_bFirst)
         {
-            m_centerPoint = posW;  // µÚÒ»´Îµã»÷ÉèÖÃÖĞĞÄµã
+            m_centerPoint = posW;  // ï¿½ï¿½Ò»ï¿½Îµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½
             m_bFirst = false;
         }
     }
@@ -52,12 +51,12 @@ void OptDrawEllipse::mouseMoveEvent(QMouseEvent* event)
         QPointF pos = event->pos();
         m_endPoint = m_scene->screenToWorld({ pos.x(), pos.y() });
 
-        // ¼ÆËã³¤ÖáºÍ¶ÌÖá
+        // ï¿½ï¿½ï¿½ã³¤ï¿½ï¿½Í¶ï¿½ï¿½ï¿½
         double dx = fabs(m_endPoint.x() - m_centerPoint.x());
         double dy = fabs(m_endPoint.y() - m_centerPoint.y());
-        double majorRadius = std::max(dx, dy);  // ³¤ÖáÈ¡½Ï´óÖµ
-        double minorRadius = std::min(dx, dy);  // ¶ÌÖáÈ¡½ÏĞ¡Öµ
-        double rotation = (dx > dy) ? 0.0 : Ut::PI / 2.0;  // ¸ù¾İ·½Ïòµ÷ÕûĞı×ª
+        double majorRadius = std::max(dx, dy);  // ï¿½ï¿½ï¿½ï¿½È¡ï¿½Ï´ï¿½Öµ
+        double minorRadius = std::min(dx, dy);  // ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½Ğ¡Öµ
+        double rotation = (dx > dy) ? 0.0 : Ut::PI / 2.0;  // ï¿½ï¿½ï¿½İ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ª
 
         m_ellipsePreview->setByCenterAxes(m_centerPoint, majorRadius, minorRadius, rotation);
         m_viewWrap->updateRender();
@@ -102,7 +101,7 @@ void OptDrawEllipse::keyPressEvent(QKeyEvent* event)
 
 void OptDrawEllipse::setEllipseData(MEngine::Ellipse* ellipse)
 {
-    // ¿ÉÑ¡£ºÉèÖÃ¶îÍâµÄÍÖÔ²ÊôĞÔ£¬ÀıÈçÑÕÉ«¡¢²ãµÈ
+    // ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô²ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½
 }
 
 void OptDrawEllipse::drawEllipse()
