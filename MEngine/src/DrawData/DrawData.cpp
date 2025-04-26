@@ -1,6 +1,7 @@
 #include "DrawData/DrawData.h"
 #include "DrawData/LineData.h"
 #include "DrawData/LinesData.h"
+#include "DrawData/ImageData.h"
 
 #include "Scene/Group.h"
 #include "Scene/Previews.h"
@@ -12,9 +13,10 @@ namespace MEngine
     public:
         std::unique_ptr<LineData> m_lineData{ nullptr };
         std::unique_ptr<LinesData> m_linesData{ nullptr };
-        std::unique_ptr<ImageData> m_imageData{ nullptr };
         std::unique_ptr<LineData> m_previewData{ nullptr };
         std::unique_ptr<LinesData> m_previewsData{ nullptr };
+
+        std::unique_ptr<ImageData> m_imageData{ nullptr };
     };
 
     DrawData::DrawData()
@@ -73,13 +75,17 @@ namespace MEngine
         if (!group)
             return;
 
+        size_t sz = group->getChildrenCount();
+        if (sz < 1)
+            return;
+
         if (!pImpl->m_lineData)
             pImpl->m_lineData = std::make_unique<LineData>();
 
-        
+
         if (!pImpl->m_linesData)
             pImpl->m_linesData = std::make_unique<LinesData>();
-    
+
         if (!pImpl->m_imageData)
             pImpl->m_imageData = std::make_unique<ImageData>();
 
@@ -87,7 +93,7 @@ namespace MEngine
         pImpl->m_linesData->clear();
         pImpl->m_imageData->clear();
 
-        for (size_t i = 0; i < group->getChildrenCount(); i++)
+        for (size_t i = 0; i < sz; i++)
         {
             Entity* entity = group->getChild(i);
             if (entity)
@@ -154,9 +160,11 @@ namespace MEngine
                 case EntType::TEXT:
                     break;
                 case EntType::IMAGE:
+                {
                     auto image = static_cast<Image*>(entity);
                     pImpl->m_imageData->collectImageData(image);
-                    break;
+                }
+                break;
                 case EntType::UNKNOWN:
                     break;
                 default:
@@ -293,8 +301,15 @@ namespace MEngine
             pImpl->m_previewsData->m_vIndex.size() };
     }
 
-    std::pair<float*, size_t> DrawData::getImageData() const
+    // std::pair<float*, size_t> DrawData::getImageData() const
+    // {
+    //     return pImpl->m_imageData->getImageData();
+    // }
+
+    std::tuple<unsigned char*, int, int, int> DrawData::getImageData() const
     {
-        return pImpl->m_imageData->getImageData();
+        //pImpl->m_imageData->getImageData()
+        return { nullptr, 0, 0, 0 };
     }
+
 }

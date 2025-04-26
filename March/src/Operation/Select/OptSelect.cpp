@@ -32,7 +32,7 @@ void OptSelect::mousePressEvent(QMouseEvent* event)
         m_posStart = m_scene->screenToWorld({ event->pos().x(), event->pos().y() });
 
         auto sz = m_scene->getSelectSz();
-        if(sz)
+        if (sz)
         {
             m_bSelecting = false;
             m_bMoving = true;
@@ -77,7 +77,7 @@ void OptSelect::mouseMoveEvent(QMouseEvent* event)
         if (m_bSelecting)
         {
             m_posEnd = currentPos;
-    
+
             m_rectPreview->setPts(m_posStart, m_posEnd);
             m_viewWrap->updateRender();
         }
@@ -85,19 +85,20 @@ void OptSelect::mouseMoveEvent(QMouseEvent* event)
         {
             std::vector<std::shared_ptr<MEngine::Entity>> entities;
             m_scene->getSelectedEntities(entities);
-            
+
             if (!entities.empty())
             {
                 // 修正：应该使用当前坐标和上一次坐标的差值
                 Ut::Vec2d delta = currentPos - m_posEnd;  // 改为使用m_posEnd而不是m_posStart
-                
+                // Ut::Vec2d delta = currentPos - m_posStart;
+
                 Ut::Mat3 transform;
                 transform.translation(delta);
-                
+
                 auto cmd = std::make_unique<MEngine::TransformCmd>(m_scene, entities, transform);
                 m_scene->execute(std::move(cmd));
-                
-                m_posEnd = currentPos;  // 更新结束坐标为当前坐标
+
+                m_posEnd = currentPos;
                 m_viewWrap->updateRender();
             }
         }
@@ -110,7 +111,7 @@ void OptSelect::mouseReleaseEvent(QMouseEvent* event)
 {
     if (event->button() == Qt::LeftButton)
     {
-        if(m_bSelecting)
+        if (m_bSelecting)
         {
             // 计算选择区域
             Ut::Vec2d minPt(
@@ -146,19 +147,21 @@ void OptSelect::mouseReleaseEvent(QMouseEvent* event)
 
             showEntityInfo();
         }
-        else if(m_bMoving)
+        else if (m_bMoving)
         {
             std::vector<std::shared_ptr<MEngine::Entity>> entities;
             m_scene->getSelectedEntities(entities);
 
             Ut::Mat3 transform;
             Ut::Vec2d delta = m_posEnd - m_posStart;  // 使用最终坐标差
+            //Ut::Vec2d delta = m_posStart - m_posEnd;
             transform.translation(delta);
 
             auto moveCmd = std::make_unique<MEngine::TransformCmd>(
                 m_scene, entities, transform);
+
             m_scene->execute(std::move(moveCmd));  // 添加命令执行
-            
+
             m_bMoving = false;  // 清除移动标志
             m_posStart = m_posEnd;  // 同步起始坐标
         }
@@ -367,7 +370,7 @@ void OptSelect::showEntityInfo()
     std::vector<std::shared_ptr<MEngine::Entity>> entities;
     m_scene->getSelectedEntities(entities);
 
-    for(auto& ent : entities)
+    for (auto& ent : entities)
     {
         showEntityInfo(ent);
     }
@@ -375,11 +378,11 @@ void OptSelect::showEntityInfo()
 
 void OptSelect::showEntityInfo(std::shared_ptr<MEngine::Entity> entity)
 {
-    if(entity)
+    if (entity)
     {
         auto& rect = entity->getRect();
         qDebug() << "--------------------Entity Info:";
-        qDebug() << "  Layer: " << entity->getLayer()->getName(); 
+        qDebug() << "  Layer: " << entity->getLayer()->getName();
         qDebug() << "  ID: " << entity->getId();
         //qDebug() << "  Type: " << entity->getType();
     }

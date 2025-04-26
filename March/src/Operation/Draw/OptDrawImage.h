@@ -21,6 +21,9 @@ public:
     void keyPressEvent(QKeyEvent* event) override;
 
 private:
+
+    QString m_strImgPath;
+
     unsigned char* m_imageData = nullptr;
 
     int m_imgW = 0;

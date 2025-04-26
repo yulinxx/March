@@ -2,6 +2,7 @@
 #define DRAWDATA_H
 
 #include <vector>
+#include <tuple>
 #include <memory>
 #include "MEngineAPI.h"
 
@@ -39,6 +40,8 @@ namespace MEngine
 
         std::pair<float*, size_t> getPreviewsData() const;
         std::pair<unsigned int*, size_t> getPreviewsIndex() const;
+
+        std::tuple<unsigned char*, int, int, int> getImageData() const;
 
     private:
         class Impl;

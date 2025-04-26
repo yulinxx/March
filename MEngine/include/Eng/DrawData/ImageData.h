@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
+#include "Entity/Image.h"
 
 namespace MEngine
 {
@@ -12,6 +13,7 @@ namespace MEngine
         ImageData();
         ~ImageData();
 
+    public:
         void clear();
         void collectImageData(Image* image);
         
@@ -19,6 +21,6 @@ namespace MEngine
         
     private:
         struct Impl;
-        Impl* pImpl;
+        Impl* m_pImpl;
     };
 }

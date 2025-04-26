@@ -178,6 +178,28 @@ void ViewWrapper::updateRender()
         //}
     }
 
+    if (1)
+    {
+        auto imgPreviewData = m_scene->getDrawData()->getImageData();
+
+        //float* ptLines = pairPreviewData.first;
+        //size_t szLines = pairPreviewData.second;
+
+        //auto pairPreviewIndex = m_scene->getDrawData()->getPreviewsIndex();
+        //const unsigned int* ptIndex = pairPreviewIndex.first;
+        //size_t szIndex = pairPreviewIndex.second;
+
+        //m_glView->addPreviewData(ptLines, szLines);
+        //m_glView->addPreviewIndex(ptIndex, szIndex);
+
+        //for (size_t i = 0; i < szLines; i += 6)
+        //{
+        //    MRender::ColorPoint pt{ *(ptLines + i), *(ptLines + i + 1),  *(ptLines + i + 2),
+        //        *(ptLines + i + 3),*(ptLines + i + 4),*(ptLines + i + 5) };
+
+        //    m_glView->addLinesPoint(pt);
+        //}
+    }
     m_glView->update();
 }
 

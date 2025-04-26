@@ -13,4 +13,7 @@ extern const char* crossFS;
 extern const char* rulerVS;
 extern const char* rulerFS;
 
+extern const char* imgVS;
+extern const char* imgFS;
+
 #endif // SHADERDEF_H

@@ -77,15 +77,24 @@ namespace Ut
         friend std::ostream& operator<<(std::ostream& os, const Matrix<T, Rows, Cols>& mat);
     };
 
-    using Matrix4f = Matrix<float, 4, 4>;
-    using Matrix4d = Matrix<double, 4, 4>;
-    using Mat4 = Matrix<double, 4, 4>;
-    using Mat4d = Matrix<double, 4, 4>;
+
+    using Matrix2f = Matrix<float, 2, 2>;
+    using Matrix2d = Matrix<double, 2, 2>;
+    using Mat2f = Matrix<float, 2, 2>;
+    using Mat2 = Matrix<double, 2, 2>;
+    using Mat2d = Matrix<double, 2, 2>;
 
     using Matrix3f = Matrix<float, 3, 3>;
     using Matrix3d = Matrix<double, 3, 3>;
     using Mat3 = Matrix<double, 3, 3>;
-    using Matd = Matrix<double, 3, 3>;
+    using Mat3f = Matrix<float, 3, 3>;
+    using Mat3d = Matrix<double, 3, 3>;
+
+    using Matrix4f = Matrix<float, 4, 4>;
+    using Matrix4d = Matrix<double, 4, 4>;
+    using Mat4 = Matrix<double, 4, 4>;
+    using Mat4f = Matrix<float, 4, 4>;
+    using Mat4d = Matrix<double, 4, 4>;
 } // namespace Ut
 
 #endif // MATRIX_H

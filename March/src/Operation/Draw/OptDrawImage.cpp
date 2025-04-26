@@ -1,5 +1,7 @@
 #include "OptDrawImage.h"
 #include <QFileDialog>
+#include "Eng/Entity/Image.h"
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -22,6 +24,8 @@ OptDrawImage::~OptDrawImage()
 
 void OptDrawImage::enter()
 {
+    m_strImgPath = "";
+
     QString fileName = QFileDialog::getOpenFileName(
         nullptr,
         QObject::tr("Open Image File"),
@@ -31,23 +35,25 @@ void OptDrawImage::enter()
 
     if (!fileName.isEmpty())
     {
-        if (m_imageData)
-        {
-            stbi_image_free(m_imageData);
-            m_imageData = nullptr;
-        }
+        m_strImgPath = fileName;
 
-        m_imageData = stbi_load(fileName.toStdString().c_str(),
-            &m_imgW,
-            &m_imgH,
-            &m_imgCh,
-            0);
+        // if (m_imageData)
+        // {
+        //     stbi_image_free(m_imageData);
+        //     m_imageData = nullptr;
+        // }
 
-        if (!m_imageData)
-        {
-            // Handle error
-            return;
-        }
+        // m_imageData = stbi_load(fileName.toStdString().c_str(),
+        //     &m_imgW,
+        //     &m_imgH,
+        //     &m_imgCh,
+        //     0);
+
+        // if (!m_imageData)
+        // {
+        //     // Handle error
+        //     return;
+        // }
     }
 }
 
@@ -56,14 +62,22 @@ void OptDrawImage::exit()
 
 }
 
-
 void OptDrawImage::mousePressEvent(QMouseEvent* event)
 {
-    if (event->button() == Qt::LeftButton && m_imageData)
+    if (event->button() == Qt::LeftButton)
     {
         QPointF pos = event->pos();
-        // 这里添加渲染逻辑，使用m_imageData和pos
-        // 例如: renderImage(pos, m_imageData, m_imgW, m_imgH);
+        auto wPos = m_scene->screenToWorld({ pos.x(), pos.y() });
+
+        MEngine::Image* img = new MEngine::Image();
+        img->loadFromFile(m_strImgPath.toStdString().c_str());
+
+        img->setPosition(wPos);
+
+        auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene, img);
+        m_scene->execute(std::move(addCmd));
+
+        m_viewWrap->updateRender();
     }
 }
 

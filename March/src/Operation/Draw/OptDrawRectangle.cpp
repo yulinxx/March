@@ -1,6 +1,5 @@
 #include "OptDrawRectangle.h"
 #include "Eng/Entity/Rectangle.h"
-#include "Command/AddEntityCmd.h"
 
 OptDrawRectangle::OptDrawRectangle(MEngine::Scene* scene)
     : OptBase(scene)

@@ -1,5 +1,4 @@
 #include "OptDrawLine.h"
-#include "Command/AddEntityCmd.h"
 #include "Eng/Entity/Line.h"
 
 OptDrawLine::OptDrawLine(MEngine::Scene* scene)
