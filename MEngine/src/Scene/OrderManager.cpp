@@ -78,7 +78,6 @@ namespace MEngine
 
             m_mapEntIndex[entity1] = nIndex2;
             m_mapEntIndex[entity2] = nIndex1;
-
         }
     }
 
@@ -105,7 +104,6 @@ namespace MEngine
                     auto& entity = m_vOrderedEntities[i];
                     entity->setId(i);
                     m_mapEntIndex[entity] = i;
-
                 }
             }
         }

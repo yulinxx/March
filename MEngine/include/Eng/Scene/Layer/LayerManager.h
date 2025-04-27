@@ -36,12 +36,11 @@ namespace MEngine
     private:
         // 删除不活跃的图层
         void cleanupInactiveLayers();
-        
+
     private:
         struct Impl;
         std::shared_ptr<Impl> pImpl;
     };
-
 }
 
 #endif // LAYERMANAGER_H

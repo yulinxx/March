@@ -172,7 +172,7 @@ namespace MEngine
         setRect(rect);
         return Entity::getRect();
     }
-    
+
     void Ellipse::transform(const Ut::Mat3& matrix)
     {
         m_impl->center = matrix.transformPoint(m_impl->center);

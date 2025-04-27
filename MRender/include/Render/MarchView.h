@@ -36,9 +36,6 @@ namespace MRender
         //void setScale(float scale);
         void setTranslation(const QVector2D& translation);
 
-        void addLinePoint(const ColorPoint& point);
-        void addLinesPoint(const ColorPoint& point);
-
         void addLineData(const float* points, size_t sz);
         void addLinePreview(const float* points, size_t sz);
 
@@ -47,6 +44,8 @@ namespace MRender
 
         void addPreviewData(const float* points, size_t sz);
         void addPreviewIndex(const unsigned int* index, size_t sz);
+
+        void addImgPreviewData(unsigned char* imgData, int w, int h, int c = 3);
 
         void clearLinePoints();
         void clearLinesPoints();
@@ -79,10 +78,12 @@ namespace MRender
         void updateCrossBuffer(); // 十字标
         void updateRuler(); // 标尺
 
+        void updateImageBuffer(); // 位图
+
     private:
         // 单线段资源
-        GLuint m_lineVao;
-        GLuint m_lineVbo;
+        GLuint m_lineVao = 0;
+        GLuint m_lineVbo = 0;
         QOpenGLShaderProgram* m_lineProgram{ nullptr };
 
         std::vector<float> m_vLinePoints;
@@ -90,30 +91,30 @@ namespace MRender
 
         std::vector<float> vRectPoints;
 
-        GLuint m_linePreviewVao;
-        GLuint m_linePreviewVbo;
+        GLuint m_linePreviewVao = 0;
+        GLuint m_linePreviewVbo = 0;
         QOpenGLShaderProgram* m_linePreviewProgram{ nullptr };
         std::vector<float> m_vLinePreview;
 
         // 多段线资源
-        GLuint m_linesVao;
-        GLuint m_linesVbo;
-        GLuint m_linesEbo;
+        GLuint m_linesVao = 0;
+        GLuint m_linesVbo = 0;
+        GLuint m_linesEbo = 0;
         QOpenGLShaderProgram* m_linesProgram{ nullptr };
         std::vector<float> m_vLinesPoints;
         std::vector<unsigned int> m_vLinesIndex;
 
-        GLuint m_previewVao;
-        GLuint m_previewVbo;
-        GLuint m_previewEbo;
+        GLuint m_previewVao = 0;
+        GLuint m_previewVbo = 0;
+        GLuint m_previewEbo = 0;
         QOpenGLShaderProgram* m_previewProgram{ nullptr };
 
         std::vector<float> m_vPreviewPoints;
         std::vector<unsigned int> m_vPreviewIndex;
 
         // Cross
-        GLuint m_crossVao;
-        GLuint m_crossVbo;
+        GLuint m_crossVao = 0;
+        GLuint m_crossVbo = 0;
         QOpenGLShaderProgram* m_crossProgram{ nullptr };
 
         std::vector<ColorPoint> m_crossPoints;
@@ -127,8 +128,24 @@ namespace MRender
         };
 
         std::vector<RulerLine> m_rulerLines;
-        GLuint m_rulerVao, m_rulerVbo;
+        GLuint m_rulerVao = 0;
+        GLuint m_rulerVbo = 0;
         QOpenGLShaderProgram* m_rulerProgram{ nullptr };
+
+        // Image
+        GLuint m_imageVao = 0;
+        GLuint m_imageVbo = 0;
+        GLuint m_imageTexture = 0;
+        QOpenGLShaderProgram* m_imageProgram{ nullptr };
+
+        unsigned char* m_imgData = nullptr;
+        int m_imgWidth = 0;
+        int m_imgHeight = 0;
+        int m_imgChannels = 3;
+        float m_imgX = 10.0f;
+        float m_imgY = 10.0f;
+        int m_imgW = 0;
+        int m_imgH = 0;
 
         // Mat
         Ut::Mat3 m_matView;

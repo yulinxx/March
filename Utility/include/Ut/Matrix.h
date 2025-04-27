@@ -43,7 +43,7 @@ namespace Ut
         void translation(const Vec<T, 2>& v) requires (Rows == 4 && Cols == 4 || Rows == 3 && Cols == 3);
 
         Vec<T, 2> transformPoint(const Vec<T, 2>& point) const requires (Rows == 3 && Cols == 3);
-        
+
         void rotation(T angle) requires (Rows == 4 && Cols == 4 || Rows == 3 && Cols == 3);
         void rotation(T angle, T centerX, T centerY) requires (Rows == 4 && Cols == 4 || Rows == 3 && Cols == 3);
         void rotation(T angle, const Vec<T, 2>& pt) requires (Rows == 4 && Cols == 4 || Rows == 3 && Cols == 3);
@@ -76,7 +76,6 @@ namespace Ut
     public:
         friend std::ostream& operator<<(std::ostream& os, const Matrix<T, Rows, Cols>& mat);
     };
-
 
     using Matrix2f = Matrix<float, 2, 2>;
     using Matrix2d = Matrix<double, 2, 2>;

@@ -133,7 +133,7 @@ namespace MEngine
     {
         // 变换圆心坐标
         m_impl->center = matrix.transformPoint(m_impl->center);
-        
+
         //double scale = sqrt(matrix[0][0]*matrix[0][0] + matrix[0][1]*matrix[0][1]);
         //m_impl->radius *= scale;
 
@@ -150,7 +150,7 @@ namespace MEngine
     {
         auto ptMin = Ut::Vec2d(m_impl->center.x() - m_impl->radius, m_impl->center.y() - m_impl->radius);
         auto ptMax = Ut::Vec2d(m_impl->center.x() + m_impl->radius, m_impl->center.y() + m_impl->radius);
-        Ut::Rect2d rect{ptMin, ptMax};
+        Ut::Rect2d rect{ ptMin, ptMax };
         setRect(rect);
         return Entity::getRect();
     }

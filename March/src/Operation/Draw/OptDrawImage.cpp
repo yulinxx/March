@@ -59,7 +59,6 @@ void OptDrawImage::enter()
 
 void OptDrawImage::exit()
 {
-
 }
 
 void OptDrawImage::mousePressEvent(QMouseEvent* event)
@@ -76,7 +75,6 @@ void OptDrawImage::mousePressEvent(QMouseEvent* event)
 
         auto addCmd = std::make_unique<MEngine::AddEntityCmd>(m_scene, img);
         m_scene->execute(std::move(addCmd));
-
         m_viewWrap->updateRender();
     }
 }

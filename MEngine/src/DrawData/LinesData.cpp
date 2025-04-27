@@ -232,9 +232,9 @@ namespace MEngine
             {
                 unsigned char r, g, b, a;
                 ent->getLayerColor(&r, &g, &b, &a);
-                m_vLinesPts.push_back(static_cast<float>(r)/255.0f);
-                m_vLinesPts.push_back(static_cast<float>(g)/255.0f);
-                m_vLinesPts.push_back(static_cast<float>(b)/255.0f);
+                m_vLinesPts.push_back(static_cast<float>(r) / 255.0f);
+                m_vLinesPts.push_back(static_cast<float>(g) / 255.0f);
+                m_vLinesPts.push_back(static_cast<float>(b) / 255.0f);
             }
             m_vIndex.push_back(baseIndex + i);
         }

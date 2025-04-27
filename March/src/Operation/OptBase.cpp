@@ -54,58 +54,9 @@ void OptBase::mousePressEvent(QMouseEvent* event)
     else if (event->button() == Qt::LeftButton)
     {
         // 记录选择起始点
-        // m_selectStart = m_scene->screenToWorld({ event->pos().x(), event->pos().y() });
-        // m_selectEnd = m_selectStart;
-        // m_bSelecting = true;
-
-        // 清除之前的选择
-        //m_scene->clearSelection();
-        //m_glView->update();
-
-        if (0)
-        {
-            std::random_device rd;
-            std::mt19937 gen(rd());
-            std::uniform_real_distribution<float> disColor(0.0f, 1.0f);
-            float r = disColor(gen);
-            float g = disColor(gen);
-            float b = disColor(gen);
-
-            auto world = m_scene->screenToWorld({ event->pos().x(), event->pos().y() });
-
-            m_glView->addLinePoint({ float(world.x()), float(world.y()), 0.0f, r, g, b });
-            m_glView->update();
-        }
     }
     else if (event->button() == Qt::RightButton)
     {
-        if (0)
-        {
-            std::random_device rd;
-            std::mt19937 gen(rd());
-            std::uniform_real_distribution<float> disColor(0.0f, 1.0f);
-
-            Ut::Vec2d sz = m_scene->getViewSize();
-            float aspect = float(sz.x() / sz.y());
-
-            Ut::Vec2d center = m_scene->getViewCenter();
-
-            float dScale = m_scene->getViewScale();
-
-            std::uniform_real_distribution<float> disX(center.x() - (sz.x() * 0.5), center.x() + (sz.x() * 0.5));
-            std::uniform_real_distribution<float> disY(center.y() - (sz.y() * 0.5), center.y() + (sz.y() * 0.5));
-
-            for (int i = 0; i < 100; ++i)
-            {
-                float randomX = disX(gen);
-                float randomY = disY(gen);
-                float r = disColor(gen);
-                float g = disColor(gen);
-                float b = disColor(gen);
-                m_glView->addLinePoint({ randomX, randomY, 0.0f, r, g, b });
-            }
-            m_glView->update();
-        }
     }
     else if (event->button() == Qt::MiddleButton)
     {
@@ -122,34 +73,6 @@ void OptBase::mouseReleaseEvent(QMouseEvent* event)
 {
     if (event->button() == Qt::LeftButton)
     {
-        // 计算选择区域
-        // Ut::Vec2d minPt(
-        //     std::min(m_selectStart.x(), m_selectEnd.x()),
-        //     std::min(m_selectStart.y(), m_selectEnd.y())
-        // );
-
-        // Ut::Vec2d maxPt(
-        //     std::max(m_selectStart.x(), m_selectEnd.x()),
-        //     std::max(m_selectStart.y(), m_selectEnd.y())
-        // );
-
-        // // 判断选择方向
-        // bool bCrossSel = (m_selectEnd.x() < m_selectStart.x());
-
-        // // 执行选择
-        // if (bCrossSel)
-        // {
-        //     qDebug() << "Cross selection";
-        //     //m_scene->selectByCross(minPt, maxPt); // 交选
-        // }
-        // else
-        // {
-        //     qDebug() << "Window selection";
-        //     //m_scene->selectByWindow(minPt, maxPt); // 窗选
-        // }
-
-        // m_bSelecting = false;
-        // m_glView->update();
     }
     else if (event->button() == Qt::MiddleButton)
     {
@@ -161,11 +84,6 @@ void OptBase::mouseMoveEvent(QMouseEvent* event)
 {
     QPoint curPos = event->pos();
     Ut::Vec2d world = m_scene->screenToWorld({ curPos.x(), curPos.y() });
-
-    // if (m_bSelecting && (event->buttons() & Qt::LeftButton))
-    // {
-    //     m_selectEnd = world;
-    // }
 
     if (event->buttons() & Qt::MiddleButton)
     {
@@ -182,8 +100,6 @@ void OptBase::mouseMoveEvent(QMouseEvent* event)
             m_lastPanPos = curPos;
         }
     }
-
-    //m_viewWrap->set
 }
 
 void OptBase::mouseDoubleClickEvent(QMouseEvent* event)

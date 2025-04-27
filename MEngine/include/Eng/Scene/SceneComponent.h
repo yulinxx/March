@@ -8,7 +8,6 @@
 
 namespace MEngine
 {
-
     class MENGINE_API SceneComponent
     {
     public:
@@ -33,7 +32,6 @@ namespace MEngine
         }
 
         virtual void addEntity(std::shared_ptr<Entity> entity) = 0;
-
 
         //template<typename T>
         //virtual void addEntity(const T>& entities) = 0;
@@ -65,7 +63,6 @@ namespace MEngine
             }
         }
     };
-
 }
 
 #endif // SCENECOMPONENT_H

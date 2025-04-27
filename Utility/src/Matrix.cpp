@@ -193,7 +193,7 @@ namespace Ut
     {
         Vec<T, 3> pt3d(point.x(), point.y(), 1.0);
         auto result = (*this) * pt3d;
-        return {result.x()/result.z(), result.y()/result.z()};
+        return { result.x() / result.z(), result.y() / result.z() };
     }
 
     template <typename T, size_t Rows, size_t Cols>

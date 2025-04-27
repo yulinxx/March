@@ -74,6 +74,8 @@ void ViewWrapper::updateRender()
     m_glView->clearLinesPoints();
 
     //m_scene->getDrawData()->clear();
+    if (!m_scene->getDrawData())
+        return;
 
     if (1)
     {
@@ -103,7 +105,6 @@ void ViewWrapper::updateRender()
         m_glView->addLinePreview(ptLines, szLines);
     }
 
-
     if (1)
     {
         auto pairLinesData = m_scene->getDrawData()->getLinesData();
@@ -132,28 +133,7 @@ void ViewWrapper::updateRender()
         float* ptPreview = pairPreviewData.first;
         size_t szPreview = pairPreviewData.second;
 
-        //for (size_t i = 0; i < szPreview; i += 2)
-        //{
-        //    MRender::ColorPoint pt{ *(ptPreview + i), *(ptPreview + i + 1), 0.0f, 1.0f, 0.0f, 0.0f };
-        //    m_glView->addLinePoint(pt);
-        //}
-
         m_glView->addLinePreview(ptPreview, szPreview);
-    }
-
-    if (0)
-    {
-        auto pairPreviewData = m_scene->getDrawData()->getPreviewsData();
-        float* ptPreview = pairPreviewData.first;
-        size_t szPreview = pairPreviewData.second;
-
-        for (size_t i = 0; i < szPreview; i += 6)
-        {
-            MRender::ColorPoint pt{ *(ptPreview + i), *(ptPreview + i + 1),  *(ptPreview + i + 2),
-                *(ptPreview + i + 3),*(ptPreview + i + 4),*(ptPreview + i + 5) };
-
-            m_glView->addLinesPoint(pt);
-        }
     }
 
     if (1)
@@ -168,67 +148,24 @@ void ViewWrapper::updateRender()
 
         m_glView->addPreviewData(ptLines, szLines);
         m_glView->addPreviewIndex(ptIndex, szIndex);
-
-        //for (size_t i = 0; i < szLines; i += 6)
-        //{
-        //    MRender::ColorPoint pt{ *(ptLines + i), *(ptLines + i + 1),  *(ptLines + i + 2),
-        //        *(ptLines + i + 3),*(ptLines + i + 4),*(ptLines + i + 5) };
-
-        //    m_glView->addLinesPoint(pt);
-        //}
     }
 
     if (1)
     {
         auto imgPreviewData = m_scene->getDrawData()->getImageData();
 
-        //float* ptLines = pairPreviewData.first;
-        //size_t szLines = pairPreviewData.second;
-
-        //auto pairPreviewIndex = m_scene->getDrawData()->getPreviewsIndex();
-        //const unsigned int* ptIndex = pairPreviewIndex.first;
-        //size_t szIndex = pairPreviewIndex.second;
-
-        //m_glView->addPreviewData(ptLines, szLines);
-        //m_glView->addPreviewIndex(ptIndex, szIndex);
-
-        //for (size_t i = 0; i < szLines; i += 6)
-        //{
-        //    MRender::ColorPoint pt{ *(ptLines + i), *(ptLines + i + 1),  *(ptLines + i + 2),
-        //        *(ptLines + i + 3),*(ptLines + i + 4),*(ptLines + i + 5) };
-
-        //    m_glView->addLinesPoint(pt);
-        //}
+        m_glView->addImgPreviewData(std::get<0>(imgPreviewData),
+            std::get<1>(imgPreviewData),
+            std::get<2>(imgPreviewData),
+            std::get<3>(imgPreviewData));
     }
+
     m_glView->update();
 }
 
 void ViewWrapper::updateScene()
 {
     m_glView->clearLinePoints();
-
-    auto rootGroup = m_scene->getRootGroup();
-    if (rootGroup)
-    {
-        for (size_t i = 0; i < rootGroup->getChildrenCount(); ++i)
-        {
-            auto ent = rootGroup->getChild(i);
-            if (ent && ent->getType() == MEngine::EntType::LINE)
-            {
-                auto line = static_cast<MEngine::Line*>(ent);
-
-                Ut::Vec2 ptS, ptE;
-                line->getPoints(ptS, ptE);
-
-                MRender::ColorPoint pt1{ static_cast<float>(ptS.x()), static_cast<float>(ptS.y()), 0.0f, 1.0f, 0.0f, 0.0f };
-                MRender::ColorPoint pt2{ static_cast<float>(ptE.x()), static_cast<float>(ptE.y()), 0.0f, 1.0f, 0.0f, 0.0f };
-
-                m_glView->addLinePoint(pt1);
-                m_glView->addLinePoint(pt2);
-            }
-        }
-    }
-
     m_glView->update();
 }
 
@@ -322,21 +259,18 @@ void ViewWrapper::resizeEvent(QResizeEvent* event)
 void ViewWrapper::mousePressEvent(QMouseEvent* event)
 {
     //m_optManager->mousePressEvent(event);
-
     QWidget::mousePressEvent(event);
 }
 
 void ViewWrapper::mouseReleaseEvent(QMouseEvent* event)
 {
     //m_optManager->mouseReleaseEvent(event);
-
     QWidget::mouseReleaseEvent(event);
 }
 
 void ViewWrapper::wheelEvent(QWheelEvent* event)
 {
     m_optManager->wheelEvent(event);
-
     QWidget::wheelEvent(event);
 }
 

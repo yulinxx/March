@@ -52,12 +52,10 @@ void OptSelect::mousePressEvent(QMouseEvent* event)
     }
     if (event->button() == Qt::MiddleButton)
     {
-
     }
     else if (event->button() == Qt::RightButton)
     {
     }
-
 
     Super::mousePressEvent(event);
 }

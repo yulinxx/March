@@ -24,7 +24,6 @@ namespace MEngine
         m_pImpl->m_vecEntities.push_back(entity);
     }
 
-
     void Group::removeEntity(std::shared_ptr<Entity> entity)
     {
         if (!entity)

@@ -47,10 +47,17 @@ namespace MEngine
         m_pImpl->vImageData.emplace_back(imgData);
     }
 
-    std::pair<float*, size_t> ImageData::getImageData() const
+    size_t ImageData::getImageDataSz() const
     {
-        //return {m_pImpl->vertexData.data(), m_pImpl->vertexData.size()};
-        // return { m_pImpl->m_vImagePts.data(), m_pImpl->m_vImagePts.size() };
-        return { nullptr, 0 };
+        return m_pImpl->vImageData.size();
+    }
+
+    std::tuple<unsigned char*, int, int, int> ImageData::getImageData(size_t n) const
+    {
+        if (n >= m_pImpl->vImageData.size() || n < 0)
+            return { nullptr, 0, 0, 0 };
+
+        return { m_pImpl->vImageData[n].data, m_pImpl->vImageData[n].width,
+                m_pImpl->vImageData[n].height, m_pImpl->vImageData[n].channels };
     }
 }

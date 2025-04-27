@@ -99,7 +99,6 @@ void OptDrawLine::keyPressEvent(QKeyEvent* event)
 
         m_linePreview->clear();
         m_viewWrap->updateRender();
-
     }
     Super::keyPressEvent(event);
 }

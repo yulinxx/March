@@ -5,15 +5,14 @@
 #include <string>
 
 #ifdef _WIN32
-    #ifdef MLOG_EXPORTS
-        #define MLOG_API __declspec(dllexport)
-    #else
-        #define MLOG_API __declspec(dllimport)
-    #endif
+#ifdef MLOG_EXPORTS
+#define MLOG_API __declspec(dllexport)
 #else
-    #define MLOG_API
+#define MLOG_API __declspec(dllimport)
 #endif
-
+#else
+#define MLOG_API
+#endif
 
 namespace MLog
 {

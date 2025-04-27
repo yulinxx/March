@@ -183,7 +183,7 @@ namespace MEngine
         m_impl->center = matrix.transformPoint(m_impl->center);
         updateVertices();
     }
-    
+
     std::pair<Ut::Vec2*, size_t> Arc::getData() const
     {
         if (m_impl->vertices.empty() && m_impl->radius > 1e-3)
@@ -211,7 +211,6 @@ namespace MEngine
         //return Entity::getRect();
 
         {
-
             Ut::Rect2d rect;
             if (m_impl->vertices.empty())
             {
@@ -239,7 +238,6 @@ namespace MEngine
             setRect(rect);
             return Entity::getRect();
         }
-
     }
 
     Ut::Vec2d Arc::getValue(double t)

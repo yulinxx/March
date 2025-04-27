@@ -11,7 +11,9 @@ namespace MEngine
         int width = 0;                      // 位图宽度
         int height = 0;                     // 位图高度
         int channels = 0;                   // 通道数
+
         Ut::Vec2 sz;                        // 显示大小
+
         Ut::Mat3 transform;                 // 变换矩阵
         std::vector<Ut::Vec2> vertices;     // 顶点数据（归一化）
         std::vector<Ut::Vec2> texCoords;    // 纹理坐标
@@ -31,10 +33,10 @@ namespace MEngine
             Ut::Vec2(0.0, 1.0), Ut::Vec2(1.0, 1.0)
         };
 
-        m_impl->texCoords = {
-            Ut::Vec2(0.0, 0.0), Ut::Vec2(1.0, 0.0),
-            Ut::Vec2(0.0, 1.0), Ut::Vec2(1.0, 1.0)
-        };
+        //m_impl->texCoords = {
+        //    Ut::Vec2(0.0, 0.0), Ut::Vec2(1.0, 0.0),
+        //    Ut::Vec2(0.0, 1.0), Ut::Vec2(1.0, 1.0)
+        //};
     }
 
     Image::Image(const char* filePath) : Image()
@@ -85,50 +87,52 @@ namespace MEngine
     {
         //m_impl->transform = matrix * m_impl->transform;
 
-        //// 更新基准点
-        //Ut::Vec3d basePt(getBasePoint().x(), getBasePoint().y(), 1.0);
-        //basePt = matrix * basePt;
-        //setBasePoint(Ut::Vec2d(basePt.x(), basePt.y()));
+        // 更新基准点
+        Ut::Vec3d basePt(getBasePoint().x(), getBasePoint().y(), 1.0);
+        basePt = matrix * basePt;
+        setBasePoint(Ut::Vec2d(basePt.x(), basePt.y()));
 
-        //// 更新边界矩形
-        //std::vector<Ut::Vec2> transformedVertices = m_impl->vertices;
-        //for (auto& vertex : transformedVertices)
-        //{
-        //    Ut::Vec3 v(vertex.x() * m_impl->sz.x(), vertex.y() * m_impl->sz.y(), 1.0);
-        //    v = m_impl->transform * v;
-        //    vertex = Ut::Vec2(v.x(), v.y());
-        //}
+        // 更新边界矩形
+        std::vector<Ut::Vec2> transformedVertices = m_impl->vertices;
+        for (auto& vertex : transformedVertices)
+        {
+            Ut::Vec3 v(vertex.x() * m_impl->sz.x(), vertex.y() * m_impl->sz.y(), 1.0);
+            v = m_impl->transform * v;
+            vertex = Ut::Vec2(v.x(), v.y());
+        }
 
-        //double minX = transformedVertices[0].x(), maxX = minX;
-        //double minY = transformedVertices[0].y(), maxY = minY;
+        double minX = transformedVertices[0].x(), maxX = minX;
+        double minY = transformedVertices[0].y(), maxY = minY;
 
-        //for (const auto& v : transformedVertices)
-        //{
-        //    minX = std::min(minX, v.x());
-        //    maxX = std::max(maxX, v.x());
-        //    minY = std::min(minY, v.y());
-        //    maxY = std::max(maxY, v.y());
-        //}
-        //m_impl->rect = Ut::Rect2d(Ut::Vec2d(minX, minY), Ut::Vec2d(maxX, maxY));
+        for (const auto& v : transformedVertices)
+        {
+            minX = std::min(minX, v.x());
+            maxX = std::max(maxX, v.x());
+            minY = std::min(minY, v.y());
+            maxY = std::max(maxY, v.y());
+        }
+        m_impl->rect = Ut::Rect2d(Ut::Vec2d(minX, minY), Ut::Vec2d(maxX, maxY));
 
-        //setFlag(EntFlag::Dirty, true);
+        setFlag(EntFlag::Dirty, true);
 
         //Entity::transform(matrix);
     }
 
     std::pair<Ut::Vec2*, size_t> Image::getData() const
     {
-        static std::vector<Ut::Vec2> vertexData(4);
-        for (size_t i = 0; i < 4; ++i)
-        {
-            Ut::Vec3 v(m_impl->vertices[i].x() * m_impl->sz.x(), m_impl->vertices[i].y() * m_impl->sz.y(), 1.0);
-            v = m_impl->transform * v;
-            vertexData[i] = Ut::Vec2(v.x(), v.y());
-        }
+        // static std::vector<Ut::Vec2> vertexData(4);
+        // for (size_t i = 0; i < 4; ++i)
+        // {
+        //     Ut::Vec3 v(m_impl->vertices[i].x() * m_impl->sz.x(),
+        //         m_impl->vertices[i].y() * m_impl->sz.y(), 1.0);
 
-        return { vertexData.data(), vertexData.size() };
+        //     v = m_impl->transform * v;
+        //     vertexData[i] = Ut::Vec2(v.x(), v.y());
+        // }
 
-        //return { nullptr, 0 };
+        // return { vertexData.data(), vertexData.size() };
+
+        return { nullptr, 0 };
     }
 
     Ut::Vec2d Image::getValue(double t)
@@ -203,14 +207,13 @@ namespace MEngine
         return m_impl->channels;
     }
 
-    const std::vector<Ut::Vec2>& Image::getTexCoords() const
-    {
-        return m_impl->texCoords;
-    }
+    // const std::vector<Ut::Vec2>& Image::getTexCoords() const
+    // {
+    //     return m_impl->texCoords;
+    // }
 
-    const Ut::Mat3& Image::getTransform() const
-    {
-        return m_impl->transform;
-    }
-
+    // const Ut::Mat3& Image::getTransform() const
+    // {
+    //     return m_impl->transform;
+    // }
 }

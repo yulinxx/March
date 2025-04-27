@@ -16,9 +16,10 @@ namespace MEngine
     public:
         void clear();
         void collectImageData(Image* image);
-        
-        std::pair<float*, size_t> getImageData() const;
-        
+
+        size_t getImageDataSz() const;
+        std::tuple<unsigned char*, int, int, int> getImageData(size_t n) const;
+
     private:
         struct Impl;
         Impl* m_pImpl;

@@ -25,10 +25,10 @@ namespace MEngine
 
         // 框选（完全包含在矩形内的实体）
         std::vector<std::shared_ptr<Entity>> getEntities(const Ut::Rect2d& rect) const;
-        
+
         // 交选（与矩形相交的实体）
         std::vector<std::shared_ptr<Entity>> getCrossEntities(const Ut::Rect2d& rect) const;
-        
+
         // 反选（不在矩形内的实体）
         std::vector<std::shared_ptr<Entity>> getInverseSelectedEntities(const Ut::Rect2d& rect) const;
 
@@ -36,7 +36,7 @@ namespace MEngine
 
         // 获取所有图元的最大包围矩形
         Ut::Rect2d getBoundingBox() const;
-        
+
         void clear();
 
         size_t size() const;
@@ -46,7 +46,6 @@ namespace MEngine
     private:
         EntRTree m_entTree;
     };
-
 } // namespace MEngine
 
 #endif // ENTITYINDEX_H

@@ -77,7 +77,7 @@ namespace MEngine
         pt = matrix.transformPoint(pt);
         setBasePoint(pt);
     }
-    
+
     Ut::Vec2d Point::getValue(double t)
     {
         return getBasePoint();

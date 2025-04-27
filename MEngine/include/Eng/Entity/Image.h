@@ -36,10 +36,10 @@ namespace MEngine
         int getChannels() const;
 
         // 获取纹理坐标（供 ImageDatas 使用）
-        const std::vector<Ut::Vec2>& getTexCoords() const;
+        // const std::vector<Ut::Vec2>& getTexCoords() const;
 
         // 获取变换矩阵（供 ImageDatas 存储到 SSBO）
-        const Ut::Mat3& getTransform() const;
+        // const Ut::Mat3& getTransform() const;
 
     private:
         struct Impl;

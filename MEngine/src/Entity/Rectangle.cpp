@@ -24,7 +24,7 @@ namespace MEngine
 
     void Rectangle::clear()
     {
-         m_impl->vertices.fill(Ut::Vec2(0, 0));
+        m_impl->vertices.fill(Ut::Vec2(0, 0));
     }
 
     void Rectangle::setStartPoint(const Ut::Vec2& start)
@@ -81,11 +81,11 @@ namespace MEngine
 
     void Rectangle::transform(const Ut::Mat3& matrix)
     {
-        for(auto& pt : m_impl->vertices)
+        for (auto& pt : m_impl->vertices)
         {
             pt = matrix.transformPoint(pt);
         }
-        
+
         // 更新起点和终点
         m_impl->start = m_impl->vertices[0];
         m_impl->end = m_impl->vertices[2];

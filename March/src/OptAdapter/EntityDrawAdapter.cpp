@@ -2,7 +2,7 @@
 
 #include "Logger.h"
 #include "MainWindow.h"
- #include "Widgets/TipWidget.h"
+#include "Widgets/TipWidget.h"
 
 #include <cstdlib>
 #include <ctime>

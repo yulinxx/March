@@ -98,7 +98,7 @@ namespace MEngine
                 ++it;
             }
         }
-        
+
         if (!pImpl->pCurrent && !pImpl->m_Layers.empty())
             pImpl->pCurrent = pImpl->m_Layers.begin()->second.get();
     }

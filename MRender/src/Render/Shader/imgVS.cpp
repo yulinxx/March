@@ -2,28 +2,21 @@
 
 const char* imgVS = R"(
     #version 460
-    layout(location = 0) in vec3 position;
-    layout(location = 1) in vec3 color;
+    layout(location = 0) in vec2 position;
+    layout(location = 1) in vec2 aTexCoord;
+
     uniform mat4 projection;
     uniform vec2 translation;
     uniform float scale = 1.0;
-    out vec3 fragColor;
+
+    out vec2 TexCoord;
 
     void main()
     {
-        vec3 scaledPos = vec3(position.xy * scale + translation, position.z);
+        vec3 scaledPos = vec3(position + translation, 0.0);
         gl_Position = projection * vec4(scaledPos, 1.0);
-        fragColor = color;
+
+        TexCoord = aTexCoord;
     }
-
-            //layout (location = 0) in vec3 aPos;
-            //layout (location = 1) in vec2 aTexCoord;
-
-            //out vec2 TexCoord;
-
-            //void main() {
-            //    gl_Position = vec4(aPos, 1.0);
-            //    TexCoord = aTexCoord;
-            //}
 
 )";

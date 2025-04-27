@@ -82,7 +82,6 @@ namespace MEngine
         if (!pImpl->m_lineData)
             pImpl->m_lineData = std::make_unique<LineData>();
 
-
         if (!pImpl->m_linesData)
             pImpl->m_linesData = std::make_unique<LinesData>();
 
@@ -267,38 +266,56 @@ namespace MEngine
 
     std::pair<float*, size_t> DrawData::getLineData() const
     {
-        return { pImpl->m_lineData->m_vLinePts.data(),
-            pImpl->m_lineData->m_vLinePts.size() };
+        if (!pImpl->m_lineData || pImpl->m_lineData->m_vLinePts.empty())
+            return { nullptr, 0 };
+        else
+            return { pImpl->m_lineData->m_vLinePts.data(),
+                pImpl->m_lineData->m_vLinePts.size() };
     }
 
     std::pair<float*, size_t> DrawData::getPreviewData() const
     {
-        return { pImpl->m_previewData->m_vLinePts.data(),
-            pImpl->m_previewData->m_vLinePts.size() };
+        if (!pImpl->m_previewData || pImpl->m_previewData->m_vLinePts.empty())
+            return { nullptr, 0 };
+        else
+            return { pImpl->m_previewData->m_vLinePts.data(),
+                pImpl->m_previewData->m_vLinePts.size() };
     }
 
     std::pair<float*, size_t> DrawData::getLinesData() const
     {
-        return { pImpl->m_linesData->m_vLinesPts.data(),
-            pImpl->m_linesData->m_vLinesPts.size() };
+        if (!pImpl->m_linesData || pImpl->m_linesData->m_vLinesPts.empty())
+            return { nullptr, 0 };
+        else
+            return { pImpl->m_linesData->m_vLinesPts.data(),
+                pImpl->m_linesData->m_vLinesPts.size() };
     }
 
     std::pair<unsigned int*, size_t> DrawData::getLinesIndex() const
     {
-        return { pImpl->m_linesData->m_vIndex.data(),
-            pImpl->m_linesData->m_vIndex.size() };
+        if (!pImpl->m_linesData || pImpl->m_linesData->m_vIndex.empty())
+            return { nullptr, 0 };
+        else
+            return { pImpl->m_linesData->m_vIndex.data(),
+                pImpl->m_linesData->m_vIndex.size() };
     }
 
     std::pair<float*, size_t> DrawData::getPreviewsData() const
     {
-        return { pImpl->m_previewsData->m_vLinesPts.data(),
-            pImpl->m_previewsData->m_vLinesPts.size() };
+        if (!pImpl->m_previewsData || pImpl->m_previewsData->m_vLinesPts.empty())
+            return { nullptr, 0 };
+        else
+            return { pImpl->m_previewsData->m_vLinesPts.data(),
+                pImpl->m_previewsData->m_vLinesPts.size() };
     }
 
     std::pair<unsigned int*, size_t> DrawData::getPreviewsIndex() const
     {
-        return { pImpl->m_previewsData->m_vIndex.data(),
-            pImpl->m_previewsData->m_vIndex.size() };
+        if (!pImpl->m_previewsData || pImpl->m_previewsData->m_vIndex.empty())
+            return { nullptr, 0 };
+        else
+            return { pImpl->m_previewsData->m_vIndex.data(),
+                pImpl->m_previewsData->m_vIndex.size() };
     }
 
     // std::pair<float*, size_t> DrawData::getImageData() const
@@ -308,8 +325,9 @@ namespace MEngine
 
     std::tuple<unsigned char*, int, int, int> DrawData::getImageData() const
     {
-        //pImpl->m_imageData->getImageData()
-        return { nullptr, 0, 0, 0 };
+        if (!pImpl->m_imageData || pImpl->m_imageData->getImageDataSz() < 1)
+            return { nullptr, 0, 0, 0 };
+        else
+            return pImpl->m_imageData->getImageData(0);
     }
-
 }

@@ -21,14 +21,16 @@ namespace MEngine
 
     void DelEntityCmd::execute()
     {
-        for (auto& entity : m_vEntities) {
+        for (auto& entity : m_vEntities)
+        {
             m_scene->removeEntity(entity.get());
         }
     }
 
     void DelEntityCmd::undo()
     {
-        for (auto& entity : m_vEntities) {
+        for (auto& entity : m_vEntities)
+        {
             m_scene->addEntity(entity.get());
         }
     }

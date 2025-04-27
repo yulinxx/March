@@ -56,7 +56,6 @@ namespace MRender
 
     void MarchView::initializeGL()
     {
-
         if (!initializeOpenGLFunctions())
         {
             qFatal("Could not initialize OpenGL 4.6 functions");
@@ -229,6 +228,27 @@ namespace MRender
             glBindVertexArray(0);
         }
 
+        // Image
+        {
+            m_imageProgram = new QOpenGLShaderProgram(this);
+            m_imageProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, imgVS);
+            m_imageProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, imgFS);
+            m_imageProgram->link();
+
+            glGenVertexArrays(1, &m_imageVao);
+            glGenBuffers(1, &m_imageVbo);
+            glBindVertexArray(m_imageVao);
+            glBindBuffer(GL_ARRAY_BUFFER, m_imageVbo);
+
+            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
+            glEnableVertexAttribArray(0);
+            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+            glEnableVertexAttribArray(1);
+
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glBindVertexArray(0);
+        }
+
         updateLineDataBuffer();
         updateRuler();
     }
@@ -277,7 +297,7 @@ namespace MRender
                     << m_vLinePreview[i + 1] << "), Color: (" << m_vLinePreview[i + 3] << ","
                     << m_vLinePreview[i + 4] << "," << m_vLinePreview[i + 5] << ")";
             }
-#endif 
+#endif
 
             m_linePreviewProgram->setUniformValue("projection", m_viewMatrix);
             m_linePreviewProgram->setUniformValue("translation", m_translation);
@@ -348,6 +368,45 @@ namespace MRender
             glDrawArrays(GL_LINES, 0, GLsizei(m_rulerLines.size() * 2));
             glBindVertexArray(0);
             m_rulerProgram->release();
+        }
+
+        // 添加图像渲染逻辑
+        if (m_imageProgram->bind() && m_imageTexture != 0)
+        {
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, m_imageTexture);
+
+            m_imageProgram->setUniformValue("projection", m_viewMatrix);
+            m_imageProgram->setUniformValue("translation", m_translation);
+            m_imageProgram->setUniformValue("imageTexture", 0);
+
+            // 设置顶点数据（根据实际位置调整）
+            //std::vector<float> imageVertices = {
+            //    // 位置       // 纹理坐标
+            //    -0.5f,  0.5f, 0.0f, 1.0f, // 左上
+            //     0.5f,  0.5f, 1.0f, 1.0f, // 右上
+            //     0.5f,  -0.5f, 1.0f, 0.0f,// 右下
+
+            //     0.5f, -0.5f, 1.0f, 0.0f, // 右下
+            //    -0.5f, -0.5f, 0.0f, 0.0f, // 左下
+            //    -0.5f,  0.5f, 0.0f, 1.0f  // 左上
+            //};
+
+            glBindVertexArray(m_imageVao);
+            //glBindBuffer(GL_ARRAY_BUFFER, m_imageVbo);
+            //glBufferData(GL_ARRAY_BUFFER, imageVertices.size() * sizeof(float), imageVertices.data(), GL_STATIC_DRAW);
+
+            //// 设置顶点属性
+            //glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
+            //glEnableVertexAttribArray(0);
+            //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+            //glEnableVertexAttribArray(1);
+
+            // 绘制图像
+            glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
+
+            glBindVertexArray(0);
+            m_imageProgram->release();
         }
     }
 
@@ -454,7 +513,6 @@ namespace MRender
         glBindVertexArray(0);
     }
 
-
     void MarchView::updateLinePreviewBuffer()
     {
         glBindVertexArray(m_linePreviewVao);
@@ -483,7 +541,6 @@ namespace MRender
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
     }
-
 
     void MarchView::updateLinesDataBuffer()
     {
@@ -675,6 +732,80 @@ namespace MRender
         glBindVertexArray(0);
     }
 
+    void MarchView::updateImageBuffer()
+    {
+        if (!m_imgData || m_imgWidth <= 0 || m_imgHeight <= 0)
+            return;
+
+        // 生成/更新纹理
+        if (m_imageTexture == 0)
+        {
+            glGenTextures(1, &m_imageTexture);
+        }
+
+        glBindTexture(GL_TEXTURE_2D, m_imageTexture);
+
+        GLenum format = GL_RGB;
+        if (m_imgChannels == 4)
+        {
+            format = GL_RGBA;
+        }
+
+        glTexImage2D(GL_TEXTURE_2D, 0, format, m_imgWidth, m_imgHeight,
+            0, format, GL_UNSIGNED_BYTE, m_imgData);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        // 更新顶点缓冲（根据实际图像尺寸调整）
+        std::vector<float> vertices;
+        vertices.reserve(4 * 4);
+
+        if (0)
+        {
+            vertices = {
+                // 位置       // 纹理坐标
+                -0.5f,  0.5f, 0.0f, 1.0f, // 左上
+                 0.5f,  0.5f, 1.0f, 1.0f, // 右上
+                 0.5f,  -0.5f, 1.0f, 0.0f,// 右下
+
+                 0.5f, -0.5f, 1.0f, 0.0f, // 右下
+                -0.5f, -0.5f, 0.0f, 0.0f, // 左下
+                -0.5f,  0.5f, 0.0f, 1.0f  // 左上
+            };
+        }
+        else
+        {
+            vertices = {
+                // 位置            // 纹理坐标
+                m_imgX, m_imgY + m_imgHeight,  0.0f, 1.0f,  // 左上
+                m_imgX + m_imgWidth, m_imgY + m_imgHeight,  1.0f, 1.0f,  // 右上
+                m_imgX + m_imgWidth, m_imgY,  1.0f, 0.0f,  // 右下
+
+                m_imgX + m_imgWidth, m_imgY,  1.0f, 0.0f,  // 右下
+                m_imgX, m_imgY,  0.0f, 0.0f,   // 左下
+                m_imgX, m_imgY + m_imgHeight,  0.0f, 1.0f  // 左上
+            };
+        }
+
+        glBindVertexArray(m_imageVao);
+        glBindBuffer(GL_ARRAY_BUFFER, m_imageVbo);
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+
+        // 设置顶点属性指针
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+        glEnableVertexAttribArray(1);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+    }
+
     const std::vector<ColorPoint>& MarchView::getLinePoints() const
     {
         return m_linePoints;
@@ -689,18 +820,6 @@ namespace MRender
     {
         m_translation = translation;
         updateRuler();
-    }
-
-    void MarchView::addLinePoint(const ColorPoint& point)
-    {
-        // m_linePoints.push_back(point);
-        // updateLineBuffer();
-    }
-
-    void MarchView::addLinesPoint(const ColorPoint& point)
-    {
-        // m_linesPoints.push_back(point);
-        // updateLinesDataBuffer();
     }
 
     void MarchView::addLineData(const float* points, size_t sz)
@@ -780,7 +899,7 @@ namespace MRender
     {
         if (sz < 2 || sz % 6 != 0)
         {
-            if (sz > 0)
+            if (sz > 0 && _DEBUG_)
                 qWarning() << "addLinesData: sz must be a multiple of 6, got" << sz;
 
             return;
@@ -806,7 +925,8 @@ namespace MRender
 
     void MarchView::addLinesIndex(const unsigned int* index, size_t sz)
     {
-        if (sz < 2) return;
+        if (sz < 2)
+            return;
 
         m_vLinesIndex.clear();
         m_vLinesIndex.resize(sz);
@@ -895,6 +1015,17 @@ namespace MRender
 #endif
     }
 
+    void MarchView::addImgPreviewData(unsigned char* imgData, int w, int h, int c/*=3*/)
+    {
+        m_imgData = imgData;
+        m_imgWidth = w;
+        m_imgHeight = h;
+        m_imgChannels = c;
+
+        updateImageBuffer();
+        return;
+    }
+
     void MarchView::clearLinePoints()
     {
         m_linePoints.clear();
@@ -939,7 +1070,6 @@ namespace MRender
         //m_vLinePoints.push_back({ rect.x1, rect.y1, 0.0f, redColor.r, redColor.g, redColor.b });
 
         addRectData();
-
 
         updateLineDataBuffer();
     }
