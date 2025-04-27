@@ -10,8 +10,6 @@ namespace MEngine
 
 class OptDrawCircle : public OptBase
 {
-    using Super = OptBase;
-
 public:
     OptDrawCircle(MEngine::Scene* scene);
     ~OptDrawCircle() override;

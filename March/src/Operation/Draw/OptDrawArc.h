@@ -11,8 +11,6 @@ namespace MEngine
 
 class OptDrawArc : public OptBase
 {
-    using Super = OptBase;
-
 public:
     OptDrawArc(MEngine::Scene* scene);
     ~OptDrawArc() override;

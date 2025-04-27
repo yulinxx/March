@@ -10,7 +10,6 @@ namespace MEngine
 
 class OptDrawCubicBezier : public OptBase
 {
-    using Super = OptBase;
 
 public:
     OptDrawCubicBezier(MEngine::Scene* scene);

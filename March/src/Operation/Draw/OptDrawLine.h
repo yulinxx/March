@@ -3,8 +3,6 @@
 
 #include "Operation/OptBase.h"
 
-using Super = OptBase;
-
 namespace MEngine
 {
     class Line;
@@ -31,7 +29,6 @@ private:
     void drawLine();
 
 private:
-    //size_t m_nPts = 0;
     bool m_bFirst = true;
     Ut::Vec2d m_startPoint;
     Ut::Vec2d m_endPoint;

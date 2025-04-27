@@ -10,8 +10,6 @@ namespace MEngine
 
 class OptDrawPolygon : public OptBase
 {
-    using Super = OptBase;
-
 public:
     OptDrawPolygon(MEngine::Scene* scene);
 

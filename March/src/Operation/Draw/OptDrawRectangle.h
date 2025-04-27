@@ -10,8 +10,6 @@ namespace MEngine
 
 class OptDrawRectangle : public OptBase
 {
-    using Super = OptBase;
-
 public:
     OptDrawRectangle(MEngine::Scene* scene);
 

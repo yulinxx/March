@@ -97,10 +97,11 @@ void OptManager::set(int nType)
         break;
     }
 
-    m_curOpt->enter();
 
     m_curOpt->setViewWidget(m_viewWrap);
     m_curOpt->setGLView(m_glView);
+
+    m_curOpt->enter();
 }
 
 void OptManager::setDefaultOpt()

@@ -10,8 +10,6 @@ namespace MEngine
 
 class OptDrawPolyLine : public OptBase
 {
-    using Super = OptBase;
-
 public:
     OptDrawPolyLine(MEngine::Scene* scene);
     ~OptDrawPolyLine() override;

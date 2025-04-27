@@ -11,8 +11,6 @@ namespace MEngine
 
 class OptDrawSpline : public OptBase
 {
-    using Super = OptBase;
-
 public:
     OptDrawSpline(MEngine::Scene* scene);
     ~OptDrawSpline() override;

@@ -10,8 +10,6 @@ namespace MEngine
 
 class OptDrawEllipse : public OptBase
 {
-    using Super = OptBase;
-
 public:
     OptDrawEllipse(MEngine::Scene* scene);
     ~OptDrawEllipse() override;

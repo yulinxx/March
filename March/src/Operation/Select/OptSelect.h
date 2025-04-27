@@ -11,8 +11,6 @@ namespace MEngine
 
 class OptSelect : public OptBase
 {
-    using Super = OptBase;
-
 public:
     OptSelect(MEngine::Scene* scene);
     virtual ~OptSelect();

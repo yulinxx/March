@@ -50,7 +50,6 @@ public:
 
     DrawType getDrawType();
 
-
     //private:
 public:
     DrawType m_drawType = DrawType::View;
@@ -61,16 +60,17 @@ public:
 
     QPoint m_lastPos;
     qint64 m_lastMiddleClickTime = 0; // 中键点击时间
-    QPoint m_lastMiddlePos; // 鼠标位置
+    QPoint m_lastMiddlePos;  // 鼠标位置
     bool m_bPanning = false; // 是否平移
-    QPoint m_lastPanPos; // 上次平移位置
+    QPoint m_lastPanPos;     // 上次平移位置
 
     // 窗、交选
     // bool m_bSelecting = false;
     // Ut::Vec2d m_selectStart;
     // Ut::Vec2d m_selectEnd;
 
-
 };
+
+using Super = OptBase;
 
 #endif // OPTBASE_H

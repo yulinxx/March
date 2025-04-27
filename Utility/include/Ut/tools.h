@@ -10,6 +10,29 @@ namespace Ut
     constexpr double PIx2 = 2.0 * PI;
     constexpr double PIHalf = 0.5 * PI;
     constexpr double UT_EPSILON = 1e-6;
+
+    // 默认DPI值 (Windows标准为96, Mac为72)
+    constexpr double DEFAULT_DPI = 96.0;
+    
+    // 毫米转像素 (默认使用96 DPI)
+    inline double mmToPx(double mm, double dpi = DEFAULT_DPI) {
+        return mm * dpi / 25.4;
+    }
+    
+    // 像素转毫米 (默认使用96 DPI)
+    inline double pxToMm(double px, double dpi = DEFAULT_DPI) {
+        return px * 25.4 / dpi;
+    }
+    
+    // 毫米转英寸
+    inline double mmToInch(double mm) {
+        return mm / 25.4;
+    }
+    
+    // 英寸转毫米
+    inline double inchToMm(double inch) {
+        return inch * 25.4;
+    }
 }
 
 // 通用容器清理宏（线程不安全）
@@ -55,5 +78,6 @@ do { \
 #elif defined(__linux__)
 #define PLATFORM_LINUX 1
 #endif
+
 
 #endif // TOOLS_H
