@@ -1,4 +1,5 @@
 #include "Entity/Image.h"
+#include "Logger.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -164,6 +165,10 @@ namespace MEngine
             m_impl->sz = Ut::Vec2(static_cast<double>(m_impl->width), static_cast<double>(m_impl->height));
             m_impl->rect = Ut::Rect2d(getBasePoint(), getBasePoint() + m_impl->sz);
             setFlag(EntFlag::Dirty, true);
+        }
+        else
+        {
+            MLog::Logger::LogError("Load Image Error");
         }
     }
 
